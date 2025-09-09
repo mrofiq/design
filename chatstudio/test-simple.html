@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatStudio Test</title>
+    <link rel="stylesheet" href="styles-modern.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header glass-panel">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="app-title">
+                        <span class="gradient-text">ChatStudio Test</span>
+                    </h1>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Chat Panel -->
+            <div class="chat-panel glass-panel">
+                <!-- Messages Container -->
+                <div class="messages-container" id="messagesContainer">
+                    <div class="welcome-message">
+                        <h3>Test Chat Interface</h3>
+                        <p>Type something and press Enter or click Send</p>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="input-area">
+                    <div class="input-wrapper">
+                        <textarea 
+                            id="messageInput" 
+                            placeholder="Type your message... (Enter to send)" 
+                            rows="3"
+                            maxlength="4000"
+                        ></textarea>
+                        <button class="send-btn" id="sendBtn">
+                            <span>→</span>
+                        </button>
+                    </div>
+                    <div class="input-footer">
+                        <span class="char-count" id="charCount">0/4000</span>
+                        <span class="shortcut-hint">Enter to send</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Simple Control Panel -->
+            <div class="control-panel glass-panel">
+                <div class="control-body">
+                    <div class="control-section">
+                        <h3 class="section-title">Test Controls</h3>
+                        <button class="modern-btn primary-btn full-width" id="testBtn">
+                            Test Button
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('Script loading...');
+        
+        // Simple test implementation
+        class SimpleTest {
+            constructor() {
+                console.log('SimpleTest constructor called');
+                this.bindEvents();
+                this.updateCharCount();
+            }
+
+            bindEvents() {
+                console.log('Binding events...');
+                
+                const messageInput = document.getElementById('messageInput');
+                const sendBtn = document.getElementById('sendBtn');
+                const testBtn = document.getElementById('testBtn');
+
+                if (!messageInput || !sendBtn) {
+                    console.error('Elements not found:', { messageInput, sendBtn });
+                    return;
+                }
+
+                // Input events
+                messageInput.addEventListener('input', () => {
+                    console.log('Input changed');
+                    this.updateCharCount();
+                });
+
+                messageInput.addEventListener('keydown', (e) => {
+                    console.log('Key pressed:', e.key);
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendMessage();
+                    }
+                });
+
+                // Send button
+                sendBtn.addEventListener('click', (e) => {
+                    console.log('Send button clicked');
+                    e.preventDefault();
+                    this.sendMessage();
+                });
+
+                // Test button
+                if (testBtn) {
+                    testBtn.addEventListener('click', () => {
+                        console.log('Test button clicked');
+                        alert('Test button works!');
+                    });
+                }
+
+                console.log('Events bound successfully');
+            }
+
+            sendMessage() {
+                console.log('sendMessage called');
+                const input = document.getElementById('messageInput');
+                const message = input.value.trim();
+                
+                if (!message) {
+                    console.log('Empty message');
+                    return;
+                }
+
+                console.log('Sending message:', message);
+                
+                // Add message to UI
+                this.addMessage(message, 'user');
+                
+                // Clear input
+                input.value = '';
+                this.updateCharCount();
+                
+                // Simulate AI response
+                setTimeout(() => {
+                    this.addMessage('Echo: ' + message, 'assistant');
+                }, 500);
+            }
+
+            addMessage(content, type) {
+                const container = document.getElementById('messagesContainer');
+                
+                // Remove welcome message if it exists
+                const welcomeMsg = container.querySelector('.welcome-message');
+                if (welcomeMsg) {
+                    welcomeMsg.remove();
+                }
+                
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${type}`;
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">${type === 'user' ? 'U' : 'AI'}</div>
+                    <div class="message-content">
+                        ${content}
+                        <div class="message-time">${new Date().toLocaleTimeString()}</div>
+                    </div>
+                `;
+                
+                container.appendChild(messageDiv);
+                container.scrollTop = container.scrollHeight;
+            }
+
+            updateCharCount() {
+                const input = document.getElementById('messageInput');
+                const counter = document.getElementById('charCount');
+                const sendBtn = document.getElementById('sendBtn');
+                
+                if (input && counter) {
+                    counter.textContent = `${input.value.length}/4000`;
+                }
+                
+                if (sendBtn) {
+                    sendBtn.disabled = !input.value.trim();
+                }
+            }
+        }
+
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                console.log('DOM ready, initializing...');
+                new SimpleTest();
+            });
+        } else {
+            console.log('DOM already ready, initializing...');
+            new SimpleTest();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Journey Dashboard</title>
+    <style>
+        :root {
+            --primary-blue: #E8F4FD;
+            --accent-blue: #3B82F6;
+            --light-blue: #F0F8FF;
+            --soft-blue: #DBEAFE;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --white: #FFFFFF;
+            --border: #E5E7EB;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--primary-blue);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: var(--white);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            padding-bottom: 5rem;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .stat-card h3 {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .patient-list {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .patient-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            background: var(--soft-blue);
+        }
+
+        .patient-item {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.2s;
+        }
+
+        .patient-item:hover {
+            background: var(--light-blue);
+        }
+
+        .patient-item:last-child {
+            border-bottom: none;
+        }
+
+        .patient-info h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .patient-info p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .stage-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .stage-admission { background: #FEF3C7; color: #92400E; }
+        .stage-diagnosis { background: #DBEAFE; color: #1E40AF; }
+        .stage-treatment { background: #D1FAE5; color: #065F46; }
+        .stage-recovery { background: #E0E7FF; color: #3730A3; }
+        .stage-discharge { background: #F3E8FF; color: #6B21A8; }
+
+        .progress-bar {
+            width: 100px;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-blue);
+            transition: width 0.3s;
+        }
+
+        .chart-container {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+        }
+
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .chart {
+            height: 200px;
+            display: flex;
+            align-items: end;
+            gap: 8px;
+            margin-top: 1rem;
+        }
+
+        .chart-bar {
+            background: var(--accent-blue);
+            border-radius: 4px 4px 0 0;
+            min-width: 20px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .chart-bar:hover {
+            opacity: 1;
+        }
+
+        .alerts-list {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .alert-item {
+            padding: 1rem 1.5rem;
+            border-left: 4px solid;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .alert-critical { border-left-color: var(--danger); background: #FEF2F2; }
+        .alert-warning { border-left-color: var(--warning); background: #FFFBEB; }
+        .alert-info { border-left-color: var(--accent-blue); background: var(--light-blue); }
+
+        .alert-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.75rem;
+        }
+
+        .settings-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .setting-item {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .toggle {
+            width: 44px;
+            height: 24px;
+            background: var(--border);
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .toggle.active {
+            background: var(--accent-blue);
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: left 0.2s;
+        }
+
+        .toggle.active::after {
+            left: 22px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.75rem 0;
+            box-shadow: 0 -1px 3px rgba(0,0,0,0.1);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+            padding: 0.5rem;
+            border-radius: 8px;
+            min-width: 60px;
+        }
+
+        .nav-item.active {
+            color: var(--accent-blue);
+            background: var(--light-blue);
+        }
+
+        .nav-item:hover {
+            color: var(--accent-blue);
+        }
+
+        .nav-icon {
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .real-time-indicator {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--success);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .pulse {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .main-content {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="real-time-indicator">
+        <div class="pulse"></div>
+        Live Updates
+    </div>
+
+    <header class="header">
+        <h1>Patient Journey Dashboard</h1>
+    </header>
+
+    <main class="main-content">
+        <!-- Patients Section -->
+        <section id="patients" class="section active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Active Patients</h3>
+                    <div class="value">24</div>
+                </div>
+                <div class="stat-card">
+                    <h3>In Treatment</h3>
+                    <div class="value">18</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Critical</h3>
+                    <div class="value">3</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Recovery</h3>
+                    <div class="value">12</div>
+                </div>
+            </div>
+
+            <div class="patient-list">
+                <div class="patient-header">Current Patients</div>
+                <div id="patientsList"></div>
+            </div>
+        </section>
+
+        <!-- Metrics Section -->
+        <section id="metrics" class="section">
+            <div class="chart-container">
+                <div class="chart-title">Daily Patient Admissions</div>
+                <div class="chart" id="admissionsChart"></div>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-title">Average Length of Stay</div>
+                <div class="chart" id="stayChart"></div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Avg Treatment Time</h3>
+                    <div class="value">4.2d</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Success Rate</h3>
+                    <div class="value">94%</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Readmissions</h3>
+                    <div class="value">2.1%</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Alerts Section -->
+        <section id="alerts" class="section">
+            <div class="alerts-list">
+                <div class="alert-item alert-critical">
+                    <div class="alert-icon" style="background: var(--danger);">!</div>
+                    <div>
+                        <h4>Patient P003 - Vitals Critical</h4>
+                        <p>Blood pressure elevated, requires immediate attention</p>
+                        <small>2 minutes ago</small>
+                    </div>
+                </div>
+                <div class="alert-item alert-warning">
+                    <div class="alert-icon" style="background: var(--warning);">⚠</div>
+                    <div>
+                        <h4>Room 205 - Equipment Check</h4>
+                        <p>Monitoring equipment needs maintenance</p>
+                        <small>15 minutes ago</small>
+                    </div>
+                </div>
+                <div class="alert-item alert-info">
+                    <div class="alert-icon" style="background: var(--accent-blue);">i</div>
+                    <div>
+                        <h4>Discharge Ready - P012</h4>
+                        <p>All criteria met, paperwork pending</p>
+                        <small>1 hour ago</small>
+                    </div>
+                </div>
+                <div class="alert-item alert-warning">
+                    <div class="alert-icon" style="background: var(--warning);">⚠</div>
+                    <div>
+                        <h4>Medication Schedule</h4>
+                        <p>3 patients due for medication in next hour</p>
+                        <small>1 hour ago</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reports Section -->
+        <section id="reports" class="section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Weekly Report</h3>
+                    <div class="value">156</div>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem; margin-top: 0.5rem;">Total patients treated</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Monthly Goal</h3>
+                    <div class="value">87%</div>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem; margin-top: 0.5rem;">Progress achieved</p>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">Patient Journey Completion Times</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; color: var(--accent-blue); font-weight: 600;">2.3d</div>
+                        <div style="color: var(--text-secondary);">Admission to Diagnosis</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; color: var(--success); font-weight: 600;">5.7d</div>
+                        <div style="color: var(--text-secondary);">Treatment Duration</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; color: var(--warning); font-weight: 600;">1.2d</div>
+                        <div style="color: var(--text-secondary);">Recovery Time</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section id="settings" class="section">
+            <div class="settings-grid">
+                <div class="setting-item">
+                    <div>
+                        <h4>Real-time Updates</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem;">Automatic data refresh</p>
+                    </div>
+                    <div class="toggle active" onclick="toggleSetting(this)"></div>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <h4>Sound Alerts</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem;">Audio notifications for critical alerts</p>
+                    </div>
+                    <div class="toggle" onclick="toggleSetting(this)"></div>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <h4>Dark Mode</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem;">Switch to dark theme</p>
+                    </div>
+                    <div class="toggle" onclick="toggleSetting(this)"></div>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <h4>Auto Refresh</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem;">Refresh data every 30 seconds</p>
+                    </div>
+                    <div class="toggle active" onclick="toggleSetting(this)"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active" onclick="showSection('patients', this)">
+            <div class="nav-icon">👥</div>
+            <div class="nav-label">Patients</div>
+        </a>
+        <a href="#" class="nav-item" onclick="showSection('metrics', this)">
+            <div class="nav-icon">📈</div>
+            <div class="nav-label">Metrics</div>
+        </a>
+        <a href="#" class="nav-item" onclick="showSection('alerts', this)">
+            <div class="nav-icon">🚨</div>
+            <div class="nav-label">Alerts</div>
+        </a>
+        <a href="#" class="nav-item" onclick="showSection('reports', this)">
+            <div class="nav-icon">📋</div>
+            <div class="nav-label">Reports</div>
+        </a>
+        <a href="#" class="nav-item" onclick="showSection('settings', this)">
+            <div class="nav-icon">⚙️</div>
+            <div class="nav-label">Settings</div>
+        </a>
+    </nav>
+
+    <script>
+        // Mock patient data
+        const patients = [
+            {
+                id: "P001",
+                name: "Sarah Johnson",
+                age: 45,
+                stage: "treatment",
+                progress: 75,
+                condition: "Post-surgical recovery",
+                room: "205A",
+                vitals: { bp: "120/80", temp: "98.6°F", hr: "72 bpm" },
+                admissionDate: "2024-01-15",
+                nextMilestone: "Discharge Planning"
+            },
+            {
+                id: "P002",
+                name: "Michael Chen",
+                age: 62,
+                stage: "diagnosis",
+                progress: 40,
+                condition: "Chest pain evaluation",
+                room: "102B",
+                vitals: { bp: "140/90", temp: "99.1°F", hr: "88 bpm" },
+                admissionDate: "2024-01-16",
+                nextMilestone: "Test Results"
+            },
+            {
+                id: "P003",
+                name: "Emma Davis",
+                age: 34,
+                stage: "admission",
+                progress: 15,
+                condition: "Emergency admission",
+                room: "ER-3",
+                vitals: { bp: "160/100", temp: "100.2°F", hr: "95 bpm" },
+                admissionDate: "2024-01-17",
+                nextMilestone: "Initial Assessment"
+            },
+            {
+                id: "P004",
+                name: "Robert Wilson",
+                age: 58,
+                stage: "recovery",
+                progress: 90,
+                condition: "Cardiac procedure recovery",
+                room: "301A",
+                vitals: { bp: "118/75", temp: "98.4°F", hr: "68 bpm" },
+                admissionDate: "2024-01-10",
+                nextMilestone: "Final Evaluation"
+            },
+            {
+                id: "P005",
+                name: "Lisa Anderson",
+                age: 29,
+                stage: "discharge",
+                progress: 95,
+                condition: "Maternity - Normal delivery",
+                room: "250B",
+                vitals: { bp: "115/72", temp: "98.8°F", hr: "70 bpm" },
+                admissionDate: "2024-01-14",
+                nextMilestone: "Discharge Complete"
+            },
+            {
+                id: "P006",
+                name: "David Brown",
+                age: 71,
+                stage: "treatment",
+                progress: 55,
+                condition: "Pneumonia treatment",
+                room: "180C",
+                vitals: { bp: "130/85", temp: "99.5°F", hr: "82 bpm" },
+                admissionDate: "2024-01-12",
+                nextMilestone: "Antibiotic Response"
+            }
+        ];
+
+        // Navigation function
+        function showSection(sectionId, navItem) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Update navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            navItem.classList.add('active');
+        }
+
+        // Toggle settings
+        function toggleSetting(toggle) {
+            toggle.classList.toggle('active');
+        }
+
+        // Render patients
+        function renderPatients() {
+            const patientsList = document.getElementById('patientsList');
+            patientsList.innerHTML = patients.map(patient => `
+                <div class="patient-item">
+                    <div class="patient-info">
+                        <h4>${patient.name} (${patient.age})</h4>
+                        <p>${patient.condition} • Room ${patient.room}</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${patient.progress}%"></div>
+                        </div>
+                    </div>
+                    <div class="stage-badge stage-${patient.stage}">
+                        ${patient.stage}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Generate chart data
+        function generateChart(containerId, data, maxHeight = 150) {
+            const container = document.getElementById(containerId);
+            const max = Math.max(...data);
+            
+            container.innerHTML = data.map(value => {
+                const height = (value / max) * maxHeight;
+                return `<div class="chart-bar" style="height: ${height}px;" title="${value}"></div>`;
+            }).join('');
+        }
+
+        // Simulate real-time updates
+        function updateRealTimeData() {
+            // Randomly update patient progress
+            patients.forEach(patient => {
+                if (Math.random() < 0.1) { // 10% chance of update
+                    patient.progress = Math.min(100, patient.progress + Math.floor(Math.random() * 5));
+                }
+            });
+
+            // Re-render patients if on patients tab
+            if (document.getElementById('patients').classList.contains('active')) {
+                renderPatients();
+            }
+
+            // Update stats with slight variations
+            const statValues = document.querySelectorAll('.stat-card .value');
+            if (Math.random() < 0.2) { // 20% chance of stat update
+                const randomStat = statValues[Math.floor(Math.random() * statValues.length)];
+                const currentValue = parseInt(randomStat.textContent);
+                if (!isNaN(currentValue)) {
+                    randomStat.textContent = Math.max(0, currentValue + (Math.random() < 0.5 ? -1 : 1));
+                }
+            }
+        }
+
+        // Initialize dashboard
+        function initDashboard() {
+            renderPatients();
+            
+            // Generate sample charts
+            generateChart('admissionsChart', [12, 19, 15, 23, 18, 25, 21]);
+            generateChart('stayChart', [4.2, 3.8, 5.1, 4.6, 3.9, 4.8, 4.3]);
+
+            // Start real-time updates
+            setInterval(updateRealTimeData, 3000); // Update every 3 seconds
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+</body>
+</html>

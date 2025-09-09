@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatStudio - Developer Chat API Testing Tool</title>
+    <link rel="stylesheet" href="styles-modern.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.2/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css">
+</head>
+<body>
+    <!-- Glass distortion filter -->
+    <svg style="display: none;">
+        <defs>
+            <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%" filterUnits="objectBoundingBox">
+                <feTurbulence type="fractalNoise" baseFrequency="0.001 0.005" numOctaves="1" seed="17" result="turbulence"/>
+                <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap"/>
+                <feDisplacementMap in="SourceGraphic" in2="softMap" scale="20" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+        </defs>
+    </svg>
+
+    <div class="app-container">
+        <!-- Modern Header with Glass Effect -->
+        <header class="app-header glass-panel">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="app-title">
+                        <span class="gradient-text">ChatStudio</span>
+                    </h1>
+                    <div class="connection-status">
+                        <div class="status-indicator connected"></div>
+                        <span class="status-text">Mock Backend Ready</span>
+                        <div class="latency-badge">45ms</div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="modern-btn icon-btn" id="themeToggle" title="Toggle Theme">
+                        <i data-lucide="moon"></i>
+                    </button>
+                    <button class="modern-btn outline-btn" id="settingsBtn">
+                        <i data-lucide="settings"></i>
+                        <span>Settings</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Chat Panel -->
+            <div class="chat-panel glass-panel">
+                <!-- Chat Header -->
+                <div class="chat-header">
+                    <div class="session-info">
+                        <h2 class="session-name" id="currentSessionName">New Session</h2>
+                        <p class="message-count">0 messages</p>
+                    </div>
+                    <div class="chat-actions">
+                        <button class="modern-btn icon-btn" id="clearChatBtn" title="Clear Chat">
+                            <i data-lucide="trash-2"></i>
+                        </button>
+                        <button class="modern-btn icon-btn" id="exportChatBtn" title="Export Chat">
+                            <i data-lucide="download"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Messages Container -->
+                <div class="messages-container" id="messagesContainer">
+                    <div class="welcome-message">
+                        <div class="welcome-icon">
+                            <i data-lucide="message-circle"></i>
+                        </div>
+                        <h3>Welcome to ChatStudio</h3>
+                        <p>Start testing your chat backend by sending a message below</p>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="input-area">
+                    <!-- Toolbar -->
+                    <div class="input-toolbar">
+                        <div class="toolbar-left">
+                            <button class="modern-btn icon-btn small" id="emojiBtn" title="Add Emoji">
+                                <i data-lucide="smile"></i>
+                            </button>
+                            <button class="modern-btn icon-btn small" id="imageBtn" title="Upload Image">
+                                <i data-lucide="image"></i>
+                            </button>
+                            <button class="modern-btn icon-btn small" id="codeBtn" title="Insert Code Block">
+                                <i data-lucide="code"></i>
+                            </button>
+                        </div>
+                        <div class="typing-indicator" id="typingIndicator">
+                            <span>AI is typing</span>
+                            <div class="typing-dots">
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                                <div class="dot"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input Wrapper -->
+                    <div class="input-wrapper">
+                        <textarea 
+                            id="messageInput" 
+                            placeholder="Type your message... (Enter to send, Shift+Enter for new line)" 
+                            rows="3"
+                            maxlength="4000"
+                        ></textarea>
+                        <button class="send-btn" id="sendBtn">
+                            <i data-lucide="send"></i>
+                        </button>
+                    </div>
+
+                    <!-- Input Footer -->
+                    <div class="input-footer">
+                        <span class="char-count">0/4000</span>
+                        <span class="shortcut-hint">Enter to send • Shift+Enter for new line</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Control Panel -->
+            <div class="control-panel glass-panel">
+                <!-- Fixed Header with Session Controls -->
+                <div class="control-header">
+                    <div class="session-controls">
+                        <button class="session-control-btn primary" id="newSessionBtn">
+                            <i data-lucide="plus"></i>
+                            <span>New Session</span>
+                        </button>
+                        <button class="session-control-btn success" id="saveSessionBtn">
+                            <i data-lucide="save"></i>
+                            <span>Save Session</span>
+                        </button>
+                        <button class="session-control-btn warning" id="resetSessionBtn">
+                            <i data-lucide="refresh-cw"></i>
+                            <span>Reset</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Scrollable Content -->
+                <div class="control-body">
+                    <!-- Mock Backend Settings -->
+                    <div class="control-section">
+                        <h3 class="section-title">Mock Backend Settings</h3>
+                        <div class="settings-grid">
+                            <div class="setting-group">
+                                <label for="responseType">Response Type</label>
+                                <select id="responseType" class="modern-select">
+                                    <option value="helpful">Helpful Assistant</option>
+                                    <option value="technical">Technical Expert</option>
+                                    <option value="creative">Creative Thinker</option>
+                                    <option value="concise">Concise Responses</option>
+                                </select>
+                            </div>
+
+                            <div class="setting-group">
+                                <div class="setting-header">
+                                    <label for="streamingSpeed">Streaming Speed</label>
+                                    <span class="setting-value">50ms</span>
+                                </div>
+                                <input type="range" id="streamingSpeed" min="10" max="200" value="50" class="modern-slider">
+                            </div>
+
+                            <div class="setting-group">
+                                <div class="setting-header">
+                                    <label for="errorRate">Error Rate</label>
+                                    <span class="setting-value">0%</span>
+                                </div>
+                                <input type="range" id="errorRate" min="0" max="30" value="0" class="modern-slider">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Debug Panel -->
+                    <div class="control-section">
+                        <h3 class="section-title">Debug Panel</h3>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value" id="messageCount">0</div>
+                                <div class="stat-label">Messages</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="avgResponse">0ms</div>
+                                <div class="stat-label">Avg Response</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="errorCount">0</div>
+                                <div class="stat-label">Errors</div>
+                            </div>
+                        </div>
+                        <button class="modern-btn outline-btn full-width" id="debugToggle">
+                            <i data-lucide="terminal"></i>
+                            <span>View Raw Messages</span>
+                        </button>
+                    </div>
+
+                    <!-- Session History -->
+                    <div class="control-section">
+                        <h3 class="section-title">Saved Sessions</h3>
+                        <div class="session-list" id="sessionList">
+                            <div class="empty-sessions">
+                                <div class="empty-icon">
+                                    <i data-lucide="folder"></i>
+                                </div>
+                                <p>No saved sessions yet</p>
+                                <span class="empty-hint">Save your first session to get started</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modern Settings Modal -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal glass-panel">
+            <div class="modal-header">
+                <h3>Settings</h3>
+                <button class="modern-btn icon-btn" id="closeSettings">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-grid">
+                    <div class="setting-group">
+                        <label for="themeSelect">Theme</label>
+                        <select id="themeSelect" class="modern-select">
+                            <option value="dark">Dark</option>
+                            <option value="light">Light</option>
+                            <option value="system">System</option>
+                        </select>
+                    </div>
+                    <div class="setting-group">
+                        <div class="setting-toggle">
+                            <label for="autoSave">Auto-save Sessions</label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="autoSave" checked>
+                                <span class="toggle-slider"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setting-group">
+                        <div class="setting-toggle">
+                            <label for="soundEffects">Sound Effects</label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="soundEffects">
+                                <span class="toggle-slider"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modern-btn outline-btn" id="resetSettings">Reset to Default</button>
+                <button class="modern-btn primary-btn" id="saveSettings">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modern Debug Modal -->
+    <div class="modal-overlay large" id="debugModal">
+        <div class="modal glass-panel large">
+            <div class="modal-header">
+                <h3>Debug Console</h3>
+                <button class="modern-btn icon-btn" id="closeDebug">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="debug-tabs">
+                    <button class="debug-tab active" data-tab="messages">Messages</button>
+                    <button class="debug-tab" data-tab="settings">Settings</button>
+                    <button class="debug-tab" data-tab="performance">Performance</button>
+                </div>
+                <div class="debug-content">
+                    <pre class="debug-output" id="debugOutput"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <!-- Hidden File Input -->
+    <input type="file" id="imageInput" accept="image/*" style="display: none;">
+    
+    <!-- Scripts -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="mock-backend.js"></script>
+    <script src="app-modern.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
