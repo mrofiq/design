@@ -1,0 +1,77 @@
+{
+  "name": "dashboard-dokter",
+  "version": "1.0.0",
+  "description": "Tablet Medical Application - Dashboard Dokter untuk Sistem Manajemen Rekam Medis Digital",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "serve": "npx serve .",
+    "dev": "npx live-server --port=8000 --host=localhost",
+    "build": "echo 'No build process needed for vanilla HTML/CSS/JS'",
+    "lint": "npx eslint app.js",
+    "validate": "npx html-validate index.html",
+    "test": "echo 'Tests will be added in future versions'"
+  },
+  "keywords": [
+    "medical",
+    "tablet",
+    "dashboard",
+    "healthcare",
+    "rekam-medis",
+    "voice-input",
+    "clinical-pathway",
+    "indonesia",
+    "bpjs"
+  ],
+  "author": "Dashboard Dokter Team",
+  "license": "Proprietary",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dashboard-dokter/tablet-app"
+  },
+  "bugs": {
+    "url": "https://github.com/dashboard-dokter/tablet-app/issues"
+  },
+  "homepage": "https://dashboard-dokter.com",
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "html-validate": "^7.0.0",
+    "live-server": "^1.2.2",
+    "serve": "^14.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browserslist": [
+    "Chrome >= 70",
+    "Safari >= 12",
+    "Firefox >= 65",
+    "Edge >= 79"
+  ],
+  "files": [
+    "index.html",
+    "demo.html",
+    "app.js",
+    "styles.css",
+    "README.md"
+  ],
+  "config": {
+    "defaultPort": 8000,
+    "supportedOrientations": ["landscape", "portrait"],
+    "minScreenWidth": "768px",
+    "targetDevices": ["tablet", "desktop"]
+  },
+  "medical": {
+    "compliance": ["HIPAA", "Indonesian Medical Record Laws"],
+    "features": {
+      "voiceInput": true,
+      "clinicalPathway": true,
+      "autoSave": true,
+      "touchOptimized": true,
+      "accessibility": true
+    },
+    "supportedLanguages": ["id-ID"],
+    "medicalTerminology": "ICD-10",
+    "dataEncryption": "AES-256"
+  }
+}

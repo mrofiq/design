@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alerts Center - Patient Journey Monitoring</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Color System */
+            --primary: #8B5CF6;
+            --primary-light: #A78BFA;
+            --primary-dark: #7C3AED;
+            --secondary: #EC4899;
+            --accent: #06B6D4;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            
+            /* Neutrals */
+            --white: #FFFFFF;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-400: #9CA3AF;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+            
+            /* Semantic Colors */
+            --background: var(--gray-50);
+            --surface: var(--white);
+            --card-bg: var(--white);
+            --text-primary: var(--gray-900);
+            --text-secondary: var(--gray-600);
+            --text-muted: var(--gray-400);
+            --border: var(--gray-200);
+            --border-light: var(--gray-100);
+            
+            /* Spacing Scale */
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            
+            /* Border Radius */
+            --radius: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            
+            /* Shadows */
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .app-container {
+            max-width: 375px;
+            margin: 0 auto;
+            background: var(--white);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-3) var(--space-4);
+            background: var(--white);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-left {
+            font-size: 15px;
+        }
+
+        .status-right {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-4);
+            background: var(--surface);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+
+        .back-btn {
+            width: 24px;
+            height: 24px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .filter-btn, .bulk-action-btn {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            background: var(--gray-100);
+            color: var(--text-secondary);
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover, .bulk-action-btn:hover {
+            background: var(--gray-200);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .filter-icon {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Alert Stats */
+        .alert-stats {
+            display: flex;
+            padding: var(--space-4);
+            gap: var(--space-4);
+            background: var(--surface);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .stat-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: var(--space-1);
+        }
+
+        .stat-critical .stat-value { color: var(--danger); }
+        .stat-warning .stat-value { color: var(--warning); }
+        .stat-info .stat-value { color: var(--info); }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .tab-item {
+            flex: 1;
+            text-align: center;
+            padding: var(--space-4);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s ease;
+        }
+
+        .tab-item.active {
+            color: var(--primary);
+        }
+
+        .tab-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .tab-count {
+            background: var(--primary);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: var(--space-1);
+        }
+
+        .tab-item:not(.active) .tab-count {
+            background: var(--gray-300);
+            color: var(--text-secondary);
+        }
+
+        /* Alerts Container */
+        .alerts-container {
+            flex: 1;
+            overflow-y: auto;
+            background: var(--background);
+        }
+
+        /* Alert Card */
+        .alert-card {
+            background: var(--card-bg);
+            margin: var(--space-2) var(--space-4);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .alert-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .alert-card.selected {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.1);
+        }
+
+        .severity-stripe {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+        }
+
+        .severity-critical { background: var(--danger); }
+        .severity-warning { background: var(--warning); }
+        .severity-info { background: var(--info); }
+
+        .alert-content {
+            padding: var(--space-4);
+            padding-left: calc(var(--space-4) + 8px);
+        }
+
+        .alert-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: var(--space-3);
+        }
+
+        .alert-info {
+            flex: 1;
+        }
+
+        .alert-source {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 500;
+            margin-bottom: var(--space-1);
+        }
+
+        .alert-message {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: var(--space-2);
+            line-height: 1.4;
+        }
+
+        .alert-patient {
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .patient-avatar {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .alert-meta {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-top: var(--space-2);
+        }
+
+        .alert-time {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .alert-location {
+            font-size: 11px;
+            color: var(--text-secondary);
+            background: var(--gray-100);
+            padding: 2px 6px;
+            border-radius: var(--radius);
+        }
+
+        .alert-actions {
+            display: flex;
+            gap: var(--space-2);
+            margin-top: var(--space-3);
+            padding-top: var(--space-3);
+            border-top: 1px solid var(--border-light);
+        }
+
+        .action-btn {
+            flex: 1;
+            background: var(--surface);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-1);
+        }
+
+        .action-btn:hover {
+            background: var(--gray-100);
+        }
+
+        .action-btn.primary {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .action-btn.primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .action-icon {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Selection Checkbox */
+        .alert-checkbox {
+            position: absolute;
+            top: var(--space-3);
+            right: var(--space-3);
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .alert-checkbox.visible {
+            display: flex;
+        }
+
+        .alert-checkbox.checked {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .checkbox-icon {
+            width: 10px;
+            height: 10px;
+            color: white;
+        }
+
+        /* Bulk Actions Bar */
+        .bulk-actions-bar {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-primary);
+            color: white;
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-lg);
+            display: none;
+            align-items: center;
+            gap: var(--space-4);
+            box-shadow: var(--shadow-md);
+            z-index: 10;
+        }
+
+        .bulk-actions-bar.visible {
+            display: flex;
+        }
+
+        .bulk-count {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .bulk-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+
+        .bulk-action {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius);
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-8);
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .empty-icon {
+            width: 48px;
+            height: 48px;
+            color: var(--text-muted);
+            margin-bottom: var(--space-4);
+        }
+
+        .empty-message {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: var(--space-2);
+        }
+
+        .empty-description {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            display: flex;
+            background: var(--surface);
+            border-top: 1px solid var(--border-light);
+            padding: var(--space-2) 0;
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: var(--space-2);
+            cursor: pointer;
+            transition: color 0.2s ease;
+            color: var(--text-muted);
+            position: relative;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item-icon {
+            width: 20px;
+            height: 20px;
+            margin-bottom: var(--space-1);
+        }
+
+        .nav-item-label {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .alert-indicator {
+            position: absolute;
+            top: 8px;
+            right: 24px;
+            width: 6px;
+            height: 6px;
+            background: var(--danger);
+            border-radius: 50%;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 360px) {
+            .alert-stats {
+                padding: var(--space-3);
+                gap: var(--space-3);
+            }
+            
+            .alert-card {
+                margin: var(--space-2) var(--space-3);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-left">9:41</div>
+            <div class="status-right">🔋 100%</div>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <svg class="back-btn" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+                <div class="header-title">Alerts Center</div>
+            </div>
+            <div class="header-right">
+                <div class="filter-btn" onclick="toggleFilter()">
+                    <svg class="filter-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"/>
+                    </svg>
+                    Filter
+                </div>
+                <div class="bulk-action-btn" onclick="toggleBulkMode()">
+                    <svg class="filter-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Select
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert Stats -->
+        <div class="alert-stats">
+            <div class="stat-item stat-critical">
+                <div class="stat-value">12</div>
+                <div class="stat-label">Critical</div>
+            </div>
+            <div class="stat-item stat-warning">
+                <div class="stat-value">24</div>
+                <div class="stat-label">Warnings</div>
+            </div>
+            <div class="stat-item stat-info">
+                <div class="stat-value">8</div>
+                <div class="stat-label">Info</div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <div class="tab-item active" onclick="switchTab('critical')">
+                Critical
+                <span class="tab-count">12</span>
+            </div>
+            <div class="tab-item" onclick="switchTab('warnings')">
+                Warnings
+                <span class="tab-count">24</span>
+            </div>
+            <div class="tab-item" onclick="switchTab('info')">
+                Info
+                <span class="tab-count">8</span>
+            </div>
+        </div>
+
+        <!-- Alerts Container -->
+        <div class="alerts-container" id="alertsContainer">
+            <!-- Critical Alerts -->
+            <div class="alert-card">
+                <div class="severity-stripe severity-critical"></div>
+                <div class="alert-checkbox" onclick="toggleCheckbox(this)">
+                    <svg class="checkbox-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: none;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                </div>
+                <div class="alert-content">
+                    <div class="alert-header">
+                        <div class="alert-info">
+                            <div class="alert-source">VITALS MONITOR</div>
+                            <div class="alert-message">SpO2 < 90% for 30 seconds</div>
+                            <div class="alert-patient">
+                                <div class="patient-avatar">AR</div>
+                                Ahmad, R (MRN: 123456)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert-meta">
+                        <div class="alert-time">2 minutes ago</div>
+                        <div class="alert-location">ER-12</div>
+                    </div>
+                    <div class="alert-actions">
+                        <div class="action-btn primary" onclick="acknowledgeAlert(this)">
+                            <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Acknowledge
+                        </div>
+                        <div class="action-btn" onclick="assignAlert(this)">
+                            <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            </svg>
+                            Assign
+                        </div>
+                        <div class="action-btn" onclick="escalateAlert(this)">
+                            <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9"/>
+                            </svg>
+                            Escalate
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert-card">
+                <div class="severity-stripe severity-critical"></div>
+                <div class="alert-checkbox" onclick="toggleCheckbox(this)">
+                    <svg class="checkbox-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: none;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                </div>
+                <div class="alert-content">
+                    <div class="alert-header">
+                        <div class="alert-info">
+                            <div class="alert-source">MEDICATION</div>
+                            <div class="alert-message">Overdue medication: Levophed infusion</div>
+                            <div class="alert-patient">
+                                <div class="patient-avatar">SM</div>
+                                Smith, M (MRN: 789012)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert-meta">
+                        <div class="alert-time">5 minutes ago</div>
+                        <div class="alert-location">ICU-05</div>
+                    </div>
+                    <div class="alert-actions">
+                        <div class="action-btn primary">
+                            <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Acknowledge
+                        </div>
+                        <div class="action-btn">
+                            <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            </svg>
+                            Assign
+                        </div>
+                        <div class="action-btn">
+                            <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9"/>
+                            </svg>
+                            Escalate
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert-card">
+                <div class="severity-stripe severity-critical"></div>
+                <div class="alert-checkbox" onclick="toggleCheckbox(this)">
+                    <svg class="checkbox-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: none;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                </div>
+                <div class="alert-content">
+                    <div class="alert-header">
+                        <div class="alert-info">
+                            <div class="alert-source">LAB RESULTS</div>
+                            <div class="alert-message">Critical lactate level: 4.2 mmol/L</div>
+                            <div class="alert-patient">
+                                <div class="patient-avatar">KB</div>
+                                Brown, K (MRN: 345678)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert-meta">
+                        <div class="alert-time">8 minutes ago</div>
+                        <div class="alert-location">ICU-03</div>
+                    </div>
+                    <div class="alert-actions">
+                        <div class="action-btn primary">
+                            <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Acknowledge
+                        </div>
+                        <div class="action-btn">
+                            <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            </svg>
+                            Assign
+                        </div>
+                        <div class="action-btn">
+                            <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9"/>
+                            </svg>
+                            Escalate
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bulk Actions Bar -->
+        <div class="bulk-actions-bar" id="bulkActionsBar">
+            <div class="bulk-count" id="bulkCount">0 selected</div>
+            <div class="bulk-actions">
+                <button class="bulk-action" onclick="bulkAcknowledge()">Acknowledge All</button>
+                <button class="bulk-action" onclick="bulkAssign()">Assign</button>
+                <button class="bulk-action" onclick="clearSelection()">Clear</button>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="navigateTo('index.html')">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 1v4m8-4v4"/>
+                </svg>
+                <span class="nav-item-label">Dashboard</span>
+            </div>
+            
+            <div class="nav-item" onclick="navigateTo('patient.html')">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                <span class="nav-item-label">Patients</span>
+            </div>
+            
+            <div class="nav-item" onclick="navigateTo('map.html')">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                <span class="nav-item-label">Map</span>
+            </div>
+            
+            <div class="nav-item active">
+                <div style="position: relative;">
+                    <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5-5-5h5v-12z"/>
+                    </svg>
+                    <div class="alert-indicator"></div>
+                </div>
+                <span class="nav-item-label">Alerts</span>
+            </div>
+            
+            <div class="nav-item">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+                </svg>
+                <span class="nav-item-label">More</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let currentTab = 'critical';
+        let isBulkMode = false;
+        let selectedAlerts = new Set();
+
+        // Tab switching functionality
+        function switchTab(tab) {
+            const tabs = document.querySelectorAll('.tab-item');
+            tabs.forEach(t => t.classList.remove('active'));
+            document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
+            
+            currentTab = tab;
+            loadAlertsForTab(tab);
+        }
+
+        // Load alerts based on tab
+        function loadAlertsForTab(tab) {
+            const container = document.getElementById('alertsContainer');
+            
+            if (tab === 'warnings') {
+                container.innerHTML = `
+                    <div class="alert-card">
+                        <div class="severity-stripe severity-warning"></div>
+                        <div class="alert-checkbox" onclick="toggleCheckbox(this)">
+                            <svg class="checkbox-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: none;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <div class="alert-content">
+                            <div class="alert-header">
+                                <div class="alert-info">
+                                    <div class="alert-source">VITALS MONITOR</div>
+                                    <div class="alert-message">Heart rate elevated: 110 BPM</div>
+                                    <div class="alert-patient">
+                                        <div class="patient-avatar">TG</div>
+                                        Garcia, T (MRN: 901234)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="alert-meta">
+                                <div class="alert-time">15 minutes ago</div>
+                                <div class="alert-location">W-23</div>
+                            </div>
+                            <div class="alert-actions">
+                                <div class="action-btn primary">
+                                    <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                    Acknowledge
+                                </div>
+                                <div class="action-btn">
+                                    <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                    </svg>
+                                    Assign
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (tab === 'info') {
+                container.innerHTML = `
+                    <div class="alert-card">
+                        <div class="severity-stripe severity-info"></div>
+                        <div class="alert-checkbox" onclick="toggleCheckbox(this)">
+                            <svg class="checkbox-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: none;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <div class="alert-content">
+                            <div class="alert-header">
+                                <div class="alert-info">
+                                    <div class="alert-source">SYSTEM</div>
+                                    <div class="alert-message">Lab results available for review</div>
+                                    <div class="alert-patient">
+                                        <div class="patient-avatar">JD</div>
+                                        Davis, J (MRN: 567890)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="alert-meta">
+                                <div class="alert-time">30 minutes ago</div>
+                                <div class="alert-location">W-21</div>
+                            </div>
+                            <div class="alert-actions">
+                                <div class="action-btn primary">
+                                    <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                    Acknowledge
+                                </div>
+                                <div class="action-btn">
+                                    <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                    View
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Show/hide checkboxes based on bulk mode
+            if (isBulkMode) {
+                document.querySelectorAll('.alert-checkbox').forEach(cb => {
+                    cb.classList.add('visible');
+                });
+            }
+        }
+
+        // Bulk mode functionality
+        function toggleBulkMode() {
+            isBulkMode = !isBulkMode;
+            const checkboxes = document.querySelectorAll('.alert-checkbox');
+            const bulkBtn = document.querySelector('.bulk-action-btn');
+            
+            if (isBulkMode) {
+                checkboxes.forEach(cb => cb.classList.add('visible'));
+                bulkBtn.style.background = 'var(--primary)';
+                bulkBtn.style.color = 'white';
+            } else {
+                checkboxes.forEach(cb => {
+                    cb.classList.remove('visible', 'checked');
+                    cb.querySelector('.checkbox-icon').style.display = 'none';
+                });
+                bulkBtn.style.background = 'var(--gray-100)';
+                bulkBtn.style.color = 'var(--text-secondary)';
+                selectedAlerts.clear();
+                updateBulkActionsBar();
+            }
+        }
+
+        // Checkbox functionality
+        function toggleCheckbox(checkbox) {
+            const isChecked = checkbox.classList.contains('checked');
+            const alertCard = checkbox.closest('.alert-card');
+            
+            if (isChecked) {
+                checkbox.classList.remove('checked');
+                checkbox.querySelector('.checkbox-icon').style.display = 'none';
+                alertCard.classList.remove('selected');
+                selectedAlerts.delete(alertCard);
+            } else {
+                checkbox.classList.add('checked');
+                checkbox.querySelector('.checkbox-icon').style.display = 'block';
+                alertCard.classList.add('selected');
+                selectedAlerts.add(alertCard);
+            }
+            
+            updateBulkActionsBar();
+        }
+
+        // Update bulk actions bar
+        function updateBulkActionsBar() {
+            const bulkBar = document.getElementById('bulkActionsBar');
+            const bulkCount = document.getElementById('bulkCount');
+            
+            if (selectedAlerts.size > 0) {
+                bulkBar.classList.add('visible');
+                bulkCount.textContent = `${selectedAlerts.size} selected`;
+            } else {
+                bulkBar.classList.remove('visible');
+            }
+        }
+
+        // Individual alert actions
+        function acknowledgeAlert(button) {
+            const alertCard = button.closest('.alert-card');
+            button.style.background = 'var(--success)';
+            button.innerHTML = '<svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Acknowledged';
+            button.disabled = true;
+            
+            // Add fade out effect after 2 seconds
+            setTimeout(() => {
+                alertCard.style.opacity = '0.6';
+                alertCard.style.transform = 'translateX(8px)';
+            }, 2000);
+        }
+
+        function assignAlert(button) {
+            // Show assignment modal (simplified for demo)
+            alert('Assignment feature - would show staff selection modal');
+        }
+
+        function escalateAlert(button) {
+            // Show escalation options (simplified for demo)
+            alert('Escalation feature - would show escalation options');
+        }
+
+        // Bulk actions
+        function bulkAcknowledge() {
+            selectedAlerts.forEach(alertCard => {
+                const ackButton = alertCard.querySelector('.action-btn.primary');
+                if (ackButton && ackButton.textContent.includes('Acknowledge')) {
+                    acknowledgeAlert(ackButton);
+                }
+            });
+            clearSelection();
+        }
+
+        function bulkAssign() {
+            alert('Bulk assignment - would show staff selection modal');
+            clearSelection();
+        }
+
+        function clearSelection() {
+            selectedAlerts.clear();
+            document.querySelectorAll('.alert-checkbox.checked').forEach(cb => {
+                cb.classList.remove('checked');
+                cb.querySelector('.checkbox-icon').style.display = 'none';
+            });
+            document.querySelectorAll('.alert-card.selected').forEach(card => {
+                card.classList.remove('selected');
+            });
+            updateBulkActionsBar();
+        }
+
+        // Filter functionality
+        function toggleFilter() {
+            const filterBtn = document.querySelector('.filter-btn');
+            filterBtn.classList.toggle('active');
+            
+            if (filterBtn.classList.contains('active')) {
+                // Show filter options (simplified for demo)
+                alert('Filter options - would show location, time, severity filters');
+            }
+        }
+
+        // Navigation
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add some loading animation for the alerts
+            setTimeout(() => {
+                document.querySelectorAll('.alert-card').forEach((card, index) => {
+                    card.style.animationDelay = `${index * 0.1}s`;
+                    card.style.animation = 'fadeInUp 0.5s ease forwards';
+                });
+            }, 100);
+        });
+
+        // CSS animation for cards
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Journey</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f8f9fa;
+            color: #1a1a1a;
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 390px;
+            margin: 0 auto;
+            background: #fff;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Header */
+        .header {
+            background: #fff;
+            padding: 60px 20px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .back-arrow {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            color: #1a1a1a;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        /* Content */
+        .content {
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-icon {
+            width: 20px;
+            height: 20px;
+            color: #20b2aa;
+        }
+
+        /* Appointment Cards */
+        .appointment-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .appointment-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .appointment-icon.stethoscope {
+            background: #e0f7fa;
+            color: #20b2aa;
+        }
+
+        .appointment-icon.calendar {
+            background: #f3e5f5;
+            color: #9c27b0;
+        }
+
+        .appointment-icon.therapy {
+            background: #e8f5e8;
+            color: #4caf50;
+        }
+
+        .appointment-info {
+            flex: 1;
+        }
+
+        .appointment-time {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+
+        .appointment-details {
+            font-size: 12px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .appointment-action {
+            color: #666;
+            font-size: 18px;
+        }
+
+        /* Medication Reminders */
+        .medication-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .medication-item {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .medication-icon {
+            width: 32px;
+            height: 32px;
+            background: #20b2aa;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        .medication-info {
+            flex: 1;
+        }
+
+        .medication-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+
+        .medication-time {
+            font-size: 12px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .medication-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .medication-action {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .medication-action.check {
+            background: #4caf50;
+            color: white;
+        }
+
+        .medication-action.smile {
+            background: #ff9800;
+            color: white;
+        }
+
+        /* Charts */
+        .chart-container {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .chart-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+
+        .chart-period {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Blood Pressure Chart */
+        .bp-chart {
+            height: 120px;
+            position: relative;
+            background: linear-gradient(to bottom, #f0f9ff 0%, #e0f2fe 100%);
+            border-radius: 8px;
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        .bp-line {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            height: 60px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 60'%3E%3Cpath d='M0,45 Q30,35 60,40 T120,38 T180,42 T240,38 T300,40' fill='none' stroke='%2320b2aa' stroke-width='2'/%3E%3C/svg%3E") no-repeat;
+            background-size: contain;
+        }
+
+        .bp-values {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        /* Activity Chart */
+        .activity-chart {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            height: 80px;
+            margin: 16px 0;
+        }
+
+        .activity-bar {
+            width: 12px;
+            background: #20b2aa;
+            border-radius: 6px 6px 0 0;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .activity-bar:hover {
+            opacity: 1;
+        }
+
+        .activity-bar:nth-child(1) { height: 30px; }
+        .activity-bar:nth-child(2) { height: 45px; }
+        .activity-bar:nth-child(3) { height: 60px; background: #4caf50; }
+        .activity-bar:nth-child(4) { height: 35px; }
+        .activity-bar:nth-child(5) { height: 55px; }
+        .activity-bar:nth-child(6) { height: 40px; }
+        .activity-bar:nth-child(7) { height: 50px; }
+
+        .activity-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .activity-summary {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .activity-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: conic-gradient(#20b2aa 0% 70%, #4caf50 70% 85%, #ff9800 85% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .activity-circle::before {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            border-radius: 50%;
+        }
+
+        .activity-stats {
+            flex: 1;
+        }
+
+        .activity-stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+            font-size: 12px;
+        }
+
+        .stat-color {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .stat-color.active { background: #20b2aa; }
+        .stat-color.exercise { background: #4caf50; }
+        .stat-color.rest { background: #ff9800; }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 390px;
+            background: #fff;
+            border-top: 1px solid #e5e7eb;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-around;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: #666;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .nav-item.active {
+            color: #20b2aa;
+        }
+
+        .nav-item:hover {
+            color: #20b2aa;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 320px) {
+            .container {
+                max-width: 100%;
+            }
+            
+            .content {
+                padding: 16px;
+            }
+            
+            .appointment-card, .medication-item, .chart-container {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <i class="fas fa-arrow-left back-arrow"></i>
+                <h1 class="header-title">Patient Journey</h1>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Upcoming Appointments -->
+            <div class="section">
+                <h2 class="section-title">
+                    <i class="fas fa-calendar section-icon"></i>
+                    Upcoming Appointments
+                </h2>
+                
+                <div class="appointment-card">
+                    <div class="appointment-icon stethoscope">
+                        <i class="fas fa-stethoscope"></i>
+                    </div>
+                    <div class="appointment-info">
+                        <div class="appointment-time">Tomorrow, 10:00 AM</div>
+                        <div class="appointment-details">Dr. Smith</div>
+                    </div>
+                    <i class="fas fa-user appointment-action"></i>
+                </div>
+
+                <div class="appointment-card">
+                    <div class="appointment-icon calendar">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="appointment-info">
+                        <div class="appointment-time">Fri, Dec 15, 2:30 PM</div>
+                        <div class="appointment-details">Physical Therapy</div>
+                    </div>
+                    <i class="fas fa-clock appointment-action"></i>
+                </div>
+
+                <div class="appointment-card">
+                    <div class="appointment-icon therapy">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    <div class="appointment-info">
+                        <div class="appointment-time">Fri, Dec15 12:00 PM</div>
+                        <div class="appointment-details"></div>
+                    </div>
+                    <i class="fas fa-clock appointment-action"></i>
+                </div>
+            </div>
+
+            <!-- Medication Reminders -->
+            <div class="section">
+                <h2 class="section-title">
+                    <i class="fas fa-pills section-icon"></i>
+                    Medication Reminders
+                </h2>
+                
+                <div class="medication-list">
+                    <div class="medication-item">
+                        <div class="medication-icon">
+                            <i class="fas fa-capsules"></i>
+                        </div>
+                        <div class="medication-info">
+                            <div class="medication-name">Metformin</div>
+                            <div class="medication-time">8:00 AM, 8:00 PM</div>
+                        </div>
+                        <div class="medication-actions">
+                            <button class="medication-action smile">
+                                <i class="fas fa-smile"></i>
+                            </button>
+                            <button class="medication-action smile">
+                                <i class="fas fa-grin"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="medication-item">
+                        <div class="medication-icon">
+                            <i class="fas fa-pills"></i>
+                        </div>
+                        <div class="medication-info">
+                            <div class="medication-name">Vitamin D</div>
+                            <div class="medication-time">9:00 AM</div>
+                        </div>
+                        <div class="medication-actions">
+                            <button class="medication-action check">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blood Pressure Trends -->
+            <div class="section">
+                <h2 class="section-title">
+                    <i class="fas fa-heartbeat section-icon"></i>
+                    Blood Pressure Trends
+                </h2>
+                
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <span class="chart-title">Systolic/Diastolic</span>
+                        <span class="chart-period">7 days</span>
+                    </div>
+                    <div class="bp-chart">
+                        <div class="bp-line"></div>
+                    </div>
+                    <div class="bp-values">
+                        <span>120</span>
+                        <span>118</span>
+                        <span>122</span>
+                        <span>119</span>
+                        <span>121</span>
+                        <span>117</span>
+                        <span>120</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daily Activity Levels -->
+            <div class="section">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-bar section-icon"></i>
+                    Daily Activity Levels
+                </h2>
+                
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <span class="chart-title">Weekly Activity</span>
+                        <span class="chart-period">7 days</span>
+                    </div>
+                    
+                    <div class="activity-chart">
+                        <div class="activity-bar"></div>
+                        <div class="activity-bar"></div>
+                        <div class="activity-bar"></div>
+                        <div class="activity-bar"></div>
+                        <div class="activity-bar"></div>
+                        <div class="activity-bar"></div>
+                        <div class="activity-bar"></div>
+                    </div>
+                    
+                    <div class="activity-labels">
+                        <span>Sun</span>
+                        <span>Mon</span>
+                        <span>Tue</span>
+                        <span>Wed</span>
+                        <span>Thu</span>
+                        <span>Fri</span>
+                        <span>Sat</span>
+                    </div>
+                    
+                    <div class="activity-summary">
+                        <div class="activity-circle"></div>
+                        <div class="activity-stats">
+                            <div class="activity-stat">
+                                <div class="stat-color active"></div>
+                                <span>Active: 4h 32m</span>
+                            </div>
+                            <div class="activity-stat">
+                                <div class="stat-color exercise"></div>
+                                <span>Exercise: 1h 15m</span>
+                            </div>
+                            <div class="activity-stat">
+                                <div class="stat-color rest"></div>
+                                <span>Rest: 18h 13m</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active">
+                <i class="fas fa-home nav-icon"></i>
+                <span class="nav-label">Home</span>
+            </div>
+            <a href="schedule.html" class="nav-item">
+                <i class="fas fa-calendar nav-icon"></i>
+                <span class="nav-label">Schedule</span>
+            </a>
+            <a href="medical-records.html" class="nav-item">
+                <i class="fas fa-clipboard nav-icon"></i>
+                <span class="nav-label">Records</span>
+            </a>
+            <div class="nav-item">
+                <i class="fas fa-chart-line nav-icon"></i>
+                <span class="nav-label">Analytics</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-user nav-icon"></i>
+                <span class="nav-label">Profile</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            // Back button functionality
+            const backArrow = document.querySelector('.back-arrow');
+            backArrow.addEventListener('click', function() {
+                window.history.back();
+            });
+
+            // Navigation items
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Medication action buttons
+            const medicationActions = document.querySelectorAll('.medication-action');
+            medicationActions.forEach(action => {
+                action.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 100);
+                });
+            });
+
+            // Activity bars hover effect
+            const activityBars = document.querySelectorAll('.activity-bar');
+            activityBars.forEach((bar, index) => {
+                bar.addEventListener('mouseenter', function() {
+                    // Could show tooltip with specific data
+                    console.log(`Activity for day ${index + 1}`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

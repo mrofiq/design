@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Vitals - Ahmad, R</title>
+    <style>
+        /* Modern Font Import */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        /* CSS Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #FFFFFF;
+            color: #111827;
+            line-height: 1.5;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Design Tokens */
+        :root {
+            /* Violet-based Color Palette */
+            --primary: #8B5CF6;
+            --primary-hover: #7C3AED;
+            --primary-light: #EDE9FE;
+            --success: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+            --background: #FFFFFF;
+            --surface: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+            --text-muted: #9CA3AF;
+            --border: #E5E7EB;
+            --border-light: #F3F4F6;
+            
+            /* Spacing Scale */
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            
+            /* Border Radius */
+            --radius-sm: 4px;
+            --radius: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Mobile Container */
+        .mobile-container {
+            max-width: 375px;
+            height: 812px;
+            margin: 20px auto;
+            background: var(--background);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            height: 44px;
+            background: var(--background);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 var(--space-4);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            height: 56px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 var(--space-4);
+            flex-shrink: 0;
+        }
+
+        .back-button {
+            width: 24px;
+            height: 24px;
+            color: var(--primary);
+            cursor: pointer;
+            margin-right: var(--space-3);
+        }
+
+        .nav-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .nav-action {
+            width: 24px;
+            height: 24px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        /* Patient Header */
+        .patient-header {
+            background: var(--card-bg);
+            padding: var(--space-4);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .patient-basic-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-bottom: var(--space-4);
+        }
+
+        .patient-avatar-large {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        .patient-details {
+            flex: 1;
+        }
+
+        .patient-name-large {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--space-1);
+        }
+
+        .patient-meta {
+            display: flex;
+            gap: var(--space-4);
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .status-badge-large {
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            align-self: flex-start;
+        }
+
+        .critical-large {
+            background: #FEF2F2;
+            color: var(--danger);
+            border: 1px solid #FECACA;
+        }
+
+        /* Connection Status */
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-connected {
+            background: var(--success);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: var(--space-3) var(--space-2);
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            background: var(--surface);
+        }
+
+        /* Vitals Chart */
+        .vitals-chart {
+            background: var(--card-bg);
+            margin: var(--space-4);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .chart-header {
+            padding: var(--space-4);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .chart-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .chart-range {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .chart-container {
+            height: 200px;
+            padding: var(--space-4);
+            position: relative;
+            background: linear-gradient(to bottom, transparent 0%, transparent 100%);
+        }
+
+        /* Mock Chart */
+        .chart-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .chart-line {
+            fill: none;
+            stroke: var(--primary);
+            stroke-width: 2;
+            opacity: 0.8;
+        }
+
+        .chart-area {
+            fill: var(--primary);
+            opacity: 0.1;
+        }
+
+        .chart-grid {
+            stroke: var(--border-light);
+            stroke-width: 1;
+        }
+
+        /* Chart Controls */
+        .chart-controls {
+            padding: var(--space-3) var(--space-4);
+            background: var(--surface);
+            display: flex;
+            gap: var(--space-2);
+        }
+
+        .chart-btn {
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text-secondary);
+        }
+
+        .chart-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Vital Signs Grid */
+        .vitals-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-3);
+            padding: var(--space-4);
+        }
+
+        .vital-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            padding: var(--space-4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vital-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+
+        .vital-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .vital-trend {
+            font-size: 10px;
+            color: var(--success);
+        }
+
+        .vital-trend.down {
+            color: var(--danger);
+        }
+
+        .vital-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+            margin-bottom: var(--space-1);
+        }
+
+        .vital-unit {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .vital-range {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-bottom: var(--space-2);
+        }
+
+        .vital-range.abnormal {
+            color: var(--danger);
+            font-weight: 500;
+        }
+
+        /* Sparkline */
+        .sparkline {
+            height: 24px;
+            width: 100%;
+            margin-top: var(--space-2);
+        }
+
+        .sparkline-line {
+            fill: none;
+            stroke: var(--primary);
+            stroke-width: 1.5;
+            opacity: 0.6;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            padding: var(--space-4);
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: var(--space-3);
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: var(--space-3);
+            border-radius: var(--radius);
+            font-size: 13px;
+            font-weight: 500;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-secondary);
+        }
+
+        .action-btn.primary {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .action-btn.danger {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+
+        /* Alert Banner */
+        .alert-banner {
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            margin: var(--space-4);
+            padding: var(--space-3);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .alert-icon {
+            width: 16px;
+            height: 16px;
+            color: var(--danger);
+            flex-shrink: 0;
+        }
+
+        .alert-text {
+            font-size: 12px;
+            color: var(--danger);
+            font-weight: 500;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            height: 56px;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 var(--space-4);
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-1);
+            padding: var(--space-1);
+            cursor: pointer;
+            transition: color 0.2s ease;
+            flex: 1;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item:not(.active) {
+            color: var(--text-muted);
+        }
+
+        .nav-item-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .nav-item-label {
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 400px) {
+            .mobile-container {
+                margin: 10px;
+                max-width: calc(100vw - 20px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>🔋 100%</span>
+        </div>
+
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <svg class="back-button" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            <div class="nav-title">Patient Vitals</div>
+            <svg class="nav-action" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+            </svg>
+        </div>
+
+        <!-- Patient Header -->
+        <div class="patient-header">
+            <div class="patient-basic-info">
+                <div class="patient-avatar-large">AR</div>
+                <div class="patient-details">
+                    <div class="patient-name-large">Ahmad, R</div>
+                    <div class="patient-meta">
+                        <span>MRN: 123456</span>
+                        <span>Room: ER-12</span>
+                    </div>
+                </div>
+                <div class="status-badge-large critical-large">Critical</div>
+            </div>
+            
+            <div class="connection-status">
+                <div class="status-indicator status-connected"></div>
+                <span>Live monitoring - Monitor-ICU-01</span>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab">Timeline</div>
+            <div class="tab active">Vitals</div>
+            <div class="tab">Orders</div>
+            <div class="tab">Images</div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content">
+            <!-- Alert Banner -->
+            <div class="alert-banner">
+                <svg class="alert-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+                </svg>
+                <span class="alert-text">SpO2 below normal range - Monitor closely</span>
+            </div>
+
+            <!-- Vitals Chart -->
+            <div class="vitals-chart">
+                <div class="chart-header">
+                    <div class="chart-title">Heart Rate Trend</div>
+                    <div class="chart-range">Last 6 hours</div>
+                </div>
+                <div class="chart-container">
+                    <svg class="chart-svg" viewBox="0 0 300 150">
+                        <!-- Grid lines -->
+                        <line class="chart-grid" x1="0" y1="30" x2="300" y2="30"/>
+                        <line class="chart-grid" x1="0" y1="60" x2="300" y2="60"/>
+                        <line class="chart-grid" x1="0" y1="90" x2="300" y2="90"/>
+                        <line class="chart-grid" x1="0" y1="120" x2="300" y2="120"/>
+                        
+                        <!-- Chart area -->
+                        <path class="chart-area" d="M0 120 L50 100 L100 80 L150 70 L200 60 L250 45 L300 30 L300 150 L0 150 Z"/>
+                        
+                        <!-- Chart line -->
+                        <path class="chart-line" d="M0 120 L50 100 L100 80 L150 70 L200 60 L250 45 L300 30"/>
+                    </svg>
+                </div>
+                <div class="chart-controls">
+                    <div class="chart-btn">1H</div>
+                    <div class="chart-btn active">6H</div>
+                    <div class="chart-btn">12H</div>
+                    <div class="chart-btn">24H</div>
+                </div>
+            </div>
+
+            <!-- Vital Signs Grid -->
+            <div class="vitals-grid">
+                <!-- Heart Rate -->
+                <div class="vital-card">
+                    <div class="vital-header">
+                        <span class="vital-label">Heart Rate</span>
+                        <span class="vital-trend">↑ +15</span>
+                    </div>
+                    <div class="vital-value">130 <span class="vital-unit">bpm</span></div>
+                    <div class="vital-range abnormal">Normal: 60-100 bpm</div>
+                    <svg class="sparkline" viewBox="0 0 80 24">
+                        <path class="sparkline-line" d="M0 20 L10 18 L20 16 L30 14 L40 12 L50 10 L60 8 L70 6 L80 4"/>
+                    </svg>
+                </div>
+
+                <!-- SpO2 -->
+                <div class="vital-card">
+                    <div class="vital-header">
+                        <span class="vital-label">SpO2</span>
+                        <span class="vital-trend down">↓ -8</span>
+                    </div>
+                    <div class="vital-value">88 <span class="vital-unit">%</span></div>
+                    <div class="vital-range abnormal">Normal: 95-100%</div>
+                    <svg class="sparkline" viewBox="0 0 80 24">
+                        <path class="sparkline-line" d="M0 8 L10 10 L20 12 L30 14 L40 16 L50 18 L60 19 L70 20 L80 20"/>
+                    </svg>
+                </div>
+
+                <!-- Blood Pressure -->
+                <div class="vital-card">
+                    <div class="vital-header">
+                        <span class="vital-label">Blood Pressure</span>
+                        <span class="vital-trend down">↓ -35</span>
+                    </div>
+                    <div class="vital-value">85/50 <span class="vital-unit">mmHg</span></div>
+                    <div class="vital-range abnormal">Normal: 120/80 mmHg</div>
+                    <svg class="sparkline" viewBox="0 0 80 24">
+                        <path class="sparkline-line" d="M0 4 L10 6 L20 8 L30 12 L40 15 L50 17 L60 19 L70 20 L80 20"/>
+                    </svg>
+                </div>
+
+                <!-- Temperature -->
+                <div class="vital-card">
+                    <div class="vital-header">
+                        <span class="vital-label">Temperature</span>
+                        <span class="vital-trend">↑ +1.2</span>
+                    </div>
+                    <div class="vital-value">38.5 <span class="vital-unit">°C</span></div>
+                    <div class="vital-range abnormal">Normal: 36.1-37.2°C</div>
+                    <svg class="sparkline" viewBox="0 0 80 24">
+                        <path class="sparkline-line" d="M0 16 L10 14 L20 12 L30 10 L40 8 L50 6 L60 5 L70 4 L80 4"/>
+                    </svg>
+                </div>
+
+                <!-- Respiratory Rate -->
+                <div class="vital-card">
+                    <div class="vital-header">
+                        <span class="vital-label">Resp Rate</span>
+                        <span class="vital-trend">↑ +8</span>
+                    </div>
+                    <div class="vital-value">28 <span class="vital-unit">rpm</span></div>
+                    <div class="vital-range abnormal">Normal: 12-20 rpm</div>
+                    <svg class="sparkline" viewBox="0 0 80 24">
+                        <path class="sparkline-line" d="M0 18 L10 16 L20 14 L30 12 L40 10 L50 8 L60 6 L70 5 L80 4"/>
+                    </svg>
+                </div>
+
+                <!-- Pain Score -->
+                <div class="vital-card">
+                    <div class="vital-header">
+                        <span class="vital-label">Pain Score</span>
+                        <span class="vital-trend">↑ +2</span>
+                    </div>
+                    <div class="vital-value">7 <span class="vital-unit">/10</span></div>
+                    <div class="vital-range">Last assessed: 10m ago</div>
+                    <svg class="sparkline" viewBox="0 0 80 24">
+                        <path class="sparkline-line" d="M0 20 L10 18 L20 16 L30 12 L40 8 L50 6 L60 4 L70 4 L80 4"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <div class="action-btn">Export Data</div>
+                <div class="action-btn">Alarm History</div>
+                <div class="action-btn primary">Acknowledge All</div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 1v4m8-4v4"/>
+                </svg>
+                <span class="nav-item-label">Dashboard</span>
+            </div>
+            
+            <div class="nav-item active">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                <span class="nav-item-label">Patients</span>
+            </div>
+            
+            <div class="nav-item">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                <span class="nav-item-label">Map</span>
+            </div>
+            
+            <div class="nav-item">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5-5-5h5v-12z"/>
+                </svg>
+                <span class="nav-item-label">Alerts</span>
+            </div>
+            
+            <div class="nav-item">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+                </svg>
+                <span class="nav-item-label">More</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

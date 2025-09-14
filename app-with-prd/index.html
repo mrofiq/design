@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Journey Monitor</title>
+    <style>
+        /* Modern Font Import */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        /* CSS Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #FFFFFF;
+            color: #111827;
+            line-height: 1.5;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Design Tokens */
+        :root {
+            /* Violet-based Color Palette */
+            --primary: #8B5CF6;
+            --primary-hover: #7C3AED;
+            --primary-light: #EDE9FE;
+            --success: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --background: #FFFFFF;
+            --surface: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+            --text-muted: #9CA3AF;
+            --border: #E5E7EB;
+            --border-light: #F3F4F6;
+            
+            /* Spacing Scale */
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            
+            /* Border Radius */
+            --radius-sm: 4px;
+            --radius: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Mobile Container */
+        .mobile-container {
+            max-width: 375px;
+            height: 812px;
+            margin: 20px auto;
+            background: var(--background);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            height: 44px;
+            background: var(--background);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 var(--space-4);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            height: 56px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 var(--space-4);
+        }
+
+        .nav-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            color: var(--text-secondary);
+            margin-left: var(--space-4);
+        }
+
+        /* Search Bar */
+        .search-container {
+            padding: var(--space-4);
+            background: var(--card-bg);
+        }
+
+        .search-bar {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-3) var(--space-4);
+            font-size: 14px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .search-icon {
+            width: 16px;
+            height: 16px;
+            color: var(--text-muted);
+        }
+
+        /* Filter Chips */
+        .filter-chips {
+            display: flex;
+            gap: var(--space-2);
+            padding: 0 var(--space-4) var(--space-4);
+            overflow-x: auto;
+        }
+
+        .chip {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-lg);
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+            border: 1px solid transparent;
+        }
+
+        .chip.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Quick Stats */
+        .stats-row {
+            display: flex;
+            padding: var(--space-4);
+            gap: var(--space-4);
+            background: var(--card-bg);
+        }
+
+        .stat-card {
+            flex: 1;
+            background: var(--surface);
+            padding: var(--space-4);
+            border-radius: var(--radius);
+            text-align: center;
+            border: 1px solid var(--border-light);
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: var(--space-1);
+            font-weight: 500;
+        }
+
+        /* Patient List */
+        .patient-list {
+            flex: 1;
+            overflow-y: auto;
+            background: var(--surface);
+            padding-bottom: var(--space-4);
+        }
+
+        .patient-card {
+            background: var(--card-bg);
+            margin: var(--space-2) var(--space-4);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .patient-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .patient-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        .patient-info {
+            flex: 1;
+        }
+
+        .patient-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-1);
+        }
+
+        .patient-room {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-1);
+        }
+
+        .patient-brief {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .patient-status {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: var(--space-1);
+        }
+
+        .status-badge {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-critical {
+            background: #FEF2F2;
+            color: var(--danger);
+            border: 1px solid #FECACA;
+        }
+
+        .status-monitor {
+            background: #FEF3C7;
+            color: var(--warning);
+            border: 1px solid #FDE68A;
+        }
+
+        .status-stable {
+            background: #ECFDF5;
+            color: var(--success);
+            border: 1px solid #A7F3D0;
+        }
+
+        .last-update {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            height: 56px;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 var(--space-4);
+            flex-shrink: 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-1);
+            padding: var(--space-1);
+            cursor: pointer;
+            transition: color 0.2s ease;
+            flex: 1;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item:not(.active) {
+            color: var(--text-muted);
+        }
+
+        .nav-item-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .nav-item-label {
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: absolute;
+            bottom: 80px;
+            right: var(--space-4);
+            width: 56px;
+            height: 56px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            z-index: 20;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+        }
+
+        .fab-icon {
+            width: 24px;
+            height: 24px;
+            color: white;
+        }
+
+        /* Alert Indicator */
+        .alert-indicator {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 12px;
+            height: 12px;
+            background: var(--danger);
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 400px) {
+            .mobile-container {
+                margin: 10px;
+                max-width: calc(100vw - 20px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>🔋 100%</span>
+        </div>
+
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="nav-title">Dashboard</div>
+            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5-5-5h5v-12z"/>
+            </svg>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-container">
+            <div class="search-bar">
+                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <span>Search by MRN, name, or room...</span>
+            </div>
+        </div>
+
+        <!-- Filter Chips -->
+        <div class="filter-chips">
+            <div class="chip active">All Wards</div>
+            <div class="chip">Critical</div>
+            <div class="chip">My Patients</div>
+            <div class="chip">ER</div>
+            <div class="chip">ICU</div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <span class="stat-number">24</span>
+                <span class="stat-label">Occupancy</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">3</span>
+                <span class="stat-label">Critical</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">7</span>
+                <span class="stat-label">Waiting</span>
+            </div>
+        </div>
+
+        <!-- Patient List -->
+        <div class="patient-list">
+            <div class="patient-card">
+                <div class="patient-avatar">AR</div>
+                <div class="patient-info">
+                    <div class="patient-name">Ahmad, R</div>
+                    <div class="patient-room">ER-12</div>
+                    <div class="patient-brief">Sepsis alert; on vasopressors</div>
+                </div>
+                <div class="patient-status">
+                    <div class="status-badge status-critical">Critical</div>
+                    <div class="last-update">2m ago</div>
+                </div>
+            </div>
+
+            <div class="patient-card">
+                <div class="patient-avatar">SM</div>
+                <div class="patient-info">
+                    <div class="patient-name">Smith, M</div>
+                    <div class="patient-room">ICU-05</div>
+                    <div class="patient-brief">Post-op monitoring, vitals stable</div>
+                </div>
+                <div class="patient-status">
+                    <div class="status-badge status-monitor">Monitor</div>
+                    <div class="last-update">15m ago</div>
+                </div>
+            </div>
+
+            <div class="patient-card">
+                <div class="patient-avatar">JD</div>
+                <div class="patient-info">
+                    <div class="patient-name">Johnson, D</div>
+                    <div class="patient-room">Ward-23</div>
+                    <div class="patient-brief">Routine check-up, ready for discharge</div>
+                </div>
+                <div class="patient-status">
+                    <div class="status-badge status-stable">Stable</div>
+                    <div class="last-update">1h ago</div>
+                </div>
+            </div>
+
+            <div class="patient-card">
+                <div class="patient-avatar">LW</div>
+                <div class="patient-info">
+                    <div class="patient-name">Wilson, L</div>
+                    <div class="patient-room">ER-08</div>
+                    <div class="patient-brief">Chest pain evaluation, awaiting EKG</div>
+                </div>
+                <div class="patient-status">
+                    <div class="status-badge status-monitor">Monitor</div>
+                    <div class="last-update">5m ago</div>
+                </div>
+            </div>
+
+            <div class="patient-card">
+                <div class="patient-avatar">KB</div>
+                <div class="patient-info">
+                    <div class="patient-name">Brown, K</div>
+                    <div class="patient-room">ICU-03</div>
+                    <div class="patient-brief">Recovering from surgery, improving</div>
+                </div>
+                <div class="patient-status">
+                    <div class="status-badge status-stable">Stable</div>
+                    <div class="last-update">30m ago</div>
+                </div>
+            </div>
+
+            <div class="patient-card">
+                <div class="patient-avatar">TG</div>
+                <div class="patient-info">
+                    <div class="patient-name">Garcia, T</div>
+                    <div class="patient-room">Ward-15</div>
+                    <div class="patient-brief">Medication adjustment needed</div>
+                </div>
+                <div class="patient-status">
+                    <div class="status-badge status-monitor">Monitor</div>
+                    <div class="last-update">45m ago</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Action Button -->
+        <div class="fab">
+            <svg class="fab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 1v4m8-4v4"/>
+                </svg>
+                <span class="nav-item-label">Dashboard</span>
+            </div>
+            
+            <div class="nav-item">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                <span class="nav-item-label">Patients</span>
+            </div>
+            
+            <div class="nav-item">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                <span class="nav-item-label">Map</span>
+            </div>
+            
+            <div class="nav-item">
+                <div style="position: relative;">
+                    <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5-5-5h5v-12z"/>
+                    </svg>
+                    <div class="alert-indicator"></div>
+                </div>
+                <span class="nav-item-label">Alerts</span>
+            </div>
+            
+            <div class="nav-item">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+                </svg>
+                <span class="nav-item-label">More</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

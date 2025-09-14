@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Orders - Ahmad, R</title>
+    <style>
+        /* Modern Font Import */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        /* CSS Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #FFFFFF;
+            color: #111827;
+            line-height: 1.5;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Design Tokens */
+        :root {
+            /* Violet-based Color Palette */
+            --primary: #8B5CF6;
+            --primary-hover: #7C3AED;
+            --primary-light: #EDE9FE;
+            --success: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+            --background: #FFFFFF;
+            --surface: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+            --text-muted: #9CA3AF;
+            --border: #E5E7EB;
+            --border-light: #F3F4F6;
+            
+            /* Spacing Scale */
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            
+            /* Border Radius */
+            --radius-sm: 4px;
+            --radius: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Mobile Container */
+        .mobile-container {
+            max-width: 375px;
+            height: 812px;
+            margin: 20px auto;
+            background: var(--background);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            height: 44px;
+            background: var(--background);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 var(--space-4);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            height: 56px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 var(--space-4);
+            flex-shrink: 0;
+        }
+
+        .back-button {
+            width: 24px;
+            height: 24px;
+            color: var(--primary);
+            cursor: pointer;
+            margin-right: var(--space-3);
+        }
+
+        .nav-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .nav-action {
+            width: 24px;
+            height: 24px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        /* Patient Header */
+        .patient-header {
+            background: var(--card-bg);
+            padding: var(--space-4);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .patient-basic-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-bottom: var(--space-3);
+        }
+
+        .patient-avatar-large {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        .patient-details {
+            flex: 1;
+        }
+
+        .patient-name-large {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--space-1);
+        }
+
+        .patient-meta {
+            display: flex;
+            gap: var(--space-4);
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .status-badge-large {
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            align-self: flex-start;
+        }
+
+        .critical-large {
+            background: #FEF2F2;
+            color: var(--danger);
+            border: 1px solid #FECACA;
+        }
+
+        .orders-summary {
+            display: flex;
+            gap: var(--space-4);
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+        }
+
+        .summary-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .dot-active { background: var(--success); }
+        .dot-pending { background: var(--warning); }
+        .dot-overdue { background: var(--danger); }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: var(--space-3) var(--space-2);
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            background: var(--surface);
+        }
+
+        /* Order Filters */
+        .order-filters {
+            padding: var(--space-3) var(--space-4);
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: var(--space-2);
+            overflow-x: auto;
+        }
+
+        .chip {
+            background: var(--surface);
+            color: var(--text-secondary);
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-lg);
+            font-size: 11px;
+            font-weight: 500;
+            white-space: nowrap;
+            border: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .chip.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Orders List */
+        .orders-list {
+            padding: var(--space-4);
+        }
+
+        .order-section {
+            margin-bottom: var(--space-6);
+        }
+
+        .section-header {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .section-count {
+            background: var(--surface);
+            color: var(--text-muted);
+            padding: 2px var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: 10px;
+        }
+
+        .order-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            margin-bottom: var(--space-3);
+            overflow: hidden;
+        }
+
+        .order-header {
+            padding: var(--space-4);
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-3);
+        }
+
+        .order-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: var(--space-1);
+        }
+
+        .order-icon.medication {
+            background: #ECFDF5;
+            color: var(--success);
+        }
+
+        .order-icon.procedure {
+            background: #DBEAFE;
+            color: var(--info);
+        }
+
+        .order-icon.lab {
+            background: #FEF3C7;
+            color: var(--warning);
+        }
+
+        .order-icon.imaging {
+            background: #F3E8FF;
+            color: var(--primary);
+        }
+
+        .order-icon.care {
+            background: #FEF2F2;
+            color: var(--danger);
+        }
+
+        .order-content {
+            flex: 1;
+        }
+
+        .order-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-1);
+        }
+
+        .order-details {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-2);
+        }
+
+        .order-schedule {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .order-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: var(--space-2);
+        }
+
+        .order-status {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .status-active {
+            color: var(--success);
+        }
+
+        .status-pending {
+            color: var(--warning);
+        }
+
+        .status-overdue {
+            color: var(--danger);
+        }
+
+        .order-time {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        /* Order Actions */
+        .order-actions {
+            padding: var(--space-3) var(--space-4);
+            background: var(--surface);
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            gap: var(--space-2);
+        }
+
+        .order-action {
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+        }
+
+        .order-action.primary {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .order-action.danger {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+
+        .order-action:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Dosage Info */
+        .dosage-info {
+            display: flex;
+            gap: var(--space-4);
+            margin-top: var(--space-2);
+            font-size: 11px;
+        }
+
+        .dosage-item {
+            color: var(--text-muted);
+        }
+
+        .dosage-value {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-left: var(--space-1);
+        }
+
+        /* Priority Badge */
+        .priority-badge {
+            padding: 2px var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: var(--space-2);
+        }
+
+        .priority-high {
+            background: #FEF2F2;
+            color: var(--danger);
+        }
+
+        .priority-medium {
+            background: #FEF3C7;
+            color: var(--warning);
+        }
+
+        .priority-low {
+            background: #F0FDF4;
+            color: var(--success);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            height: 56px;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 var(--space-4);
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-1);
+            padding: var(--space-1);
+            cursor: pointer;
+            transition: color 0.2s ease;
+            flex: 1;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item:not(.active) {
+            color: var(--text-muted);
+        }
+
+        .nav-item-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .nav-item-label {
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 400px) {
+            .mobile-container {
+                margin: 10px;
+                max-width: calc(100vw - 20px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>🔋 100%</span>
+        </div>
+
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <svg class="back-button" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            <div class="nav-title">Patient Orders</div>
+            <svg class="nav-action" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+            </svg>
+        </div>
+
+        <!-- Patient Header -->
+        <div class="patient-header">
+            <div class="patient-basic-info">
+                <div class="patient-avatar-large">AR</div>
+                <div class="patient-details">
+                    <div class="patient-name-large">Ahmad, R</div>
+                    <div class="patient-meta">
+                        <span>MRN: 123456</span>
+                        <span>Room: ER-12</span>
+                        <span>Dr. Smith</span>
+                    </div>
+                </div>
+                <div class="status-badge-large critical-large">Critical</div>
+            </div>
+            
+            <div class="orders-summary">
+                <div class="summary-item">
+                    <div class="summary-dot dot-active"></div>
+                    <span>5 Active</span>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-dot dot-pending"></div>
+                    <span>3 Pending</span>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-dot dot-overdue"></div>
+                    <span>1 Overdue</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab">Timeline</div>
+            <div class="tab">Vitals</div>
+            <div class="tab active">Orders</div>
+            <div class="tab">Images</div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content">
+            <!-- Order Filters -->
+            <div class="order-filters">
+                <div class="filter-chips">
+                    <div class="chip active">All Orders</div>
+                    <div class="chip">Medications</div>
+                    <div class="chip">Lab Tests</div>
+                    <div class="chip">Imaging</div>
+                    <div class="chip">Procedures</div>
+                </div>
+            </div>
+
+            <!-- Orders List -->
+            <div class="orders-list">
+                <!-- Active Medications -->
+                <div class="order-section">
+                    <div class="section-header">
+                        Active Medications
+                        <span class="section-count">3</span>
+                    </div>
+                    
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="order-icon medication">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c.251.023.501.05.75.082m-.75-.082a24.301 24.301 0 00-4.688 1.746c-2.478 1.332-2.74 4.476-.557 6.659l.75.75m4.688-8.155a24.301 24.301 0 014.688 1.746c2.478 1.332 2.74 4.476.557 6.659l-.75.75M9.75 8.818v5.714a2.25 2.25 0 00.659 1.591L14.5 19.5"/>
+                                </svg>
+                            </div>
+                            <div class="order-content">
+                                <div class="order-title">
+                                    Norepinephrine Drip
+                                    <span class="priority-badge priority-high">High Priority</span>
+                                </div>
+                                <div class="order-details">Continuous infusion for blood pressure support</div>
+                                <div class="dosage-info">
+                                    <div class="dosage-item">Dose:<span class="dosage-value">0.1 mcg/kg/min</span></div>
+                                    <div class="dosage-item">Route:<span class="dosage-value">IV</span></div>
+                                </div>
+                                <div class="order-schedule">Started: 1:30 PM • Duration: Continuous</div>
+                                <div class="order-meta">
+                                    <div class="order-status status-active">
+                                        <div class="status-dot dot-active"></div>
+                                        <span>Active</span>
+                                    </div>
+                                    <div class="order-time">Dr. Smith • 2h ago</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="order-actions">
+                            <div class="order-action">View Details</div>
+                            <div class="order-action">Document</div>
+                            <div class="order-action danger">Stop Infusion</div>
+                        </div>
+                    </div>
+
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="order-icon medication">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c.251.023.501.05.75.082m-.75-.082a24.301 24.301 0 00-4.688 1.746c-2.478 1.332-2.74 4.476-.557 6.659l.75.75m4.688-8.155a24.301 24.301 0 014.688 1.746c2.478 1.332 2.74 4.476.557 6.659l-.75.75M9.75 8.818v5.714a2.25 2.25 0 00.659 1.591L14.5 19.5"/>
+                                </svg>
+                            </div>
+                            <div class="order-content">
+                                <div class="order-title">
+                                    Ceftriaxone
+                                    <span class="priority-badge priority-medium">Medium</span>
+                                </div>
+                                <div class="order-details">Broad-spectrum antibiotic for sepsis treatment</div>
+                                <div class="dosage-info">
+                                    <div class="dosage-item">Dose:<span class="dosage-value">2g</span></div>
+                                    <div class="dosage-item">Route:<span class="dosage-value">IV</span></div>
+                                    <div class="dosage-item">Freq:<span class="dosage-value">Q24H</span></div>
+                                </div>
+                                <div class="order-schedule">Next dose: 6:00 PM • Duration: 7 days</div>
+                                <div class="order-meta">
+                                    <div class="order-status status-pending">
+                                        <div class="status-dot dot-pending"></div>
+                                        <span>Due Soon</span>
+                                    </div>
+                                    <div class="order-time">Dr. Smith • 4h ago</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="order-actions">
+                            <div class="order-action primary">Administer</div>
+                            <div class="order-action">View Details</div>
+                            <div class="order-action">Hold</div>
+                        </div>
+                    </div>
+
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="order-icon medication">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c.251.023.501.05.75.082m-.75-.082a24.301 24.301 0 00-4.688 1.746c-2.478 1.332-2.74 4.476-.557 6.659l.75.75m4.688-8.155a24.301 24.301 0 014.688 1.746c2.478 1.332 2.74 4.476.557 6.659l-.75.75M9.75 8.818v5.714a2.25 2.25 0 00.659 1.591L14.5 19.5"/>
+                                </svg>
+                            </div>
+                            <div class="order-content">
+                                <div class="order-title">
+                                    Morphine PRN
+                                    <span class="priority-badge priority-medium">Medium</span>
+                                </div>
+                                <div class="order-details">Pain management as needed</div>
+                                <div class="dosage-info">
+                                    <div class="dosage-item">Dose:<span class="dosage-value">2-4mg</span></div>
+                                    <div class="dosage-item">Route:<span class="dosage-value">IV</span></div>
+                                    <div class="dosage-item">Max:<span class="dosage-value">Q4H</span></div>
+                                </div>
+                                <div class="order-schedule">Last given: 12:30 PM • PRN for pain >5/10</div>
+                                <div class="order-meta">
+                                    <div class="order-status status-active">
+                                        <div class="status-dot dot-active"></div>
+                                        <span>Available</span>
+                                    </div>
+                                    <div class="order-time">Dr. Johnson • 6h ago</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="order-actions">
+                            <div class="order-action primary">Give Now</div>
+                            <div class="order-action">Pain Assessment</div>
+                            <div class="order-action">History</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Lab Orders -->
+                <div class="order-section">
+                    <div class="section-header">
+                        Pending Lab Orders
+                        <span class="section-count">2</span>
+                    </div>
+                    
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="order-icon lab">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.25a.75.75 0 001 .707A8.237 8.237 0 016 18.75c1.995 0 3.823.707 5.25 1.886V4.533zM12.75 20.636A8.214 8.214 0 0118 18.75c.966 0 1.89.166 2.75.47a.75.75 0 001-.708V4.262a.75.75 0 00-.5-.707A9.735 9.735 0 0018 3a9.707 9.707 0 00-5.25 1.533v16.103z"/>
+                                </svg>
+                            </div>
+                            <div class="order-content">
+                                <div class="order-title">
+                                    Blood Culture x2
+                                    <span class="priority-badge priority-high">Stat</span>
+                                </div>
+                                <div class="order-details">Before antibiotic administration - sepsis workup</div>
+                                <div class="order-schedule">Ordered: 1:15 PM • Collection: Immediately</div>
+                                <div class="order-meta">
+                                    <div class="order-status status-overdue">
+                                        <div class="status-dot dot-overdue"></div>
+                                        <span>Overdue</span>
+                                    </div>
+                                    <div class="order-time">Dr. Smith • 3h ago</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="order-actions">
+                            <div class="order-action primary">Collect Now</div>
+                            <div class="order-action">View Order</div>
+                            <div class="order-action">Call Lab</div>
+                        </div>
+                    </div>
+
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="order-icon lab">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.25a.75.75 0 001 .707A8.237 8.237 0 016 18.75c1.995 0 3.823.707 5.25 1.886V4.533zM12.75 20.636A8.214 8.214 0 0118 18.75c.966 0 1.89.166 2.75.47a.75.75 0 001-.708V4.262a.75.75 0 00-.5-.707A9.735 9.735 0 0018 3a9.707 9.707 0 00-5.25 1.533v16.103z"/>
+                                </svg>
+                            </div>
+                            <div class="order-content">
+                                <div class="order-title">
+                                    Lactate Level
+                                    <span class="priority-badge priority-high">Stat</span>
+                                </div>
+                                <div class="order-details">Serial lactate monitoring for sepsis progression</div>
+                                <div class="order-schedule">Ordered: 2:00 PM • Repeat Q6H x 24hrs</div>
+                                <div class="order-meta">
+                                    <div class="order-status status-pending">
+                                        <div class="status-dot dot-pending"></div>
+                                        <span>Pending</span>
+                                    </div>
+                                    <div class="order-time">Dr. Smith • 2h ago</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="order-actions">
+                            <div class="order-action primary">Collect</div>
+                            <div class="order-action">Previous Results</div>
+                            <div class="order-action">Trend</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Imaging Orders -->
+                <div class="order-section">
+                    <div class="section-header">
+                        Imaging Orders
+                        <span class="section-count">1</span>
+                    </div>
+                    
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="order-icon imaging">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
+                                    <path d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/>
+                                </svg>
+                            </div>
+                            <div class="order-content">
+                                <div class="order-title">
+                                    Chest X-Ray
+                                    <span class="priority-badge priority-medium">Urgent</span>
+                                </div>
+                                <div class="order-details">Evaluate for pneumonia, pulmonary edema</div>
+                                <div class="order-schedule">Ordered: 1:45 PM • Portable in ER</div>
+                                <div class="order-meta">
+                                    <div class="order-status status-pending">
+                                        <div class="status-dot dot-pending"></div>
+                                        <span>Scheduled</span>
+                                    </div>
+                                    <div class="order-time">Dr. Smith • 2h ago</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="order-actions">
+                            <div class="order-action">Call Radiology</div>
+                            <div class="order-action">View Order</div>
+                            <div class="order-action">Prep Patient</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Care Orders -->
+                <div class="order-section">
+                    <div class="section-header">
+                        Care Orders
+                        <span class="section-count">2</span>
+                    </div>
+                    
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="order-icon care">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
+                                </svg>
+                            </div>
+                            <div class="order-content">
+                                <div class="order-title">
+                                    Hourly Vital Signs
+                                    <span class="priority-badge priority-high">Critical</span>
+                                </div>
+                                <div class="order-details">Close monitoring during sepsis treatment</div>
+                                <div class="order-schedule">Started: 1:30 PM • Duration: 24 hours</div>
+                                <div class="order-meta">
+                                    <div class="order-status status-active">
+                                        <div class="status-dot dot-active"></div>
+                                        <span>Active</span>
+                                    </div>
+                                    <div class="order-time">Dr. Smith • 2h ago</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="order-actions">
+                            <div class="order-action primary">Record Vitals</div>
+                            <div class="order-action">View Trend</div>
+                            <div class="order-action">Set Reminder</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 1v4m8-4v4"/>
+                </svg>
+                <span class="nav-item-label">Dashboard</span>
+            </div>
+            
+            <div class="nav-item active">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                <span class="nav-item-label">Patients</span>
+            </div>
+            
+            <div class="nav-item">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                <span class="nav-item-label">Map</span>
+            </div>
+            
+            <div class="nav-item">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5-5-5h5v-12z"/>
+                </svg>
+                <span class="nav-item-label">Alerts</span>
+            </div>
+            
+            <div class="nav-item">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+                </svg>
+                <span class="nav-item-label">More</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

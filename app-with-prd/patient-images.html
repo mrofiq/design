@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Images - Ahmad, R</title>
+    <style>
+        /* Modern Font Import */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        /* CSS Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #FFFFFF;
+            color: #111827;
+            line-height: 1.5;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Design Tokens */
+        :root {
+            /* Violet-based Color Palette */
+            --primary: #8B5CF6;
+            --primary-hover: #7C3AED;
+            --primary-light: #EDE9FE;
+            --success: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+            --background: #FFFFFF;
+            --surface: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+            --text-muted: #9CA3AF;
+            --border: #E5E7EB;
+            --border-light: #F3F4F6;
+            
+            /* Spacing Scale */
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            
+            /* Border Radius */
+            --radius-sm: 4px;
+            --radius: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Mobile Container */
+        .mobile-container {
+            max-width: 375px;
+            height: 812px;
+            margin: 20px auto;
+            background: var(--background);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            height: 44px;
+            background: var(--background);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 var(--space-4);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            height: 56px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 var(--space-4);
+            flex-shrink: 0;
+        }
+
+        .back-button {
+            width: 24px;
+            height: 24px;
+            color: var(--primary);
+            cursor: pointer;
+            margin-right: var(--space-3);
+        }
+
+        .nav-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .nav-action {
+            width: 24px;
+            height: 24px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        /* Patient Header */
+        .patient-header {
+            background: var(--card-bg);
+            padding: var(--space-4);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .patient-basic-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-bottom: var(--space-3);
+        }
+
+        .patient-avatar-large {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        .patient-details {
+            flex: 1;
+        }
+
+        .patient-name-large {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--space-1);
+        }
+
+        .patient-meta {
+            display: flex;
+            gap: var(--space-4);
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .status-badge-large {
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            align-self: flex-start;
+        }
+
+        .critical-large {
+            background: #FEF2F2;
+            color: var(--danger);
+            border: 1px solid #FECACA;
+        }
+
+        .images-summary {
+            display: flex;
+            gap: var(--space-4);
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+        }
+
+        .summary-icon {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: var(--space-3) var(--space-2);
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            background: var(--surface);
+        }
+
+        /* Image Filters */
+        .image-filters {
+            padding: var(--space-3) var(--space-4);
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: var(--space-2);
+            overflow-x: auto;
+        }
+
+        .chip {
+            background: var(--surface);
+            color: var(--text-secondary);
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-lg);
+            font-size: 11px;
+            font-weight: 500;
+            white-space: nowrap;
+            border: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .chip.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Images Grid */
+        .images-grid {
+            padding: var(--space-4);
+        }
+
+        .image-section {
+            margin-bottom: var(--space-6);
+        }
+
+        .section-header {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .section-count {
+            background: var(--surface);
+            color: var(--text-muted);
+            padding: 2px var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: 10px;
+        }
+
+        .image-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            margin-bottom: var(--space-4);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .image-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        /* Image Preview */
+        .image-preview {
+            position: relative;
+            height: 120px;
+            background: #000000;
+            overflow: hidden;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9CA3AF;
+        }
+
+        .medical-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+        }
+
+        .image-overlay {
+            position: absolute;
+            top: var(--space-2);
+            right: var(--space-2);
+            display: flex;
+            gap: var(--space-1);
+        }
+
+        .overlay-badge {
+            padding: 2px var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-new {
+            background: var(--success);
+            color: white;
+        }
+
+        .badge-urgent {
+            background: var(--danger);
+            color: white;
+        }
+
+        .badge-pending {
+            background: var(--warning);
+            color: white;
+        }
+
+        /* Image Info */
+        .image-info {
+            padding: var(--space-4);
+        }
+
+        .image-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-1);
+        }
+
+        .image-details {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-2);
+        }
+
+        .image-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: var(--space-2);
+        }
+
+        .image-date {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+        }
+
+        .image-status {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .status-available {
+            background: var(--success);
+        }
+
+        .status-processing {
+            background: var(--warning);
+        }
+
+        .status-reviewed {
+            background: var(--info);
+        }
+
+        /* Image Actions */
+        .image-actions {
+            display: flex;
+            gap: var(--space-2);
+            margin-top: var(--space-2);
+        }
+
+        .image-action {
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+        }
+
+        .image-action.primary {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .image-action:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Report Badge */
+        .report-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            padding: var(--space-1) var(--space-2);
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: var(--radius-sm);
+            font-size: 10px;
+            font-weight: 500;
+            margin-left: var(--space-2);
+        }
+
+        .report-icon {
+            width: 10px;
+            height: 10px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: var(--space-8);
+            color: var(--text-muted);
+        }
+
+        .empty-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto var(--space-3);
+            color: var(--text-muted);
+        }
+
+        .empty-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: var(--space-2);
+        }
+
+        .empty-description {
+            font-size: 12px;
+            margin-bottom: var(--space-4);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            height: 56px;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 var(--space-4);
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-1);
+            padding: var(--space-1);
+            cursor: pointer;
+            transition: color 0.2s ease;
+            flex: 1;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item:not(.active) {
+            color: var(--text-muted);
+        }
+
+        .nav-item-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .nav-item-label {
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 400px) {
+            .mobile-container {
+                margin: 10px;
+                max-width: calc(100vw - 20px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>🔋 100%</span>
+        </div>
+
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <svg class="back-button" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            <div class="nav-title">Patient Images</div>
+            <svg class="nav-action" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+            </svg>
+        </div>
+
+        <!-- Patient Header -->
+        <div class="patient-header">
+            <div class="patient-basic-info">
+                <div class="patient-avatar-large">AR</div>
+                <div class="patient-details">
+                    <div class="patient-name-large">Ahmad, R</div>
+                    <div class="patient-meta">
+                        <span>MRN: 123456</span>
+                        <span>Room: ER-12</span>
+                        <span>Dr. Smith</span>
+                    </div>
+                </div>
+                <div class="status-badge-large critical-large">Critical</div>
+            </div>
+            
+            <div class="images-summary">
+                <div class="summary-item">
+                    <svg class="summary-icon" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
+                        <path d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/>
+                    </svg>
+                    <span>4 X-Rays</span>
+                </div>
+                <div class="summary-item">
+                    <svg class="summary-icon" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+                    </svg>
+                    <span>2 Reports</span>
+                </div>
+                <div class="summary-item">
+                    <svg class="summary-icon" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/>
+                    </svg>
+                    <span>1 CT Scan</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab">Timeline</div>
+            <div class="tab">Vitals</div>
+            <div class="tab">Orders</div>
+            <div class="tab active">Images</div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content">
+            <!-- Image Filters -->
+            <div class="image-filters">
+                <div class="filter-chips">
+                    <div class="chip active">All Images</div>
+                    <div class="chip">X-Rays</div>
+                    <div class="chip">CT Scans</div>
+                    <div class="chip">Lab Photos</div>
+                    <div class="chip">Reports</div>
+                </div>
+            </div>
+
+            <!-- Images Grid -->
+            <div class="images-grid">
+                <!-- Recent Images -->
+                <div class="image-section">
+                    <div class="section-header">
+                        Recent Images - Today
+                        <span class="section-count">3</span>
+                    </div>
+                    
+                    <!-- Chest X-Ray -->
+                    <div class="image-card">
+                        <div class="image-preview">
+                            <div class="image-placeholder">
+                                <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M7.5 3.375c0-1.036.84-1.875 1.875-1.875h.375a3.75 3.75 0 013.75 3.75v1.875C13.5 8.161 14.34 9 15.375 9h1.875A3.75 3.75 0 0121 12.75v3.375C21 17.16 20.16 18 19.125 18h-9.75A1.875 1.875 0 017.5 16.125V3.375z"/>
+                                    <path d="M15 5.25a5.23 5.23 0 00-1.279-3.434 9.768 9.768 0 016.963 6.963A5.23 5.23 0 0017.25 7.5h-1.875A.375.375 0 0115 7.125V5.25zM4.875 6H6v10.125A3.375 3.375 0 009.375 19.5H16.5v1.125c0 1.035-.84 1.875-1.875 1.875h-9.75A1.875 1.875 0 013 20.625V7.875C3 6.839 3.84 6 4.875 6z"/>
+                                </svg>
+                            </div>
+                            <div class="image-overlay">
+                                <div class="overlay-badge badge-new">New</div>
+                                <div class="overlay-badge badge-urgent">Urgent</div>
+                            </div>
+                        </div>
+                        <div class="image-info">
+                            <div class="image-title">
+                                Chest X-Ray - Portable
+                                <span class="report-badge">
+                                    <svg class="report-icon" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+                                    </svg>
+                                    Report Available
+                                </span>
+                            </div>
+                            <div class="image-details">Evaluation for pneumonia, pulmonary edema</div>
+                            <div class="image-meta">
+                                <div class="image-date">
+                                    <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <span>Today 2:15 PM</span>
+                                </div>
+                                <div class="image-status">
+                                    <div class="status-dot status-reviewed"></div>
+                                    <span>Reviewed</span>
+                                </div>
+                            </div>
+                            <div class="image-actions">
+                                <div class="image-action primary">View Full</div>
+                                <div class="image-action">Download</div>
+                                <div class="image-action">Share</div>
+                                <div class="image-action">Report</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- EKG -->
+                    <div class="image-card">
+                        <div class="image-preview">
+                            <div class="image-placeholder">
+                                <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M4.5 12.75l6 6 9-13.5"/>
+                                </svg>
+                            </div>
+                            <div class="image-overlay">
+                                <div class="overlay-badge badge-new">New</div>
+                            </div>
+                        </div>
+                        <div class="image-info">
+                            <div class="image-title">12-Lead EKG</div>
+                            <div class="image-details">Cardiac rhythm assessment during sepsis</div>
+                            <div class="image-meta">
+                                <div class="image-date">
+                                    <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <span>Today 1:45 PM</span>
+                                </div>
+                                <div class="image-status">
+                                    <div class="status-dot status-available"></div>
+                                    <span>Available</span>
+                                </div>
+                            </div>
+                            <div class="image-actions">
+                                <div class="image-action primary">View Strip</div>
+                                <div class="image-action">Measure</div>
+                                <div class="image-action">Compare</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Wound Photo -->
+                    <div class="image-card">
+                        <div class="image-preview">
+                            <div class="image-placeholder">
+                                <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
+                                    <path d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="image-info">
+                            <div class="image-title">IV Site Documentation</div>
+                            <div class="image-details">Central line insertion site - right subclavian</div>
+                            <div class="image-meta">
+                                <div class="image-date">
+                                    <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <span>Today 1:30 PM</span>
+                                </div>
+                                <div class="image-status">
+                                    <div class="status-dot status-available"></div>
+                                    <span>Available</span>
+                                </div>
+                            </div>
+                            <div class="image-actions">
+                                <div class="image-action primary">View Photo</div>
+                                <div class="image-action">Add Note</div>
+                                <div class="image-action">Follow-up</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Previous Studies -->
+                <div class="image-section">
+                    <div class="section-header">
+                        Previous Studies - This Week
+                        <span class="section-count">2</span>
+                    </div>
+                    
+                    <!-- CT Chest -->
+                    <div class="image-card">
+                        <div class="image-preview">
+                            <div class="image-placeholder">
+                                <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="image-info">
+                            <div class="image-title">
+                                CT Chest with Contrast
+                                <span class="report-badge">
+                                    <svg class="report-icon" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+                                    </svg>
+                                    Report Available
+                                </span>
+                            </div>
+                            <div class="image-details">Rule out pulmonary embolism, pneumonia</div>
+                            <div class="image-meta">
+                                <div class="image-date">
+                                    <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <span>Sept 11, 3:30 PM</span>
+                                </div>
+                                <div class="image-status">
+                                    <div class="status-dot status-reviewed"></div>
+                                    <span>Reviewed</span>
+                                </div>
+                            </div>
+                            <div class="image-actions">
+                                <div class="image-action primary">View DICOM</div>
+                                <div class="image-action">Download</div>
+                                <div class="image-action">Compare</div>
+                                <div class="image-action">Report</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lab Culture Plate -->
+                    <div class="image-card">
+                        <div class="image-preview">
+                            <div class="image-placeholder">
+                                <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c.251.023.501.05.75.082m-.75-.082a24.301 24.301 0 00-4.688 1.746c-2.478 1.332-2.74 4.476-.557 6.659l.75.75m4.688-8.155a24.301 24.301 0 014.688 1.746c2.478 1.332 2.74 4.476.557 6.659l-.75.75M9.75 8.818v5.714a2.25 2.25 0 00.659 1.591L14.5 19.5"/>
+                                </svg>
+                            </div>
+                            <div class="image-overlay">
+                                <div class="overlay-badge badge-pending">Processing</div>
+                            </div>
+                        </div>
+                        <div class="image-info">
+                            <div class="image-title">Blood Culture - Growth</div>
+                            <div class="image-details">Gram-positive cocci in clusters - preliminary</div>
+                            <div class="image-meta">
+                                <div class="image-date">
+                                    <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <span>Sept 10, 8:00 AM</span>
+                                </div>
+                                <div class="image-status">
+                                    <div class="status-dot status-processing"></div>
+                                    <span>Final pending</span>
+                                </div>
+                            </div>
+                            <div class="image-actions">
+                                <div class="image-action primary">View Image</div>
+                                <div class="image-action">Sensitivity</div>
+                                <div class="image-action">Call Lab</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Archive Section -->
+                <div class="image-section">
+                    <div class="section-header">
+                        Archive - Older Studies
+                        <span class="section-count">8</span>
+                    </div>
+                    
+                    <!-- Empty State for Demo -->
+                    <div class="empty-state">
+                        <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                        </svg>
+                        <div class="empty-title">Archive Available</div>
+                        <div class="empty-description">Tap to view older medical images and reports</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 1v4m8-4v4"/>
+                </svg>
+                <span class="nav-item-label">Dashboard</span>
+            </div>
+            
+            <div class="nav-item active">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                <span class="nav-item-label">Patients</span>
+            </div>
+            
+            <div class="nav-item">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                <span class="nav-item-label">Map</span>
+            </div>
+            
+            <div class="nav-item">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5-5-5h5v-12z"/>
+                </svg>
+                <span class="nav-item-label">Alerts</span>
+            </div>
+            
+            <div class="nav-item">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+                </svg>
+                <span class="nav-item-label">More</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

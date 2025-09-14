@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo - Dashboard Dokter dengan Fitur ICD-10</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'medical-blue': '#2E86AB',
+                        'medical-blue-50': '#F0F8FF',
+                        'medical-blue-200': '#87CEEB',
+                        'success-green': '#06D6A0',
+                        'warning-orange': '#F18701',
+                        'error-red': '#F72585'
+                    },
+                    fontFamily: {
+                        'sans': ['Roboto', 'system-ui'],
+                        'mono': ['Roboto Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="h-full bg-gray-50 font-sans">
+    <!-- Demo Header -->
+    <div class="bg-medical-blue text-white p-4 text-center">
+        <h1 class="text-2xl font-bold">Demo: Dashboard Dokter - Enhanced Features</h1>
+        <p class="text-sm mt-1">Fitur Baru: Tanggal Lahir, Jenis Kelamin, Metode Pembayaran, ICD-10 Autocomplete, Auto Clinical Pathway</p>
+    </div>
+
+    <!-- Demo Instructions -->
+    <div class="max-w-4xl mx-auto p-6">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">🎯 Cara Testing Fitur Baru</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="font-semibold text-medical-blue mb-2">1. Data Pasien Enhanced</h3>
+                    <ul class="text-sm text-gray-700 space-y-1">
+                        <li>✅ Tanggal lahir pasien</li>
+                        <li>✅ Jenis kelamin</li>
+                        <li>✅ Metode pembayaran (BPJS/Swasta/Umum)</li>
+                        <li>✅ Alamat dan nomor telepon</li>
+                        <li>✅ Badge metode pembayaran di card appointment</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-medical-blue mb-2">2. ICD-10 Autocomplete</h3>
+                    <ul class="text-sm text-gray-700 space-y-1">
+                        <li>✅ Ketik "diabetes" atau "E11.9"</li>
+                        <li>✅ Ketik "hipertensi" atau "I10"</li>
+                        <li>✅ Ketik "dispepsia" atau "K30"</li>
+                        <li>✅ Dropdown muncul dengan opsi ICD-10</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-4 p-4 bg-blue-50 rounded-lg">
+                <h3 class="font-semibold text-medical-blue mb-2">3. Auto Clinical Pathway</h3>
+                <p class="text-sm text-gray-700">
+                    Setelah memilih diagnosis ICD-10, clinical pathway akan otomatis muncul berdasarkan:
+                    <br>• Metode pembayaran pasien (BPJS/Swasta/Umum)
+                    <br>• Kode diagnosis yang dipilih
+                    <br>• Template layanan yang tersedia
+                </p>
+            </div>
+        </div>
+
+        <!-- Test Data Preview -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">📋 Data Test</h2>
+            <div class="grid md:grid-cols-3 gap-4">
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h3 class="font-semibold text-medical-blue">Ahmad Budi</h3>
+                    <div class="text-sm text-gray-600 space-y-1 mt-2">
+                        <p>Lahir: 15 Mar 1978</p>
+                        <p>Jenis Kelamin: Laki-laki</p>
+                        <p>Pembayaran: BPJS</p>
+                        <p>Riwayat: Diabetes Type 2</p>
+                    </div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h3 class="font-semibold text-medical-blue">Siti Nuraini</h3>
+                    <div class="text-sm text-gray-600 space-y-1 mt-2">
+                        <p>Lahir: 22 Jun 1987</p>
+                        <p>Jenis Kelamin: Perempuan</p>
+                        <p>Pembayaran: Asuransi Swasta</p>
+                        <p>Riwayat: Dispepsia</p>
+                    </div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h3 class="font-semibold text-medical-blue">Bambang Sutrisno</h3>
+                    <div class="text-sm text-gray-600 space-y-1 mt-2">
+                        <p>Lahir: 8 Des 1971</p>
+                        <p>Jenis Kelamin: Laki-laki</p>
+                        <p>Pembayaran: Umum</p>
+                        <p>Riwayat: Hipertensi</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ICD-10 Quick Reference -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">🔍 ICD-10 Test Cases</h2>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                    <h3 class="font-semibold text-medical-blue mb-2">Ketik ini untuk test autocomplete:</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="bg-gray-50 p-2 rounded"><code>E11.9</code> → Diabetes mellitus tipe 2</div>
+                        <div class="bg-gray-50 p-2 rounded"><code>I10</code> → Hipertensi esensial</div>
+                        <div class="bg-gray-50 p-2 rounded"><code>K30</code> → Dispepsia</div>
+                        <div class="bg-gray-50 p-2 rounded"><code>diabetes</code> → Akan suggest kode diabetes</div>
+                        <div class="bg-gray-50 p-2 rounded"><code>hipertensi</code> → Akan suggest kode hipertensi</div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-medical-blue mb-2">Clinical Pathway akan muncul untuk:</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="bg-green-50 p-2 rounded">✅ BPJS: E11.9, I10</div>
+                        <div class="bg-green-50 p-2 rounded">✅ Asuransi Swasta: E11.9, I10</div>
+                        <div class="bg-green-50 p-2 rounded">✅ Umum: E11.9</div>
+                        <div class="bg-yellow-50 p-2 rounded">⚠️ Diagnosis lain: Standard pathway</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Launch App Button -->
+        <div class="text-center">
+            <a href="index.html" class="inline-block bg-medical-blue text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors shadow-lg">
+                🚀 Launch Dashboard Dokter
+            </a>
+            <p class="text-sm text-gray-600 mt-2">Klik untuk membuka aplikasi dan test fitur-fitur baru</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center py-4 mt-8">
+        <p class="text-sm">Dashboard Dokter v2.0 - Enhanced dengan ICD-10 & Auto Clinical Pathway</p>
+    </footer>
+</body>
+</html>

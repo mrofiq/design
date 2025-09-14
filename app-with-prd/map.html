@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Map - RTLS</title>
+    <style>
+        /* Modern Font Import */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        /* CSS Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #FFFFFF;
+            color: #111827;
+            line-height: 1.5;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Design Tokens */
+        :root {
+            /* Violet-based Color Palette */
+            --primary: #8B5CF6;
+            --primary-hover: #7C3AED;
+            --primary-light: #EDE9FE;
+            --success: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+            --background: #FFFFFF;
+            --surface: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+            --text-muted: #9CA3AF;
+            --border: #E5E7EB;
+            --border-light: #F3F4F6;
+            
+            /* Spacing Scale */
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            
+            /* Border Radius */
+            --radius-sm: 4px;
+            --radius: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Mobile Container */
+        .mobile-container {
+            max-width: 375px;
+            height: 812px;
+            margin: 20px auto;
+            background: var(--background);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            height: 44px;
+            background: var(--background);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 var(--space-4);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            height: 56px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 var(--space-4);
+            flex-shrink: 0;
+        }
+
+        .nav-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .nav-action {
+            width: 24px;
+            height: 24px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            margin-left: var(--space-3);
+        }
+
+        /* Floor Selector */
+        .floor-selector {
+            padding: var(--space-3) var(--space-4);
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+
+        .floor-dropdown {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: var(--space-2) var(--space-3);
+            font-size: 14px;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .floor-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Map Controls */
+        .map-controls {
+            padding: var(--space-3) var(--space-4);
+            background: var(--surface);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            gap: var(--space-2);
+            overflow-x: auto;
+        }
+
+        .control-chip {
+            background: var(--card-bg);
+            color: var(--text-secondary);
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-lg);
+            font-size: 11px;
+            font-weight: 500;
+            white-space: nowrap;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+        }
+
+        .control-chip.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .chip-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .dot-critical { background: var(--danger); }
+        .dot-staff { background: var(--success); }
+        .dot-all { background: var(--text-muted); }
+
+        /* Map Container */
+        .map-container {
+            flex: 1;
+            position: relative;
+            background: var(--surface);
+            overflow: hidden;
+        }
+
+        /* Floor Plan */
+        .floor-plan {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: var(--card-bg);
+            overflow: hidden;
+        }
+
+        /* Floor Plan SVG */
+        .floor-svg {
+            width: 100%;
+            height: 100%;
+            transform: scale(1.2) translate(-10%, -5%);
+        }
+
+        .room-rect {
+            fill: var(--surface);
+            stroke: var(--border);
+            stroke-width: 1;
+        }
+
+        .room-rect.er {
+            fill: #FEF2F2;
+            stroke: var(--danger);
+        }
+
+        .room-rect.icu {
+            fill: #EFF6FF;
+            stroke: var(--info);
+        }
+
+        .room-rect.ward {
+            fill: #F0FDF4;
+            stroke: var(--success);
+        }
+
+        .room-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            fill: var(--text-secondary);
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
+
+        .hallway {
+            fill: var(--background);
+            stroke: var(--border-light);
+            stroke-width: 1;
+        }
+
+        /* Location Pins */
+        .location-pin {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            animation: pulse 2s infinite;
+            transition: all 0.3s ease;
+        }
+
+        /* Pin Container - Now scales with SVG */
+        .pins-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            /* Apply same transform as SVG to scale together */
+            transform: scale(1.2) translate(-10%, -5%);
+        }
+
+        .pins-container .location-pin {
+            pointer-events: all;
+        }
+
+        .pin-patient {
+            background: var(--primary);
+            border: 2px solid white;
+            box-shadow: var(--shadow);
+        }
+
+        .pin-patient.critical {
+            background: var(--danger);
+            animation: pulse-critical 1s infinite;
+        }
+
+        .pin-staff {
+            background: var(--success);
+            border: 2px solid white;
+            box-shadow: var(--shadow);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        @keyframes pulse-critical {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+        }
+
+        /* Pin positioning based on room coordinates in SVG viewBox (320x400) */
+        .location-pin[data-room="ER-12"] {
+            left: 56.25%; /* 180px / 320px */
+            top: 23.75%; /* 95px / 400px */
+        }
+
+        .location-pin[data-room="ICU-05"] {
+            left: 31.25%; /* 100px / 320px */
+            top: 43.125%; /* 172px / 400px */
+        }
+
+        .location-pin[data-room="ICU-03"] {
+            left: 56.25%; /* 180px / 320px */
+            top: 34.375%; /* 137px / 400px */
+        }
+
+        .location-pin[data-room="W-23"] {
+            left: 63.125%; /* 202px / 320px */
+            top: 63.75%; /* 255px / 400px */
+        }
+
+        .location-pin[data-room="ICU-HALL"] {
+            left: 46.875%; /* 150px / 320px */
+            top: 40%; /* 160px / 400px */
+        }
+
+        .location-pin[data-room="HALLWAY"] {
+            left: 50%; /* 160px / 320px */
+            top: 53.75%; /* 215px / 400px */
+        }
+
+        .location-pin[data-room="WARD-HALL"] {
+            left: 40.625%; /* 130px / 320px */
+            top: 70%; /* 280px / 400px */
+        }
+
+        /* Quick Info Card */
+        .quick-info {
+            position: absolute;
+            bottom: var(--space-4);
+            left: var(--space-4);
+            right: var(--space-4);
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            padding: var(--space-4);
+            box-shadow: var(--shadow);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 20;
+        }
+
+        .quick-info.visible {
+            transform: translateY(0);
+        }
+
+        .info-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-bottom: var(--space-3);
+        }
+
+        .info-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 12px;
+        }
+
+        .info-details {
+            flex: 1;
+        }
+
+        .info-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-1);
+        }
+
+        .info-room {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .info-close {
+            width: 20px;
+            height: 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .info-status {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-3);
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-critical { background: var(--danger); }
+        .status-stable { background: var(--success); }
+
+        .status-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .info-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+
+        .info-action {
+            flex: 1;
+            padding: var(--space-2);
+            border-radius: var(--radius);
+            font-size: 11px;
+            font-weight: 500;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-secondary);
+        }
+
+        .info-action.primary {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Map Legend */
+        .map-legend {
+            position: absolute;
+            top: var(--space-4);
+            right: var(--space-4);
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: var(--space-3);
+            box-shadow: var(--shadow-sm);
+            z-index: 15;
+        }
+
+        .legend-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-2);
+            text-transform: uppercase;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-1);
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            border: 1px solid white;
+        }
+
+        /* Zoom Controls */
+        .zoom-controls {
+            position: absolute;
+            bottom: var(--space-4);
+            right: var(--space-4);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-1);
+            z-index: 15;
+        }
+
+        .zoom-btn {
+            width: 36px;
+            height: 36px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+            color: var(--text-secondary);
+        }
+
+        .zoom-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            height: 56px;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 var(--space-4);
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-1);
+            padding: var(--space-1);
+            cursor: pointer;
+            transition: color 0.2s ease;
+            flex: 1;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item:not(.active) {
+            color: var(--text-muted);
+        }
+
+        .nav-item-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .nav-item-label {
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        /* Alert Indicator */
+        .alert-indicator {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 12px;
+            height: 12px;
+            background: var(--danger);
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 400px) {
+            .mobile-container {
+                margin: 10px;
+                max-width: calc(100vw - 20px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>🔋 100%</span>
+        </div>
+
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="nav-title">Hospital Map</div>
+            <svg class="nav-action" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <svg class="nav-action" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+            </svg>
+        </div>
+
+        <!-- Floor Selector -->
+        <div class="floor-selector">
+            <div class="floor-dropdown">
+                <svg class="floor-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19.5 21a3 3 0 003-3v-4.5a3 3 0 00-3-3h-15a3 3 0 00-3 3V18a3 3 0 003 3h15zM1.5 10.146V6a3 3 0 013-3h15a3 3 0 013 3v4.146a4.483 4.483 0 00-3 .854v-4.146A1.5 1.5 0 0018 5.5H4.5A1.5 1.5 0 003 7v3.146a4.483 4.483 0 00-1.5-.146z"/>
+                </svg>
+                <span>Ground Floor - Emergency & ICU</span>
+                <svg style="width: 12px; height: 12px; margin-left: auto;" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M7 10l5 5 5-5z"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Map Controls -->
+        <div class="map-controls">
+            <div class="control-chip active">
+                <div class="chip-dot dot-all"></div>
+                <span>All Locations</span>
+            </div>
+            <div class="control-chip">
+                <div class="chip-dot dot-critical"></div>
+                <span>Critical Only</span>
+            </div>
+            <div class="control-chip">
+                <span>My Patients</span>
+            </div>
+            <div class="control-chip">
+                <div class="chip-dot dot-staff"></div>
+                <span>Show Staff</span>
+            </div>
+        </div>
+
+        <!-- Map Container -->
+        <div class="map-container">
+            <!-- Floor Plan -->
+            <div class="floor-plan">
+                <svg class="floor-svg" viewBox="0 0 320 400" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Hallways -->
+                    <rect class="hallway" x="50" y="50" width="220" height="30"/>
+                    <rect class="hallway" x="50" y="80" width="30" height="240"/>
+                    <rect class="hallway" x="80" y="200" width="190" height="30"/>
+                    <rect class="hallway" x="240" y="80" width="30" height="120"/>
+                    
+                    <!-- Emergency Rooms -->
+                    <rect class="room-rect er" x="80" y="80" width="40" height="30"/>
+                    <text class="room-text" x="100" y="95">ER-10</text>
+                    
+                    <rect class="room-rect er" x="120" y="80" width="40" height="30"/>
+                    <text class="room-text" x="140" y="95">ER-11</text>
+                    
+                    <rect class="room-rect er" x="160" y="80" width="40" height="30"/>
+                    <text class="room-text" x="180" y="95">ER-12</text>
+                    
+                    <rect class="room-rect er" x="200" y="80" width="40" height="30"/>
+                    <text class="room-text" x="220" y="95">ER-13</text>
+                    
+                    <!-- ICU Rooms -->
+                    <rect class="room-rect icu" x="80" y="120" width="40" height="35"/>
+                    <text class="room-text" x="100" y="137">ICU-01</text>
+                    
+                    <rect class="room-rect icu" x="120" y="120" width="40" height="35"/>
+                    <text class="room-text" x="140" y="137">ICU-02</text>
+                    
+                    <rect class="room-rect icu" x="160" y="120" width="40" height="35"/>
+                    <text class="room-text" x="180" y="137">ICU-03</text>
+                    
+                    <rect class="room-rect icu" x="200" y="120" width="40" height="35"/>
+                    <text class="room-text" x="220" y="137">ICU-04</text>
+                    
+                    <rect class="room-rect icu" x="80" y="155" width="40" height="35"/>
+                    <text class="room-text" x="100" y="172">ICU-05</text>
+                    
+                    <!-- Ward Rooms -->
+                    <rect class="room-rect ward" x="80" y="240" width="35" height="30"/>
+                    <text class="room-text" x="97" y="255">W-20</text>
+                    
+                    <rect class="room-rect ward" x="115" y="240" width="35" height="30"/>
+                    <text class="room-text" x="132" y="255">W-21</text>
+                    
+                    <rect class="room-rect ward" x="150" y="240" width="35" height="30"/>
+                    <text class="room-text" x="167" y="255">W-22</text>
+                    
+                    <rect class="room-rect ward" x="185" y="240" width="35" height="30"/>
+                    <text class="room-text" x="202" y="255">W-23</text>
+                    
+                    <rect class="room-rect ward" x="220" y="240" width="35" height="30"/>
+                    <text class="room-text" x="237" y="255">W-24</text>
+                </svg>
+                
+                <!-- Location Pins Container -->
+                <div class="pins-container" id="pinsContainer">
+                    <!-- Patient Pins -->
+                    <div class="location-pin pin-patient critical" data-room="ER-12" onclick="showQuickInfo('Ahmad, R', 'ER-12', 'critical')">AR</div>
+                    <div class="location-pin pin-patient" data-room="ICU-05" onclick="showQuickInfo('Smith, M', 'ICU-05', 'stable')">SM</div>
+                    <div class="location-pin pin-patient" data-room="ICU-03" onclick="showQuickInfo('Brown, K', 'ICU-03', 'stable')">KB</div>
+                    <div class="location-pin pin-patient" data-room="W-23" onclick="showQuickInfo('Garcia, T', 'W-23', 'stable')">TG</div>
+                    
+                    <!-- Staff Pins -->
+                    <div class="location-pin pin-staff" data-room="ICU-HALL" onclick="showQuickInfo('Nurse Davis', 'ICU Unit', 'staff')">ND</div>
+                    <div class="location-pin pin-staff" data-room="HALLWAY" onclick="showQuickInfo('Dr. Johnson', 'Round', 'staff')">DJ</div>
+                    <div class="location-pin pin-staff" data-room="WARD-HALL" onclick="showQuickInfo('Nurse Wilson', 'Ward', 'staff')">NW</div>
+                </div>
+            </div>
+
+            <!-- Map Legend -->
+            <div class="map-legend">
+                <div class="legend-title">Legend</div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--danger);"></div>
+                    <span>Critical Patient</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--primary);"></div>
+                    <span>Stable Patient</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--success);"></div>
+                    <span>Staff Member</span>
+                </div>
+            </div>
+
+            <!-- Zoom Controls -->
+            <div class="zoom-controls">
+                <div class="zoom-btn" onclick="zoomIn()">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                    </svg>
+                </div>
+                <div class="zoom-btn" onclick="zoomOut()">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Quick Info Card -->
+            <div class="quick-info" id="quickInfo">
+                <div class="info-header">
+                    <div class="info-avatar" id="infoAvatar">AR</div>
+                    <div class="info-details">
+                        <div class="info-name" id="infoName">Ahmad, R</div>
+                        <div class="info-room" id="infoRoom">ER-12 • Last seen: 2m ago</div>
+                    </div>
+                    <svg class="info-close" fill="none" stroke="currentColor" viewBox="0 0 24 24" onclick="hideQuickInfo()">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </div>
+                
+                <div class="info-status" id="infoStatus">
+                    <div class="status-indicator status-critical"></div>
+                    <span class="status-text">Critical - Sepsis protocol active</span>
+                </div>
+                
+                <div class="info-actions">
+                    <div class="info-action">Call</div>
+                    <div class="info-action">Message</div>
+                    <div class="info-action primary">View Patient</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 1v4m8-4v4"/>
+                </svg>
+                <span class="nav-item-label">Dashboard</span>
+            </div>
+            
+            <div class="nav-item">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                <span class="nav-item-label">Patients</span>
+            </div>
+            
+            <div class="nav-item active">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                <span class="nav-item-label">Map</span>
+            </div>
+            
+            <div class="nav-item">
+                <div style="position: relative;">
+                    <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5-5-5h5v-12z"/>
+                    </svg>
+                    <div class="alert-indicator"></div>
+                </div>
+                <span class="nav-item-label">Alerts</span>
+            </div>
+            
+            <div class="nav-item">
+                <svg class="nav-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+                </svg>
+                <span class="nav-item-label">More</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quick info functionality
+        function showQuickInfo(name, location, status) {
+            const quickInfo = document.getElementById('quickInfo');
+            const avatar = document.getElementById('infoAvatar');
+            const nameEl = document.getElementById('infoName');
+            const roomEl = document.getElementById('infoRoom');
+            const statusEl = document.getElementById('infoStatus');
+            
+            // Update content
+            avatar.textContent = name.split(' ').map(n => n[0]).join('');
+            nameEl.textContent = name;
+            
+            if (status === 'staff') {
+                roomEl.textContent = `${location} • Active now`;
+                statusEl.innerHTML = '<div class="status-indicator status-stable"></div><span class="status-text">On duty - Available</span>';
+            } else {
+                roomEl.textContent = `${location} • Last seen: 2m ago`;
+                if (status === 'critical') {
+                    statusEl.innerHTML = '<div class="status-indicator status-critical"></div><span class="status-text">Critical - Sepsis protocol active</span>';
+                } else {
+                    statusEl.innerHTML = '<div class="status-indicator status-stable"></div><span class="status-text">Stable - Routine monitoring</span>';
+                }
+            }
+            
+            // Show the card
+            quickInfo.classList.add('visible');
+        }
+        
+        function hideQuickInfo() {
+            document.getElementById('quickInfo').classList.remove('visible');
+        }
+        
+        // Zoom functionality
+        let zoomLevel = 1.2;
+        
+        function zoomIn() {
+            zoomLevel = Math.min(zoomLevel + 0.2, 2.0);
+            updateZoom();
+        }
+        
+        function zoomOut() {
+            zoomLevel = Math.max(zoomLevel - 0.2, 0.8);
+            updateZoom();
+        }
+        
+        function updateZoom() {
+            const floorSvg = document.querySelector('.floor-svg');
+            const pinsContainer = document.querySelector('.pins-container');
+            const translateX = -10 - (zoomLevel - 1.2) * 5;
+            const translateY = -5 - (zoomLevel - 1.2) * 5;
+            
+            // Apply same transform to both SVG and pins
+            const transform = `scale(${zoomLevel}) translate(${translateX}%, ${translateY}%)`;
+            floorSvg.style.transform = transform;
+            pinsContainer.style.transform = transform;
+        }
+        
+        // Close quick info when clicking outside
+        document.addEventListener('click', function(e) {
+            const quickInfo = document.getElementById('quickInfo');
+            if (!quickInfo.contains(e.target) && !e.target.classList.contains('location-pin')) {
+                hideQuickInfo();
+            }
+        });
+    </script>
+</body>
+</html>

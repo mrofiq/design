@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Records - Patient Journey</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f8f9fa;
+            color: #1a1a1a;
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 390px;
+            margin: 0 auto;
+            background: #fff;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Content */
+        .content {
+            padding: 60px 20px 100px;
+        }
+
+        /* Patient Profile */
+        .patient-profile {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+            padding-top: 20px;
+        }
+
+        .patient-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            overflow: hidden;
+        }
+
+        .patient-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .patient-name {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        /* Medical Records Title */
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            position: relative;
+            padding-bottom: 8px;
+        }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: #4f46e5;
+            border-radius: 2px;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            color: #4f46e5;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        /* Item Cards */
+        .item-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            overflow: hidden;
+        }
+
+        .item-row {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            gap: 12px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .item-row:last-child {
+            border-bottom: none;
+        }
+
+        .item-icon {
+            width: 20px;
+            height: 20px;
+            color: #666;
+        }
+
+        .item-content {
+            flex: 1;
+        }
+
+        .item-name {
+            font-size: 15px;
+            font-weight: 500;
+            color: #1a1a1a;
+            margin-bottom: 2px;
+        }
+
+        .item-details {
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Severity Indicators */
+        .severity-indicators {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .severity-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #d1d5db;
+        }
+
+        .severity-dot.active {
+            background-color: #ef4444;
+        }
+
+        .severity-dot.confirmed {
+            background-color: #22c55e;
+        }
+
+        .severity-check {
+            color: #22c55e;
+            font-size: 16px;
+        }
+
+        /* Status Indicators */
+        .status-indicator {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .status-indicator.success {
+            background: #dcfce7;
+            color: #22c55e;
+        }
+
+        .status-indicator.info {
+            background: #dbeafe;
+            color: #3b82f6;
+        }
+
+        /* Action Menu */
+        .action-menu {
+            color: #666;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .action-menu:hover {
+            color: #1a1a1a;
+        }
+
+        /* Medications styling */
+        .medication-row {
+            background: #f0fdf4;
+            border-left: 4px solid #22c55e;
+        }
+
+        /* Lab Results */
+        .lab-result-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .lab-result-icon {
+            width: 24px;
+            height: 24px;
+            color: #4f46e5;
+            margin-right: 12px;
+        }
+
+        .lab-result-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .lab-result-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .lab-result-details {
+            flex: 1;
+        }
+
+        .lab-result-name {
+            font-size: 15px;
+            font-weight: 500;
+            color: #1a1a1a;
+            margin-bottom: 2px;
+        }
+
+        .lab-result-value {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .lab-date {
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f3f4f6;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 390px;
+            background: #fff;
+            border-top: 1px solid #e5e7eb;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-around;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: #666;
+            cursor: pointer;
+            transition: color 0.2s;
+            text-decoration: none;
+        }
+
+        .nav-item.active {
+            color: #20b2aa;
+        }
+
+        .nav-item:hover {
+            color: #20b2aa;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 320px) {
+            .container {
+                max-width: 100%;
+            }
+            
+            .content {
+                padding: 50px 16px 100px;
+            }
+            
+            .patient-avatar {
+                width: 56px;
+                height: 56px;
+                font-size: 20px;
+            }
+            
+            .patient-name {
+                font-size: 20px;
+            }
+        }
+
+        /* Animation effects */
+        .item-card {
+            transition: all 0.2s ease;
+        }
+
+        .item-card:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .item-row {
+            transition: background-color 0.2s ease;
+        }
+
+        .item-row:hover {
+            background-color: #f9fafb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Content -->
+        <div class="content">
+            <!-- Patient Profile -->
+            <div class="patient-profile">
+                <div class="patient-avatar">
+                    MR
+                </div>
+                <h1 class="patient-name">Maria Rodriguez</h1>
+            </div>
+
+            <!-- Page Title -->
+            <h2 class="page-title">Medical Records</h2>
+
+            <!-- Allergies Section -->
+            <div class="section">
+                <div class="section-header">
+                    <i class="fas fa-exclamation-triangle section-icon"></i>
+                    <h3 class="section-title">Allergies</h3>
+                </div>
+
+                <div class="item-card">
+                    <div class="item-row">
+                        <i class="fas fa-seedling item-icon"></i>
+                        <div class="item-content">
+                            <div class="item-name">Pollen</div>
+                        </div>
+                        <div class="severity-indicators">
+                            <div class="severity-dot"></div>
+                            <div class="severity-dot"></div>
+                            <div class="severity-dot"></div>
+                            <i class="fas fa-check severity-check"></i>
+                        </div>
+                    </div>
+
+                    <div class="item-row">
+                        <i class="fas fa-capsules item-icon"></i>
+                        <div class="item-content">
+                            <div class="item-name">Penicillin</div>
+                        </div>
+                        <div class="severity-indicators">
+                            <div class="severity-dot"></div>
+                            <div class="severity-dot"></div>
+                            <div class="severity-dot"></div>
+                            <div class="severity-dot"></div>
+                        </div>
+                    </div>
+
+                    <div class="item-row">
+                        <i class="fas fa-home item-icon"></i>
+                        <div class="item-content">
+                            <div class="item-name">Dust Mites</div>
+                        </div>
+                        <div class="severity-indicators">
+                            <div class="severity-dot"></div>
+                            <div class="severity-dot"></div>
+                            <div class="severity-dot"></div>
+                            <div class="severity-dot"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Medications Section -->
+            <div class="section">
+                <div class="section-header">
+                    <i class="fas fa-pills section-icon"></i>
+                    <h3 class="section-title">Medications</h3>
+                </div>
+
+                <div class="item-card">
+                    <div class="item-row medication-row">
+                        <i class="fas fa-tablets item-icon"></i>
+                        <div class="item-content">
+                            <div class="item-name">Ibuprofen (as needed)</div>
+                            <div class="item-details">Lisinopril (10mt daily)</div>
+                        </div>
+                        <div class="status-indicator success">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conditions Section -->
+            <div class="section">
+                <div class="section-header">
+                    <i class="fas fa-heart section-icon"></i>
+                    <h3 class="section-title">Conditions</h3>
+                </div>
+
+                <div class="item-card">
+                    <div class="item-row">
+                        <i class="fas fa-heartbeat item-icon"></i>
+                        <div class="item-content">
+                            <div class="item-name">Type 2 Diabetes</div>
+                            <div class="item-details">Hypertension</div>
+                        </div>
+                        <div class="action-menu">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Lab Results Section -->
+            <div class="section">
+                <div class="section-header">
+                    <i class="fas fa-flask section-icon"></i>
+                    <h3 class="section-title">Recent Lab Results</h3>
+                </div>
+
+                <div class="lab-result-card">
+                    <div class="lab-result-item">
+                        <i class="fas fa-tint lab-result-icon"></i>
+                        <div class="lab-result-details">
+                            <div class="lab-result-name">Blood Sugar: 120 mg/dL (Normal)</div>
+                            <div class="lab-result-value">Cholesterol: 180 mg/dL (Normal)</div>
+                        </div>
+                    </div>
+                    <div class="lab-date">10/26/2023</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <a href="index.html" class="nav-item">
+                <i class="fas fa-home nav-icon"></i>
+                <span class="nav-label">Home</span>
+            </a>
+            <a href="schedule.html" class="nav-item">
+                <i class="fas fa-calendar nav-icon"></i>
+                <span class="nav-label">Schedule</span>
+            </a>
+            <div class="nav-item active">
+                <i class="fas fa-clipboard nav-icon"></i>
+                <span class="nav-label">Records</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-chart-line nav-icon"></i>
+                <span class="nav-label">Analytics</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-user nav-icon"></i>
+                <span class="nav-label">Profile</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navigation functionality
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    if (!this.href) {
+                        e.preventDefault();
+                        navItems.forEach(nav => nav.classList.remove('active'));
+                        this.classList.add('active');
+                    }
+                });
+            });
+
+            // Action menu functionality
+            const actionMenus = document.querySelectorAll('.action-menu');
+            actionMenus.forEach(menu => {
+                menu.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    // Show action options (placeholder)
+                    console.log('Action menu clicked for condition');
+                    
+                    // Visual feedback
+                    this.style.transform = 'scale(0.9)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 100);
+                });
+            });
+
+            // Item row interactions
+            const itemRows = document.querySelectorAll('.item-row');
+            itemRows.forEach(row => {
+                row.addEventListener('click', function() {
+                    const itemName = this.querySelector('.item-name').textContent;
+                    console.log(`Clicked on: ${itemName}`);
+                    
+                    // Could show detailed information
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 100);
+                });
+            });
+
+            // Severity indicators interaction (for educational purposes)
+            const severityIndicators = document.querySelectorAll('.severity-indicators');
+            severityIndicators.forEach(indicator => {
+                indicator.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const dots = this.querySelectorAll('.severity-dot');
+                    const activeDots = this.querySelectorAll('.severity-dot.active');
+                    console.log(`Severity level: ${activeDots.length}/4`);
+                });
+            });
+
+            // Lab results interaction
+            const labResultCard = document.querySelector('.lab-result-card');
+            if (labResultCard) {
+                labResultCard.addEventListener('click', function() {
+                    console.log('Lab results clicked - could show detailed results');
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                });
+            }
+
+            // Patient avatar interaction
+            const patientAvatar = document.querySelector('.patient-avatar');
+            patientAvatar.addEventListener('click', function() {
+                console.log('Patient profile clicked');
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 100);
+            });
+        });
+    </script>
+</body>
+</html>
