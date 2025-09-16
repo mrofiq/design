@@ -1,0 +1,863 @@
+/* ===================================
+   RESPONSIVE DESIGN SYSTEM
+   Based on breakpoints: Mobile (<768px), Tablet (≥768px), Desktop (≥1280px)
+   =================================== */
+
+/* ===================================
+   RESPONSIVE UTILITIES
+   =================================== */
+
+/* Hide/Show elements at different breakpoints */
+.mobile-only {
+  display: block;
+}
+
+.tablet-up {
+  display: none;
+}
+
+.desktop-only {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .mobile-only {
+    display: none;
+  }
+
+  .tablet-up {
+    display: block;
+  }
+}
+
+@media (min-width: 1280px) {
+  .desktop-only {
+    display: block;
+  }
+}
+
+/* ===================================
+   MOBILE-FIRST BASE STYLES (< 768px)
+   =================================== */
+
+/* Typography scaling for mobile */
+body {
+  font-size: var(--font-size-base);
+}
+
+h1 {
+  font-size: var(--font-size-2xl);
+}
+
+h2 {
+  font-size: var(--font-size-xl);
+}
+
+h3 {
+  font-size: var(--font-size-lg);
+}
+
+/* Container spacing for mobile */
+.container {
+  padding: 0 var(--spacing-md);
+}
+
+/* Stack navigation vertically on mobile */
+.header-nav {
+  flex-direction: row;
+  gap: var(--spacing-sm);
+}
+
+/* Mobile button sizing */
+.btn {
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-base);
+  min-height: 48px; /* Larger touch targets on mobile */
+}
+
+.btn-sm {
+  min-height: 40px;
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+/* Form elements mobile optimization */
+.form-input,
+.form-textarea,
+.form-select {
+  padding: var(--spacing-md);
+  font-size: 16px; /* Prevent zoom on iOS */
+  min-height: 48px;
+}
+
+/* Card spacing for mobile */
+.card {
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* Mobile modal adjustments */
+.modal-content {
+  width: 95%;
+  margin: var(--spacing-md);
+  max-height: calc(100vh - 2rem);
+}
+
+.accessibility-panel {
+  width: 100%;
+  right: -100%;
+}
+
+/* ===================================
+   LANDING PAGE MOBILE
+   =================================== */
+.welcome-card {
+  padding: var(--spacing-xl);
+  margin: var(--spacing-md);
+}
+
+.session-form {
+  text-align: left;
+}
+
+.demo-buttons {
+  grid-template-columns: 1fr;
+  gap: var(--spacing-sm);
+}
+
+/* ===================================
+   PRE-TRAINING MOBILE
+   =================================== */
+.session-header {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+}
+
+.countdown-timer {
+  min-width: auto;
+  width: 100%;
+  max-width: 250px;
+}
+
+.pre-training-content {
+  grid-template-columns: 1fr;
+  gap: var(--spacing-xl);
+}
+
+.agenda-item {
+  flex-direction: column;
+  text-align: center;
+  gap: var(--spacing-sm);
+}
+
+.agenda-time {
+  min-width: auto;
+  align-self: stretch;
+}
+
+.resource-card {
+  flex-direction: column;
+  text-align: center;
+  padding: var(--spacing-lg);
+}
+
+.resource-icon {
+  width: auto;
+}
+
+/* ===================================
+   IN-TRAINING MOBILE
+   =================================== */
+.training-layout {
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+}
+
+.training-main {
+  order: 1;
+}
+
+.training-sidebar {
+  order: 2;
+}
+
+/* Slide viewer mobile */
+.slide-header {
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  text-align: center;
+}
+
+.slide-container {
+  padding: var(--spacing-lg);
+  min-height: 300px;
+}
+
+.slide-controls {
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+/* Feedback bar mobile */
+.feedback-buttons {
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-sm);
+}
+
+.feedback-btn {
+  min-width: auto;
+  min-height: 70px;
+  padding: var(--spacing-sm);
+}
+
+.feedback-icon {
+  font-size: var(--font-size-xl);
+}
+
+.feedback-label {
+  font-size: var(--font-size-xs);
+}
+
+/* Code panel mobile */
+.code-tabs {
+  flex-direction: row;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+}
+
+.code-header {
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  align-items: flex-start;
+}
+
+/* Q&A mobile */
+.qa-section {
+  max-height: 500px;
+}
+
+.qa-input {
+  min-height: 100px;
+}
+
+.qa-input-footer {
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  align-items: stretch;
+}
+
+.question-item {
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.question-actions {
+  flex-direction: row;
+  align-self: flex-end;
+}
+
+.upvote-btn {
+  flex-direction: row;
+  min-width: auto;
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+/* Help button mobile */
+.help-btn {
+  bottom: var(--spacing-lg);
+  right: var(--spacing-lg);
+  width: 56px;
+  height: 56px;
+}
+
+/* ===================================
+   POST-TRAINING MOBILE
+   =================================== */
+.completion-banner {
+  padding: var(--spacing-xl);
+  text-align: center;
+}
+
+.completion-title {
+  font-size: var(--font-size-2xl);
+}
+
+.certificate-card {
+  flex-direction: column;
+  text-align: center;
+  gap: var(--spacing-lg);
+}
+
+.certificate-actions {
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.rating-stars {
+  justify-content: center;
+  gap: var(--spacing-xs);
+}
+
+.star-label {
+  font-size: var(--font-size-2xl);
+  padding: var(--spacing-sm);
+}
+
+.next-steps-grid {
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+}
+
+/* ===================================
+   TRAINER DASHBOARD MOBILE
+   =================================== */
+.trainer-header {
+  flex-direction: column;
+  gap: var(--spacing-md);
+  text-align: center;
+}
+
+.session-controls {
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  width: 100%;
+}
+
+.trainer-content {
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+}
+
+.current-slide-preview {
+  flex-direction: column;
+  text-align: center;
+}
+
+.slide-navigation {
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.feedback-stats {
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.participants-list {
+  max-height: 200px;
+}
+
+.trainer-actions {
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}
+
+/* ===================================
+   TABLET STYLES (≥ 768px)
+   =================================== */
+@media (min-width: 768px) {
+  /* Typography scaling for tablet */
+  h1 {
+    font-size: var(--font-size-3xl);
+  }
+
+  h2 {
+    font-size: var(--font-size-2xl);
+  }
+
+  h3 {
+    font-size: var(--font-size-xl);
+  }
+
+  /* Container spacing for tablet */
+  .container {
+    padding: 0 var(--spacing-xl);
+  }
+
+  /* Button sizing for tablet */
+  .btn {
+    min-height: 44px;
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  /* Form elements tablet optimization */
+  .form-input,
+  .form-textarea,
+  .form-select {
+    font-size: var(--font-size-base);
+    min-height: 44px;
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  /* ===================================
+     LANDING PAGE TABLET
+     =================================== */
+  .welcome-card {
+    max-width: 600px;
+    padding: var(--spacing-2xl);
+  }
+
+  .demo-buttons {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 400px;
+  }
+
+  /* ===================================
+     PRE-TRAINING TABLET
+     =================================== */
+  .session-header {
+    flex-direction: row;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .countdown-timer {
+    min-width: 200px;
+  }
+
+  .agenda-item {
+    flex-direction: row;
+    text-align: left;
+  }
+
+  .agenda-time {
+    min-width: 120px;
+  }
+
+  .resource-card {
+    flex-direction: row;
+    text-align: left;
+  }
+
+  .resources-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  /* ===================================
+     IN-TRAINING TABLET
+     =================================== */
+  .training-layout {
+    grid-template-columns: 2fr 1fr;
+    gap: var(--spacing-xl);
+  }
+
+  .training-main {
+    order: initial;
+  }
+
+  .training-sidebar {
+    order: initial;
+  }
+
+  .slide-header {
+    flex-direction: row;
+    text-align: left;
+  }
+
+  .slide-container {
+    padding: var(--spacing-xl);
+    min-height: 400px;
+  }
+
+  .slide-controls {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .feedback-buttons {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+    justify-content: center;
+  }
+
+  .feedback-btn {
+    min-width: 100px;
+    min-height: 80px;
+    flex-direction: column;
+  }
+
+  .feedback-icon {
+    font-size: var(--font-size-2xl);
+  }
+
+  .feedback-label {
+    font-size: var(--font-size-sm);
+  }
+
+  .code-header {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .qa-section {
+    max-height: 600px;
+  }
+
+  .qa-input-footer {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .question-item {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .question-actions {
+    flex-direction: column;
+    align-self: flex-start;
+  }
+
+  .upvote-btn {
+    flex-direction: column;
+    min-width: 50px;
+  }
+
+  /* ===================================
+     POST-TRAINING TABLET
+     =================================== */
+  .certificate-card {
+    flex-direction: row;
+    text-align: left;
+  }
+
+  .certificate-actions {
+    flex-direction: row;
+  }
+
+  .next-steps-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  /* ===================================
+     TRAINER DASHBOARD TABLET
+     =================================== */
+  .trainer-header {
+    flex-direction: row;
+    text-align: left;
+  }
+
+  .session-controls {
+    flex-direction: row;
+    width: auto;
+  }
+
+  .trainer-content {
+    grid-template-columns: 2fr 1fr;
+  }
+
+  .current-slide-preview {
+    flex-direction: row;
+    text-align: left;
+  }
+
+  .slide-navigation {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .feedback-stats {
+    flex-direction: row;
+  }
+
+  .participants-list {
+    max-height: 300px;
+  }
+
+  .trainer-actions {
+    flex-wrap: nowrap;
+  }
+}
+
+/* ===================================
+   DESKTOP STYLES (≥ 1280px)
+   =================================== */
+@media (min-width: 1280px) {
+  /* Typography scaling for desktop */
+  h1 {
+    font-size: var(--font-size-4xl);
+  }
+
+  h2 {
+    font-size: var(--font-size-3xl);
+  }
+
+  h3 {
+    font-size: var(--font-size-2xl);
+  }
+
+  /* Container spacing for desktop */
+  .container {
+    padding: 0 var(--spacing-2xl);
+  }
+
+  /* ===================================
+     LANDING PAGE DESKTOP
+     =================================== */
+  .welcome-card {
+    max-width: 700px;
+    padding: var(--spacing-3xl);
+  }
+
+  .demo-buttons {
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 600px;
+  }
+
+  /* ===================================
+     PRE-TRAINING DESKTOP
+     =================================== */
+  .pre-training-content {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "agenda expectations"
+      "resources resources";
+    max-width: 1000px;
+  }
+
+  .agenda-section {
+    grid-area: agenda;
+  }
+
+  .expectations-section {
+    grid-area: expectations;
+  }
+
+  .resources-section {
+    grid-area: resources;
+  }
+
+  /* ===================================
+     IN-TRAINING DESKTOP
+     =================================== */
+  .training-layout {
+    grid-template-columns: 2fr 1fr;
+    gap: var(--spacing-2xl);
+  }
+
+  .slide-container {
+    min-height: 500px;
+  }
+
+  .feedback-buttons {
+    gap: var(--spacing-xl);
+  }
+
+  .feedback-btn {
+    min-width: 120px;
+    min-height: 100px;
+  }
+
+  /* ===================================
+     POST-TRAINING DESKTOP
+     =================================== */
+  .post-training-content {
+    max-width: 900px;
+  }
+
+  .completion-banner {
+    padding: var(--spacing-3xl) var(--spacing-2xl);
+  }
+
+  /* ===================================
+     TRAINER DASHBOARD DESKTOP
+     =================================== */
+  .trainer-content {
+    grid-template-columns: 2fr 1fr;
+    gap: var(--spacing-2xl);
+  }
+
+  .current-slide-preview {
+    gap: var(--spacing-xl);
+  }
+
+  .slide-thumbnail img {
+    width: 400px;
+    height: 250px;
+    object-fit: cover;
+  }
+}
+
+/* ===================================
+   ACCESSIBILITY RESPONSIVE
+   =================================== */
+
+/* High contrast adjustments */
+@media (prefers-contrast: high) {
+  .btn {
+    border-width: 2px;
+  }
+
+  .form-input:focus,
+  .form-textarea:focus,
+  .form-select:focus {
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.3);
+  }
+
+  .question-item {
+    border-width: 2px;
+  }
+}
+
+/* Reduced motion adjustments */
+@media (prefers-reduced-motion: reduce) {
+  .modal-content,
+  .accessibility-panel,
+  .help-btn,
+  .feedback-btn {
+    transition: none;
+  }
+
+  .loading-spinner {
+    animation: none;
+    border: 4px solid var(--color-primary);
+  }
+}
+
+/* Large text adjustments */
+@media (min-width: 768px) {
+  [data-font-size="large"] {
+    .btn {
+      padding: var(--spacing-md) var(--spacing-lg);
+    }
+
+    .form-input,
+    .form-textarea {
+      padding: var(--spacing-md) var(--spacing-lg);
+    }
+  }
+
+  [data-font-size="extra-large"] {
+    .btn {
+      padding: var(--spacing-lg) var(--spacing-xl);
+    }
+
+    .form-input,
+    .form-textarea {
+      padding: var(--spacing-lg) var(--spacing-xl);
+    }
+  }
+}
+
+/* ===================================
+   PRINT STYLES
+   =================================== */
+@media print {
+  .app-header,
+  .app-footer,
+  .help-btn,
+  .accessibility-panel,
+  .demo-section {
+    display: none;
+  }
+
+  .screen:not(.active) {
+    display: none;
+  }
+
+  body {
+    font-size: 12pt;
+    line-height: 1.4;
+    color: #000;
+    background: #fff;
+  }
+
+  .container {
+    max-width: none;
+    padding: 0;
+  }
+
+  .card,
+  .welcome-card {
+    border: 1px solid #000;
+    box-shadow: none;
+    page-break-inside: avoid;
+  }
+
+  .btn {
+    border: 1px solid #000;
+    background: #fff;
+    color: #000;
+  }
+
+  .slide-content {
+    page-break-inside: avoid;
+  }
+
+  .question-item {
+    page-break-inside: avoid;
+    border: 1px solid #000;
+    margin-bottom: 12pt;
+  }
+}
+
+/* ===================================
+   ORIENTATION CHANGES
+   =================================== */
+@media (orientation: landscape) and (max-height: 500px) {
+  .session-header {
+    padding: var(--spacing-md);
+  }
+
+  .completion-banner {
+    padding: var(--spacing-lg);
+  }
+
+  .completion-icon {
+    font-size: 2rem;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .modal-content {
+    max-height: 95vh;
+  }
+}
+
+/* ===================================
+   TOUCH DEVICE OPTIMIZATIONS
+   =================================== */
+@media (hover: none) and (pointer: coarse) {
+  /* Larger touch targets for touch devices */
+  .btn {
+    min-height: 48px;
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+
+  .form-input,
+  .form-textarea,
+  .form-select {
+    min-height: 48px;
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+
+  .upvote-btn {
+    min-width: 48px;
+    min-height: 48px;
+  }
+
+  .tab-btn {
+    min-height: 48px;
+  }
+
+  /* Remove hover states on touch devices */
+  .feedback-btn:hover,
+  .resource-card:hover,
+  .question-item:hover,
+  .upvote-btn:hover {
+    transform: none;
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Adjust scrollable areas for touch */
+  .qa-list,
+  .participants-list,
+  .qa-management {
+    padding-bottom: var(--spacing-xl);
+  }
+}
