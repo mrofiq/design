@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DevDash Developer Dashboard - Personal performance metrics and daily productivity tracking">
+    <title>DevDash - Developer Dashboard</title>
+    
+    <!-- CSS Framework and Custom Styles -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="assets/css/dashboard.css" rel="stylesheet">
+    
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Accessibility and SEO -->
+    <meta name="theme-color" content="#1f2937">
+    <link rel="icon" href="assets/images/favicon.ico">
+    
+    <style>
+        .hero-metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        
+        .hero-metric-card::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        .hero-value {
+            font-size: 4rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+        
+        .hero-label {
+            font-size: 1.25rem;
+            font-weight: 500;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+        
+        .hero-trend {
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .daily-goal-card {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            position: relative;
+        }
+        
+        .goal-progress-ring {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .goal-progress-text {
+            position: absolute;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .current-work-section {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+        
+        .work-item {
+            background: #f9fafb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 0.75rem 0;
+            border-left: 4px solid #e5e7eb;
+            transition: all 0.2s ease;
+        }
+        
+        .work-item.in-progress {
+            border-left-color: #f59e0b;
+            background: #fefbf0;
+        }
+        
+        .work-item.completed {
+            border-left-color: #10b981;
+            background: #f0fdf4;
+        }
+        
+        .work-item.blocked {
+            border-left-color: #ef4444;
+            background: #fef2f2;
+        }
+        
+        .achievement-badge {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            margin: 0.25rem;
+            box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+        }
+        
+        .motivational-card {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            margin: 1rem 0;
+        }
+        
+        .streak-counter {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .personal-record {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 0.5rem 0;
+            text-align: center;
+        }
+        
+        .daily-activity-feed {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .activity-time {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            min-width: 3rem;
+        }
+        
+        .quality-score-ring {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .quality-score-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+        
+        .improvement-suggestion {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .suggestion-title {
+            font-weight: 600;
+            color: #0369a1;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .suggestion-description {
+            color: #075985;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .quick-action-btn {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: #374151;
+        }
+        
+        .quick-action-btn:hover {
+            border-color: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            color: #2563eb;
+        }
+        
+        .action-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #6b7280;
+        }
+        
+        .quick-action-btn:hover .action-icon {
+            color: #2563eb;
+        }
+        
+        .productivity-insight {
+            background: #f8fafc;
+            border-left: 4px solid #3b82f6;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .insight-metric {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+        
+        .time-tracking-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .time-block {
+            background: #f3f4f6;
+            border-radius: 0.375rem;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+        
+        .time-block.active {
+            background: #dbeafe;
+            border: 1px solid #3b82f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+    <!-- Skip to main content for screen readers -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-blue-600 text-white p-2 rounded">
+        Skip to main content
+    </a>
+
+    <!-- Application Shell -->
+    <div id="app" class="min-h-screen flex">
+        <!-- Sidebar Navigation -->
+        <nav id="sidebar" class="bg-gray-900 text-white w-64 min-h-screen transition-all duration-300 ease-in-out" 
+             role="navigation" aria-label="Main navigation">
+            <!-- Logo -->
+            <div class="p-4 border-b border-gray-700">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-chart-line text-blue-400 text-2xl" aria-hidden="true"></i>
+                    <h1 class="text-xl font-bold">DevDash</h1>
+                </div>
+            </div>
+
+            <!-- User Profile -->
+            <div class="p-4 border-b border-gray-700">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                        <span class="text-white font-semibold">JD</span>
+                    </div>
+                    <div>
+                        <p class="font-medium">John Developer</p>
+                        <p class="text-sm text-gray-400">Frontend Developer</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Menu -->
+            <ul class="p-4 space-y-2" role="menu">
+                <li role="none">
+                    <a href="#" class="nav-link active" role="menuitem" aria-current="page">
+                        <i class="fas fa-chart-line" aria-hidden="true"></i>
+                        My Dashboard
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="#" class="nav-link" role="menuitem">
+                        <i class="fas fa-tasks" aria-hidden="true"></i>
+                        My Tasks
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="#" class="nav-link" role="menuitem">
+                        <i class="fas fa-code-branch" aria-hidden="true"></i>
+                        Pull Requests
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="#" class="nav-link" role="menuitem">
+                        <i class="fas fa-clock" aria-hidden="true"></i>
+                        Time Tracking
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="#" class="nav-link" role="menuitem">
+                        <i class="fas fa-trophy" aria-hidden="true"></i>
+                        Achievements
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="#" class="nav-link" role="menuitem">
+                        <i class="fas fa-file-alt" aria-hidden="true"></i>
+                        My Reports
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="#" class="nav-link" role="menuitem">
+                        <i class="fas fa-chart-bar" aria-hidden="true"></i>
+                        Performance Analytics
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="#" class="nav-link" role="menuitem">
+                        <i class="fas fa-cog" aria-hidden="true"></i>
+                        Settings
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Daily Goal Section -->
+            <div class="p-4 border-t border-gray-700">
+                <div class="daily-goal-card">
+                    <h3 class="font-semibold mb-3">Today's Goal</h3>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-sm opacity-90">Story Points</div>
+                            <div class="text-lg font-semibold">6 / 8</div>
+                        </div>
+                        <div class="goal-progress-ring">
+                            <svg width="60" height="60" class="transform -rotate-90">
+                                <circle cx="30" cy="30" r="25" stroke="rgba(255,255,255,0.3)" stroke-width="4" fill="none" />
+                                <circle cx="30" cy="30" r="25" stroke="white" stroke-width="4" fill="none" 
+                                        stroke-dasharray="157" stroke-dashoffset="39" />
+                            </svg>
+                            <div class="goal-progress-text">75%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main id="main-content" class="flex-1 overflow-x-hidden bg-gray-50">
+            <!-- Header -->
+            <header class="bg-white shadow-sm border-b border-gray-200">
+                <div class="px-6 py-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-900">Good morning, John! 👋</h2>
+                            <p class="text-gray-600">Here's your development activity for today</p>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="text-right">
+                                <div class="text-sm text-gray-500">Current streak</div>
+                                <div class="streak-counter">12 days</div>
+                            </div>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-plus mr-2"></i>
+                                Submit Daily Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="p-6">
+                <!-- Hero Metrics -->
+                <section class="mb-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Main Hero Card -->
+                        <div class="lg:col-span-2">
+                            <div class="hero-metric-card">
+                                <div class="hero-value">24</div>
+                                <div class="hero-label">Commits This Week</div>
+                                <div class="hero-trend">
+                                    <i class="fas fa-arrow-up mr-2"></i>
+                                    +15% from last week - Great momentum!
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Secondary Metrics -->
+                        <div class="space-y-4">
+                            <div class="metric-card p-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <div class="metric-value text-green-600">94%</div>
+                                        <div class="metric-label">Code Quality</div>
+                                    </div>
+                                    <div class="quality-score-ring">
+                                        <svg width="50" height="50" class="transform -rotate-90">
+                                            <circle cx="25" cy="25" r="20" stroke="#e5e7eb" stroke-width="4" fill="none" />
+                                            <circle cx="25" cy="25" r="20" stroke="#10b981" stroke-width="4" fill="none" 
+                                                    stroke-dasharray="126" stroke-dashoffset="8" />
+                                        </svg>
+                                        <div class="quality-score-text">94</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="metric-card p-4">
+                                <div class="metric-value text-blue-600">7</div>
+                                <div class="metric-label">Active Pull Requests</div>
+                                <div class="metric-change neutral">
+                                    <i class="fas fa-minus mr-1"></i>
+                                    No change from yesterday
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Current Work Status -->
+                <section class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">Current Work Status</h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="current-work-section">
+                            <h4 class="font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-play-circle text-yellow-500 mr-2"></i>
+                                In Progress
+                            </h4>
+                            
+                            <div class="work-item in-progress">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h5 class="font-medium text-gray-900">User Authentication Module</h5>
+                                    <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">Frontend</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-2">Implementing OAuth 2.0 integration with social login options</p>
+                                <div class="flex items-center justify-between text-xs text-gray-500">
+                                    <span>Started 2 days ago</span>
+                                    <span>Est. 3 more days</span>
+                                </div>
+                            </div>
+                            
+                            <div class="work-item in-progress">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h5 class="font-medium text-gray-900">API Response Optimization</h5>
+                                    <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Backend</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-2">Optimizing database queries for user data retrieval</p>
+                                <div class="flex items-center justify-between text-xs text-gray-500">
+                                    <span>Started today</span>
+                                    <span>Est. 2 days</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="current-work-section">
+                            <h4 class="font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                Completed Today
+                            </h4>
+                            
+                            <div class="work-item completed">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h5 class="font-medium text-gray-900">Unit Tests for Login Component</h5>
+                                    <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Testing</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-2">Added comprehensive test coverage for login functionality</p>
+                                <div class="flex items-center justify-between text-xs text-gray-500">
+                                    <span>Completed 2 hours ago</span>
+                                    <span>2 story points</span>
+                                </div>
+                            </div>
+                            
+                            <div class="work-item completed">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h5 class="font-medium text-gray-900">Code Review for PR #341</h5>
+                                    <span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">Review</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-2">Reviewed and approved team member's navigation updates</p>
+                                <div class="flex items-center justify-between text-xs text-gray-500">
+                                    <span>Completed 4 hours ago</span>
+                                    <span>15 minutes</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Performance Analytics -->
+                <section class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">Performance Analytics</h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Activity Trend Chart -->
+                        <div class="metric-card p-6">
+                            <h4 class="font-semibold text-gray-900 mb-4">Weekly Activity Trend</h4>
+                            <div class="chart-container">
+                                <canvas id="activityChart" aria-label="Weekly activity showing commits, reviews, and tasks over 7 days"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Performance Metrics -->
+                        <div class="metric-card p-6">
+                            <h4 class="font-semibold text-gray-900 mb-4">Key Performance Metrics</h4>
+                            <div class="space-y-4">
+                                <div class="productivity-insight">
+                                    <div class="text-sm text-gray-600">Average Review Time</div>
+                                    <div class="insight-metric">2.3 hours</div>
+                                    <div class="text-xs text-green-600 mt-1">
+                                        <i class="fas fa-arrow-down mr-1"></i>30 minutes faster than last week
+                                    </div>
+                                </div>
+                                
+                                <div class="productivity-insight">
+                                    <div class="text-sm text-gray-600">Code Quality Score</div>
+                                    <div class="insight-metric">94%</div>
+                                    <div class="text-xs text-green-600 mt-1">
+                                        <i class="fas fa-arrow-up mr-1"></i>+2% improvement this month
+                                    </div>
+                                </div>
+                                
+                                <div class="productivity-insight">
+                                    <div class="text-sm text-gray-600">Velocity (Story Points/Week)</div>
+                                    <div class="insight-metric">18 pts</div>
+                                    <div class="text-xs text-green-600 mt-1">
+                                        <i class="fas fa-arrow-up mr-1"></i>+3 points above team average
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Achievements & Recognition -->
+                <section class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">Recent Achievements</h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="metric-card p-6">
+                            <h4 class="font-semibold text-gray-900 mb-4">This Week's Badges</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <div class="achievement-badge">
+                                    <i class="fas fa-fire mr-2"></i>
+                                    Hot Streak
+                                </div>
+                                <div class="achievement-badge">
+                                    <i class="fas fa-code mr-2"></i>
+                                    Code Quality Master
+                                </div>
+                                <div class="achievement-badge">
+                                    <i class="fas fa-eye mr-2"></i>
+                                    Review Ninja
+                                </div>
+                                <div class="achievement-badge">
+                                    <i class="fas fa-clock mr-2"></i>
+                                    Early Bird
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="personal-record">
+                            <h4 class="font-semibold mb-2">🏆 Personal Record</h4>
+                            <div class="text-2xl font-bold mb-1">12 consecutive days</div>
+                            <div class="text-sm opacity-90">Longest active development streak</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- AI-Powered Insights -->
+                <section class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">Personalized Insights</h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="improvement-suggestion">
+                            <div class="suggestion-title">
+                                <i class="fas fa-lightbulb mr-2"></i>
+                                Productivity Tip
+                            </div>
+                            <div class="suggestion-description">
+                                Your most productive coding time is between 9-11 AM. Consider scheduling complex tasks during this window for optimal performance.
+                            </div>
+                        </div>
+                        
+                        <div class="improvement-suggestion">
+                            <div class="suggestion-title">
+                                <i class="fas fa-chart-line mr-2"></i>
+                                Performance Trend
+                            </div>
+                            <div class="suggestion-description">
+                                Your code review turnaround time has improved by 25% this month. Keep up the great work maintaining quality while being efficient!
+                            </div>
+                        </div>
+                        
+                        <div class="improvement-suggestion">
+                            <div class="suggestion-title">
+                                <i class="fas fa-users mr-2"></i>
+                                Collaboration Opportunity
+                            </div>
+                            <div class="suggestion-description">
+                                Consider pairing with Sarah on React components - your combined expertise could accelerate the frontend modernization project.
+                            </div>
+                        </div>
+                        
+                        <div class="improvement-suggestion">
+                            <div class="suggestion-title">
+                                <i class="fas fa-graduation-cap mr-2"></i>
+                                Skill Development
+                            </div>
+                            <div class="suggestion-description">
+                                Based on your current projects, learning TypeScript could enhance your development efficiency. 3 team members are available to mentor.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Quick Actions -->
+                <section class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">Quick Actions</h3>
+                    <div class="quick-actions-grid">
+                        <a href="#" class="quick-action-btn">
+                            <div class="action-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="font-medium">Submit Daily Report</div>
+                            <div class="text-sm text-gray-500 mt-1">Track today's progress</div>
+                        </a>
+                        
+                        <a href="#" class="quick-action-btn">
+                            <div class="action-icon">
+                                <i class="fas fa-code-branch"></i>
+                            </div>
+                            <div class="font-medium">Create Pull Request</div>
+                            <div class="text-sm text-gray-500 mt-1">Submit your changes</div>
+                        </a>
+                        
+                        <a href="#" class="quick-action-btn">
+                            <div class="action-icon">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="font-medium">Review Code</div>
+                            <div class="text-sm text-gray-500 mt-1">3 PRs waiting for review</div>
+                        </a>
+                        
+                        <a href="#" class="quick-action-btn">
+                            <div class="action-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="font-medium">Log Time</div>
+                            <div class="text-sm text-gray-500 mt-1">Update time tracking</div>
+                        </a>
+                    </div>
+                </section>
+
+                <!-- Daily Activity Feed -->
+                <section class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">Today's Activity Feed</h3>
+                    <div class="metric-card p-6">
+                        <div class="daily-activity-feed">
+                            <div class="flex items-start space-x-4 py-3 border-b border-gray-100">
+                                <div class="activity-time">2:30 PM</div>
+                                <div class="activity-icon gitlab">
+                                    <i class="fab fa-gitlab"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-gray-900">Merged pull request #342</p>
+                                    <p class="text-xs text-gray-500">Added OAuth 2.0 social login integration</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start space-x-4 py-3 border-b border-gray-100">
+                                <div class="activity-time">1:45 PM</div>
+                                <div class="activity-icon sonar">
+                                    <i class="fas fa-bug"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-gray-900">Fixed 2 code quality issues</p>
+                                    <p class="text-xs text-gray-500">Reduced complexity in authentication service</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start space-x-4 py-3 border-b border-gray-100">
+                                <div class="activity-time">11:20 AM</div>
+                                <div class="activity-icon openproject">
+                                    <i class="fas fa-tasks"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-gray-900">Completed task: Unit test coverage</p>
+                                    <p class="text-xs text-gray-500">Login component now has 95% test coverage</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start space-x-4 py-3 border-b border-gray-100">
+                                <div class="activity-time">10:15 AM</div>
+                                <div class="activity-icon gitlab">
+                                    <i class="fab fa-gitlab"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-gray-900">Reviewed pull request #341</p>
+                                    <p class="text-xs text-gray-500">Approved navigation component updates by Sarah</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start space-x-4 py-3">
+                                <div class="activity-time">9:00 AM</div>
+                                <div class="activity-icon gitlab">
+                                    <i class="fab fa-gitlab"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-gray-900">Started working on authentication module</p>
+                                    <p class="text-xs text-gray-500">Created feature branch and initial commit</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Motivational Section -->
+                <section class="mb-8">
+                    <div class="motivational-card">
+                        <h3 class="text-lg font-semibold mb-2">🌟 You're doing great!</h3>
+                        <p class="opacity-90">
+                            You're ahead of your weekly goals and maintaining excellent code quality. 
+                            Your consistent performance is contributing significantly to the team's success.
+                        </p>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Initialize charts
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeActivityChart();
+        });
+
+        function initializeActivityChart() {
+            const ctx = document.getElementById('activityChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [
+                        {
+                            label: 'Commits',
+                            data: [3, 5, 4, 7, 6, 2, 1],
+                            borderColor: '#2563eb',
+                            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Code Reviews',
+                            data: [2, 3, 2, 4, 3, 1, 0],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Tasks Completed',
+                            data: [1, 2, 3, 2, 4, 1, 0],
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Activity Count'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Mobile menu toggle
+        const sidebar = document.getElementById('sidebar');
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('open');
+            });
+        }
+
+        // Simulate real-time updates
+        function updateStreakCounter() {
+            // In a real application, this would fetch current data
+            console.log('Updating streak counter...');
+        }
+
+        // Initialize real-time updates
+        setInterval(updateStreakCounter, 300000); // Update every 5 minutes
+    </script>
+</body>
+</html>

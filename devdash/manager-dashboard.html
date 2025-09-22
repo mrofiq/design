@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DevDash Manager Dashboard - Strategic KPIs and organizational metrics">
+    <title>DevDash - Manager Dashboard</title>
+    
+    <!-- CSS Framework and Custom Styles -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="assets/css/dashboard.css" rel="stylesheet">
+    
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Accessibility and SEO -->
+    <meta name="theme-color" content="#1f2937">
+    <link rel="icon" href="assets/images/favicon.ico">
+    
+    <style>
+        .strategic-kpi-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .strategic-kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(30px, -30px);
+        }
+        
+        .kpi-value {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .kpi-trend {
+            display: flex;
+            align-items: center;
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+        
+        .team-comparison-table {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .team-row {
+            border-bottom: 1px solid #f3f4f6;
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .team-row:hover {
+            background-color: #f9fafb;
+        }
+        
+        .team-row:last-child {
+            border-bottom: none;
+        }
+        
+        .performance-bar {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 0.25rem 0;
+        }
+        
+        .performance-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        
+        .performance-excellent { background: #10b981; }
+        .performance-good { background: #f59e0b; }
+        .performance-poor { background: #ef4444; }
+        
+        .resource-allocation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .capacity-chart {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .business-alignment-score {
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #10b981, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+        }
+        
+        .roi-metric {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .roi-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .cross-team-insights {
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+        
+        .insight-item {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 0.75rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #2563eb;
+        }
+        
+        .drill-down-button {
+            background: rgba(37, 99, 235, 0.1);
+            border: 1px solid #2563eb;
+            color: #2563eb;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+        
+        .drill-down-button:hover {
+            background: #2563eb;
+            color: white;
+        }
+        
+        .strategic-initiative {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #10b981;
+            margin: 1rem 0;
+        }
+        
+        .initiative-status {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .status-on-track {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-at-risk {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-delayed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .forecasting-chart {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin: 1rem 0;
+        }
+        
+        .executive-summary {
+            background: linear-gradient(135deg, #1f2937, #374151);
+            color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .summary-metric {
+            text-align: center;
+            padding: 1rem;
+        }
+        
+        .summary-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .summary-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+    <!-- Skip to main content for screen readers -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-blue-600 text-white p-2 rounded">
+        Skip to main content
+    </a>
+
+    <!-- Application Shell -->
+    <div id="app" class="min-h-screen flex">
+        <!-- Sidebar Navigation -->
+        <nav id="sidebar" class="bg-gray-900 text-white w-64 min-h-screen transition-all duration-300 ease-in-out" 
+             role="navigation" aria-label="Main navigation">
+            <!-- Logo -->
+            <div class="p-4 border-b border-gray-700">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-chart-line text-blue-400 text-2xl" aria-hidden="true"></i>
+                    <h1 class="text-xl font-bold">DevDash</h1>
+                </div>
+            </div>
+
+            <!-- User Profile -->
+            <div class="p-4 border-b border-gray-700">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center">
+                        <span class="text-white font-semibold">EM</span>
+                    </div>
+                    <div>
+                        <p class="font-medium">Emily Manager</p>
+                        <p class="text-sm text-gray-400">Engineering Manager</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Menu -->
+            <ul class="p-4 space-y-2" role="menu">
+                <li role="none">
+                    <a href="#" class="nav-link active" role="menuitem" aria-current="page">
+                        <i class="fas fa-tachometer-alt" aria-hidden="true"></i>
+                        Strategic Overview
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="#" class="nav-link" role="menuitem">
+                        <i class="fas fa-sitemap" aria-hidden="true"></i>
+                        Cross-Team Comparison
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="#" class="nav-link" role="menuitem">
+                        <i class="fas fa-chart-bar" aria-hidden="true"></i>
+                        Resource Planning
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="#" class="nav-link" role="menuitem">
+                        <i class="fas fa-bullseye" aria-hidden="true"></i>
+                        Business Alignment
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="#" class="nav-link" role="menuitem">
+                        <i class="fas fa-chart-line" aria-hidden="true"></i>
+                        ROI Analytics
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="#" class="nav-link" role="menuitem">
+                        <i class="fas fa-road" aria-hidden="true"></i>
+                        Strategic Initiatives
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="#" class="nav-link" role="menuitem">
+                        <i class="fas fa-crystal-ball" aria-hidden="true"></i>
+                        Forecasting
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="#" class="nav-link" role="menuitem">
+                        <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i>
+                        Executive Reports
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Quick Actions -->
+            <div class="mt-auto p-4 border-t border-gray-700">
+                <button class="w-full btn btn-primary btn-sm mb-2">
+                    <i class="fas fa-plus mr-2"></i>
+                    Create Initiative
+                </button>
+                <button class="w-full btn btn-secondary btn-sm">
+                    <i class="fas fa-download mr-2"></i>
+                    Export Dashboard
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main id="main-content" class="flex-1 overflow-x-hidden bg-gray-50">
+            <!-- Header -->
+            <header class="bg-white shadow-sm border-b border-gray-200">
+                <div class="px-6 py-4">
+                    <!-- Breadcrumb Navigation -->
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        <div class="breadcrumb-item">
+                            <span>Organization</span>
+                        </div>
+                    </nav>
+                    
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-900">Engineering Organization Dashboard</h2>
+                            <p class="text-gray-600">Strategic overview of 5 teams, 34 developers, 8 active initiatives</p>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <select class="form-input w-40" aria-label="Time period">
+                                <option>Last Quarter</option>
+                                <option>Last 6 Months</option>
+                                <option>Year to Date</option>
+                            </select>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-presentation mr-2"></i>
+                                Board Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="p-6">
+                <!-- Strategic KPIs -->
+                <section class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">Strategic KPIs</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Delivery Velocity -->
+                        <div class="strategic-kpi-card">
+                            <div class="kpi-value">142</div>
+                            <div class="text-lg font-medium mb-2">Features Delivered</div>
+                            <div class="kpi-trend">
+                                <i class="fas fa-arrow-up mr-2"></i>
+                                +23% vs last quarter
+                            </div>
+                        </div>
+
+                        <!-- Team Efficiency -->
+                        <div class="strategic-kpi-card">
+                            <div class="kpi-value">89%</div>
+                            <div class="text-lg font-medium mb-2">Team Efficiency</div>
+                            <div class="kpi-trend">
+                                <i class="fas fa-arrow-up mr-2"></i>
+                                +7% vs last quarter
+                            </div>
+                        </div>
+
+                        <!-- Quality Score -->
+                        <div class="strategic-kpi-card">
+                            <div class="kpi-value">94%</div>
+                            <div class="text-lg font-medium mb-2">Quality Score</div>
+                            <div class="kpi-trend">
+                                <i class="fas fa-arrow-up mr-2"></i>
+                                +2% vs last quarter
+                            </div>
+                        </div>
+
+                        <!-- Customer Impact -->
+                        <div class="strategic-kpi-card">
+                            <div class="kpi-value">76%</div>
+                            <div class="text-lg font-medium mb-2">Customer Satisfaction</div>
+                            <div class="kpi-trend">
+                                <i class="fas fa-arrow-up mr-2"></i>
+                                +11% vs last quarter
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Executive Summary -->
+                <section class="mb-8">
+                    <div class="executive-summary">
+                        <h3 class="text-xl font-semibold mb-6">Quarterly Executive Summary</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                            <div class="summary-metric">
+                                <div class="summary-value">$2.4M</div>
+                                <div class="summary-label">Value Delivered</div>
+                            </div>
+                            <div class="summary-metric">
+                                <div class="summary-value">315%</div>
+                                <div class="summary-label">ROI</div>
+                            </div>
+                            <div class="summary-metric">
+                                <div class="summary-value">96%</div>
+                                <div class="summary-label">On-Time Delivery</div>
+                            </div>
+                            <div class="summary-metric">
+                                <div class="summary-value">12</div>
+                                <div class="summary-label">Strategic Goals Met</div>
+                            </div>
+                        </div>
+                        <div class="mt-6 p-4 bg-gray-800 rounded-lg">
+                            <p class="text-sm opacity-90">
+                                Engineering organization exceeded quarterly targets with 23% increase in feature delivery while maintaining 94% quality score. 
+                                Cross-team collaboration initiatives show strong ROI. Two strategic initiatives ahead of schedule.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Cross-Team Comparison -->
+                <section class="mb-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900">Cross-Team Performance</h3>
+                        <button class="drill-down-button">View Detailed Comparison</button>
+                    </div>
+                    
+                    <div class="team-comparison-table">
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Team</th>
+                                        <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Velocity</th>
+                                        <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Quality</th>
+                                        <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Efficiency</th>
+                                        <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Health Score</th>
+                                        <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Trend</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="team-row" onclick="drillDownTeam('frontend')">
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center">
+                                                <div class="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
+                                                <div>
+                                                    <div class="font-medium text-gray-900">Frontend Team</div>
+                                                    <div class="text-sm text-gray-500">6 developers</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="font-semibold text-gray-900">24 pts</div>
+                                            <div class="performance-bar">
+                                                <div class="performance-fill performance-excellent" style="width: 88%"></div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="font-semibold text-gray-900">92%</div>
+                                            <div class="performance-bar">
+                                                <div class="performance-fill performance-excellent" style="width: 92%"></div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="font-semibold text-gray-900">87%</div>
+                                            <div class="performance-bar">
+                                                <div class="performance-fill performance-excellent" style="width: 87%"></div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="font-semibold text-green-600">87</div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <i class="fas fa-arrow-up text-green-500"></i>
+                                        </td>
+                                    </tr>
+                                    <tr class="team-row" onclick="drillDownTeam('backend')">
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center">
+                                                <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+                                                <div>
+                                                    <div class="font-medium text-gray-900">Backend Team</div>
+                                                    <div class="text-sm text-gray-500">8 developers</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="font-semibold text-gray-900">31 pts</div>
+                                            <div class="performance-bar">
+                                                <div class="performance-fill performance-excellent" style="width: 95%"></div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="font-semibold text-gray-900">96%</div>
+                                            <div class="performance-bar">
+                                                <div class="performance-fill performance-excellent" style="width: 96%"></div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="font-semibold text-gray-900">93%</div>
+                                            <div class="performance-bar">
+                                                <div class="performance-fill performance-excellent" style="width: 93%"></div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="font-semibold text-green-600">94</div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <i class="fas fa-arrow-up text-green-500"></i>
+                                        </td>
+                                    </tr>
+                                    <tr class="team-row" onclick="drillDownTeam('mobile')">
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center">
+                                                <div class="w-3 h-3 bg-purple-500 rounded-full mr-3"></div>
+                                                <div>
+                                                    <div class="font-medium text-gray-900">Mobile Team</div>
+                                                    <div class="text-sm text-gray-500">5 developers</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="font-semibold text-gray-900">18 pts</div>
+                                            <div class="performance-bar">
+                                                <div class="performance-fill performance-good" style="width: 72%"></div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="font-semibold text-gray-900">89%</div>
+                                            <div class="performance-bar">
+                                                <div class="performance-fill performance-good" style="width: 89%"></div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="font-semibold text-gray-900">78%</div>
+                                            <div class="performance-bar">
+                                                <div class="performance-fill performance-good" style="width: 78%"></div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="font-semibold text-yellow-600">76</div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <i class="fas fa-arrow-down text-red-500"></i>
+                                        </td>
+                                    </tr>
+                                    <tr class="team-row" onclick="drillDownTeam('devops')">
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center">
+                                                <div class="w-3 h-3 bg-yellow-500 rounded-full mr-3"></div>
+                                                <div>
+                                                    <div class="font-medium text-gray-900">DevOps Team</div>
+                                                    <div class="text-sm text-gray-500">4 developers</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="font-semibold text-gray-900">16 pts</div>
+                                            <div class="performance-bar">
+                                                <div class="performance-fill performance-excellent" style="width: 85%"></div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="font-semibold text-gray-900">98%</div>
+                                            <div class="performance-bar">
+                                                <div class="performance-fill performance-excellent" style="width: 98%"></div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="font-semibold text-gray-900">91%</div>
+                                            <div class="performance-bar">
+                                                <div class="performance-fill performance-excellent" style="width: 91%"></div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="font-semibold text-green-600">91</div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <i class="fas fa-arrow-up text-green-500"></i>
+                                        </td>
+                                    </tr>
+                                    <tr class="team-row" onclick="drillDownTeam('qa')">
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center">
+                                                <div class="w-3 h-3 bg-red-500 rounded-full mr-3"></div>
+                                                <div>
+                                                    <div class="font-medium text-gray-900">QA Team</div>
+                                                    <div class="text-sm text-gray-500">11 developers</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="font-semibold text-gray-900">28 pts</div>
+                                            <div class="performance-bar">
+                                                <div class="performance-fill performance-excellent" style="width: 90%"></div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="font-semibold text-gray-900">97%</div>
+                                            <div class="performance-bar">
+                                                <div class="performance-fill performance-excellent" style="width: 97%"></div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="font-semibold text-gray-900">85%</div>
+                                            <div class="performance-bar">
+                                                <div class="performance-fill performance-excellent" style="width: 85%"></div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="font-semibold text-green-600">89</div>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <i class="fas fa-arrow-up text-green-500"></i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Resource Allocation & Capacity Planning -->
+                <section class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">Resource Allocation & Capacity Planning</h3>
+                    <div class="resource-allocation-grid">
+                        <!-- Current Utilization -->
+                        <div class="capacity-chart">
+                            <h4 class="font-semibold text-gray-900 mb-4">Current Team Utilization</h4>
+                            <div class="chart-container">
+                                <canvas id="utilizationChart" aria-label="Current team utilization across all teams"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Capacity Forecast -->
+                        <div class="capacity-chart">
+                            <h4 class="font-semibold text-gray-900 mb-4">Capacity Forecast (Next 6 Months)</h4>
+                            <div class="chart-container">
+                                <canvas id="capacityChart" aria-label="Team capacity forecast for the next 6 months"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Resource Recommendations -->
+                        <div class="capacity-chart">
+                            <h4 class="font-semibold text-gray-900 mb-4">Resource Recommendations</h4>
+                            <div class="space-y-4">
+                                <div class="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                    <div class="font-medium text-yellow-800 mb-1">Mobile Team Understaffed</div>
+                                    <div class="text-sm text-yellow-700">Recommend hiring 2 senior mobile developers to meet Q4 targets</div>
+                                </div>
+                                <div class="p-3 bg-green-50 border border-green-200 rounded-lg">
+                                    <div class="font-medium text-green-800 mb-1">Backend Team Optimal</div>
+                                    <div class="text-sm text-green-700">Current capacity aligns well with roadmap requirements</div>
+                                </div>
+                                <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                    <div class="font-medium text-blue-800 mb-1">Cross-Training Opportunity</div>
+                                    <div class="text-sm text-blue-700">3 frontend developers interested in full-stack transition</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Business Alignment & ROI -->
+                <section class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">Business Alignment & ROI</h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Business Alignment Score -->
+                        <div class="metric-card p-6 text-center">
+                            <div class="business-alignment-score">92</div>
+                            <div class="text-lg font-semibold text-gray-700 mb-2">Business Alignment Score</div>
+                            <div class="text-sm text-gray-600">Engineering efforts aligned with business objectives</div>
+                        </div>
+
+                        <!-- ROI Metrics -->
+                        <div class="roi-metric">
+                            <div class="roi-value">315%</div>
+                            <div class="text-lg font-medium mb-2">Engineering ROI</div>
+                            <div class="text-sm opacity-90">Return on engineering investment this quarter</div>
+                        </div>
+
+                        <!-- Value Delivered -->
+                        <div class="metric-card p-6 text-center">
+                            <div class="metric-value text-purple-600">$2.4M</div>
+                            <div class="text-lg font-semibold text-gray-700 mb-2">Value Delivered</div>
+                            <div class="text-sm text-gray-600">Estimated business value from engineering output</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Strategic Initiatives -->
+                <section class="mb-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900">Strategic Initiatives</h3>
+                        <button class="drill-down-button">View Initiative Details</button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="strategic-initiative">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="font-semibold text-gray-900">Cloud Migration Phase 2</h4>
+                                <span class="initiative-status status-on-track">On Track</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 text-sm">
+                                <div>
+                                    <div class="text-gray-600">Progress</div>
+                                    <div class="font-semibold">67%</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-600">Timeline</div>
+                                    <div class="font-semibold">Q4 2024</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-600">Budget</div>
+                                    <div class="font-semibold">$450K</div>
+                                </div>
+                            </div>
+                            <div class="mt-4 bg-gray-100 rounded-full h-2">
+                                <div class="bg-green-500 h-2 rounded-full" style="width: 67%"></div>
+                            </div>
+                        </div>
+
+                        <div class="strategic-initiative">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="font-semibold text-gray-900">Mobile App Redesign</h4>
+                                <span class="initiative-status status-at-risk">At Risk</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 text-sm">
+                                <div>
+                                    <div class="text-gray-600">Progress</div>
+                                    <div class="font-semibold">34%</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-600">Timeline</div>
+                                    <div class="font-semibold">Q1 2025</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-600">Budget</div>
+                                    <div class="font-semibold">$280K</div>
+                                </div>
+                            </div>
+                            <div class="mt-4 bg-gray-100 rounded-full h-2">
+                                <div class="bg-yellow-500 h-2 rounded-full" style="width: 34%"></div>
+                            </div>
+                        </div>
+
+                        <div class="strategic-initiative">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="font-semibold text-gray-900">AI Integration Platform</h4>
+                                <span class="initiative-status status-on-track">On Track</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 text-sm">
+                                <div>
+                                    <div class="text-gray-600">Progress</div>
+                                    <div class="font-semibold">89%</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-600">Timeline</div>
+                                    <div class="font-semibold">Q3 2024</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-600">Budget</div>
+                                    <div class="font-semibold">$650K</div>
+                                </div>
+                            </div>
+                            <div class="mt-4 bg-gray-100 rounded-full h-2">
+                                <div class="bg-green-500 h-2 rounded-full" style="width: 89%"></div>
+                            </div>
+                        </div>
+
+                        <div class="strategic-initiative">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="font-semibold text-gray-900">Security Enhancement</h4>
+                                <span class="initiative-status status-delayed">Delayed</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 text-sm">
+                                <div>
+                                    <div class="text-gray-600">Progress</div>
+                                    <div class="font-semibold">12%</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-600">Timeline</div>
+                                    <div class="font-semibold">Q2 2025</div>
+                                </div>
+                                <div>
+                                    <div class="text-gray-600">Budget</div>
+                                    <div class="font-semibold">$320K</div>
+                                </div>
+                            </div>
+                            <div class="mt-4 bg-gray-100 rounded-full h-2">
+                                <div class="bg-red-500 h-2 rounded-full" style="width: 12%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Cross-Team Insights -->
+                <section class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">AI-Powered Strategic Insights</h3>
+                    <div class="cross-team-insights">
+                        <div class="insight-item">
+                            <div class="flex items-start">
+                                <i class="fas fa-lightbulb text-blue-600 mr-3 mt-1"></i>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900 mb-2">Cross-Team Collaboration Opportunity</h4>
+                                    <p class="text-gray-700 text-sm mb-3">
+                                        Backend and Mobile teams show complementary skill gaps. Cross-training 3 developers could improve mobile API development efficiency by 25%.
+                                    </p>
+                                    <button class="btn btn-primary btn-sm">Create Cross-Training Plan</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="insight-item">
+                            <div class="flex items-start">
+                                <i class="fas fa-chart-line text-green-600 mr-3 mt-1"></i>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900 mb-2">Resource Optimization</h4>
+                                    <p class="text-gray-700 text-sm mb-3">
+                                        QA team's automation improvements have freed up 15 hours/week. Consider reallocating these resources to mobile testing to address the bottleneck.
+                                    </p>
+                                    <button class="btn btn-primary btn-sm">Optimize Resource Allocation</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="insight-item">
+                            <div class="flex items-start">
+                                <i class="fas fa-exclamation-triangle text-yellow-600 mr-3 mt-1"></i>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900 mb-2">Initiative Risk Assessment</h4>
+                                    <p class="text-gray-700 text-sm mb-3">
+                                        Mobile App Redesign initiative is at risk due to resource constraints. Current mobile team capacity is 76% with declining velocity trend.
+                                    </p>
+                                    <button class="btn btn-warning btn-sm">Review Initiative Scope</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Forecasting -->
+                <section class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">6-Month Forecasting</h3>
+                    <div class="forecasting-chart">
+                        <div class="chart-container">
+                            <canvas id="forecastChart" aria-label="6-month delivery forecast across all teams"></canvas>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Initialize charts
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeUtilizationChart();
+            initializeCapacityChart();
+            initializeForecastChart();
+        });
+
+        function initializeUtilizationChart() {
+            const ctx = document.getElementById('utilizationChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Frontend', 'Backend', 'Mobile', 'DevOps', 'QA'],
+                    datasets: [{
+                        label: 'Current Utilization %',
+                        data: [87, 93, 76, 91, 85],
+                        backgroundColor: [
+                            '#3b82f6',
+                            '#10b981',
+                            '#8b5cf6',
+                            '#f59e0b',
+                            '#ef4444'
+                        ],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Utilization %'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initializeCapacityChart() {
+            const ctx = document.getElementById('capacityChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
+                    datasets: [
+                        {
+                            label: 'Available Capacity',
+                            data: [180, 185, 190, 195, 200, 205],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            fill: true
+                        },
+                        {
+                            label: 'Projected Demand',
+                            data: [165, 175, 195, 210, 215, 220],
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Story Points'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initializeForecastChart() {
+            const ctx = document.getElementById('forecastChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Oct 2024', 'Nov 2024', 'Dec 2024', 'Jan 2025', 'Feb 2025', 'Mar 2025'],
+                    datasets: [
+                        {
+                            label: 'Predicted Delivery',
+                            data: [142, 156, 163, 171, 178, 185],
+                            borderColor: '#2563eb',
+                            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Conservative Estimate',
+                            data: [138, 148, 155, 162, 168, 175],
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            borderDash: [5, 5]
+                        },
+                        {
+                            label: 'Optimistic Scenario',
+                            data: [145, 162, 172, 182, 192, 202],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            borderDash: [2, 2]
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: 'Features Delivered'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function drillDownTeam(teamId) {
+            console.log(`Drilling down to team: ${teamId}`);
+            // In a real application, this would navigate to the team-specific dashboard
+            alert(`Navigating to ${teamId} team dashboard...`);
+        }
+
+        // Mobile menu toggle (if needed)
+        const sidebar = document.getElementById('sidebar');
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('open');
+            });
+        }
+    </script>
+</body>
+</html>

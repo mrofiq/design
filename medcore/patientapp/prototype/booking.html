@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedCore Patient - Appointment Booking</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .tab-active { background-color: rgb(15 118 110 / 0.1); border-color: rgb(15 118 110 / 0.6); color: rgb(15 118 110); }
+  </style>
+</head>
+<body class="min-h-full">
+  <div class="mx-auto flex min-h-screen max-w-5xl flex-col px-4 py-8">
+    <header class="flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <h1 class="text-2xl font-semibold text-slate-900">Booking Janji Temu</h1>
+        <p class="text-sm text-slate-500">Langkah 2 dari 3 • Pilih slot waktu dan isi detail kunjungan.</p>
+      </div>
+      <div class="flex items-center gap-3 text-xs text-slate-500">
+        <span class="rounded-full bg-emerald-100 px-3 py-1 font-medium text-emerald-600">dr. Kamila Putri</span>
+        <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-500">MedCore Heart Center</span>
+        <button class="rounded-full border border-slate-200 bg-white px-3 py-1 font-medium text-slate-500">Ubah Dokter</button>
+      </div>
+    </header>
+
+    <main class="mt-8 grid flex-1 gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+      <section class="space-y-6">
+        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 class="text-lg font-semibold text-slate-900">Selasa, 18 Maret 2025</h2>
+              <p class="text-xs text-slate-500">Tersisa 5 slot tersedia • Durasi 30 menit</p>
+            </div>
+            <div class="flex items-center gap-2 text-xs text-slate-500">
+              <button class="rounded-full border border-slate-200 bg-white px-3 py-1.5 font-medium">Grid</button>
+              <button class="rounded-full border border-slate-200 bg-white px-3 py-1.5 font-medium">List</button>
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <div class="flex rounded-full border border-slate-200 bg-slate-100 p-1 text-sm font-medium text-slate-500">
+              <button class="slot-tab w-1/3 rounded-full bg-white py-2 shadow" data-target="morning">Pagi</button>
+              <button class="slot-tab w-1/3 rounded-full py-2" data-target="afternoon">Siang</button>
+              <button class="slot-tab w-1/3 rounded-full py-2" data-target="evening">Sore</button>
+            </div>
+
+            <div class="mt-6 space-y-6">
+              <div id="morning" class="slot-panel grid gap-3 md:grid-cols-2">
+                <button class="flex flex-col gap-2 rounded-2xl border-2 border-emerald-500 bg-emerald-50 p-4 text-left shadow">
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="rounded-full bg-white px-3 py-1 font-semibold text-emerald-600">08:30</span>
+                    <span class="text-[11px] uppercase tracking-wide text-emerald-600">Sisa 1 slot</span>
+                  </div>
+                  <p class="text-sm text-slate-500">Durasi 30 menit • Konsultasi tatap muka</p>
+                </button>
+                <button class="flex flex-col gap-2 rounded-2xl border border-slate-200 bg-white p-4 text-left shadow-sm">
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600">09:15</span>
+                    <span class="text-[11px] uppercase tracking-wide text-slate-400">3 slot tersedia</span>
+                  </div>
+                  <p class="text-sm text-slate-500">Durasi 30 menit</p>
+                </button>
+                <button class="flex flex-col gap-2 rounded-2xl border border-slate-200 bg-white p-4 text-left shadow-sm">
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600">10:45</span>
+                    <span class="text-[11px] uppercase tracking-wide text-slate-400">1 slot tersedia</span>
+                  </div>
+                  <p class="text-sm text-slate-500">Durasi 30 menit</p>
+                </button>
+                <button class="flex flex-col gap-2 rounded-2xl border border-slate-200 bg-white p-4 text-left shadow-sm">
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600">11:30</span>
+                    <span class="text-[11px] uppercase tracking-wide text-slate-400">Telemedicine</span>
+                  </div>
+                  <p class="text-sm text-slate-500">Durasi 20 menit • Video call</p>
+                </button>
+              </div>
+
+              <div id="afternoon" class="slot-panel hidden grid gap-3 md:grid-cols-2">
+                <button class="flex flex-col gap-2 rounded-2xl border border-slate-200 bg-white p-4 text-left shadow-sm">
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600">13:00</span>
+                    <span class="text-[11px] uppercase tracking-wide text-slate-400">2 slots</span>
+                  </div>
+                  <p class="text-sm text-slate-500">Durasi 30 menit • Tatap muka</p>
+                </button>
+                <button class="flex flex-col gap-2 rounded-2xl border border-slate-200 bg-white p-4 text-left shadow-sm">
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600">15:30</span>
+                    <span class="text-[11px] uppercase tracking-wide text-amber-500">Sisa 1 slot</span>
+                  </div>
+                  <p class="text-sm text-slate-500">Durasi 30 menit • Tatap muka</p>
+                </button>
+              </div>
+
+              <div id="evening" class="slot-panel hidden grid gap-3 md:grid-cols-2">
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-500">
+                  Semua slot sore hari sudah penuh. Pilih tanggal lain atau aktifkan notifikasi.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60">
+          <h2 class="text-lg font-semibold text-slate-900">Detail Kunjungan</h2>
+          <form class="mt-4 space-y-5 text-sm text-slate-600">
+            <div class="grid gap-4 md:grid-cols-2">
+              <label class="space-y-2">
+                <span class="text-xs uppercase tracking-wide text-slate-400">Alasan Kunjungan</span>
+                <select class="w-full rounded-2xl border border-slate-200 px-3 py-3 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200">
+                  <option value="consultation">Konsultasi umum</option>
+                  <option value="followup">Kontrol lanjutan</option>
+                  <option value="checkup">Medical check up</option>
+                  <option value="second">Second opinion</option>
+                </select>
+              </label>
+              <label class="space-y-2">
+                <span class="text-xs uppercase tracking-wide text-slate-400">Jenis Kunjungan</span>
+                <div class="flex h-12 gap-2 rounded-2xl border border-slate-200 bg-slate-50 p-1">
+                  <button type="button" class="flex-1 rounded-xl bg-white text-xs font-semibold text-slate-700 shadow">First Visit</button>
+                  <button type="button" class="flex-1 rounded-xl text-xs font-medium text-slate-500">Follow-up</button>
+                </div>
+              </label>
+            </div>
+
+            <fieldset class="space-y-3">
+              <legend class="text-xs uppercase tracking-wide text-slate-400">Gejala yang dirasakan</legend>
+              <div class="grid gap-2 md:grid-cols-2">
+                <label class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3">
+                  <input type="checkbox" class="h-4 w-4 rounded border-slate-300 text-sky-500 focus:ring-sky-500" checked />
+                  <span>Sakit dada / sesak napas</span>
+                </label>
+                <label class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3">
+                  <input type="checkbox" class="h-4 w-4 rounded border-slate-300 text-sky-500 focus:ring-sky-500" />
+                  <span>Detak jantung tidak teratur</span>
+                </label>
+                <label class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3">
+                  <input type="checkbox" class="h-4 w-4 rounded border-slate-300 text-sky-500 focus:ring-sky-500" />
+                  <span>Tekanan darah tinggi</span>
+                </label>
+                <label class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3">
+                  <input type="checkbox" class="h-4 w-4 rounded border-slate-300 text-sky-500 focus:ring-sky-500" />
+                  <span>Pusing / migrain</span>
+                </label>
+              </div>
+              <button type="button" class="text-xs font-semibold text-sky-600">Lihat gejala lainnya</button>
+            </fieldset>
+
+            <div class="grid gap-4 md:grid-cols-2">
+              <label class="space-y-2">
+                <span class="text-xs uppercase tracking-wide text-slate-400">Riwayat medis</span>
+                <textarea rows="3" class="w-full rounded-2xl border border-slate-200 px-3 py-3 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200" placeholder="Tuliskan penyakit kronis, alergi, atau obat rutin."></textarea>
+              </label>
+              <label class="space-y-2">
+                <span class="text-xs uppercase tracking-wide text-slate-400">Kebutuhan khusus</span>
+                <textarea rows="3" class="w-full rounded-2xl border border-slate-200 px-3 py-3 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200" placeholder="Contoh: perlu kursi roda, pendamping wanita, penerjemah."></textarea>
+              </label>
+            </div>
+
+            <div class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-500">
+              <p class="text-xs uppercase tracking-wide text-slate-400">Lampiran Rekam Medis</p>
+              <div class="mt-2 flex flex-wrap items-center justify-between gap-3">
+                <button type="button" class="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-medium text-slate-600">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                  </svg>
+                  Unggah File (PDF/JPG)
+                </button>
+                <div class="flex items-center gap-2 text-xs text-slate-400">
+                  <span class="rounded-full bg-white px-2 py-1 font-medium text-slate-500">Lab-results-mar2025.pdf</span>
+                  <button class="text-slate-400">Ganti</button>
+                </div>
+              </div>
+            </div>
+
+            <label class="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-500">
+              <input type="checkbox" class="mt-1 h-4 w-4 rounded border-slate-300 text-sky-500 focus:ring-sky-500" checked />
+              <span>
+                Saya menyetujui kebijakan pembatalan: pembatalan kurang dari 6 jam sebelum jadwal akan dikenakan biaya 30%.
+              </span>
+            </label>
+          </form>
+        </div>
+      </section>
+
+      <aside class="space-y-6">
+        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60">
+          <div class="flex items-center justify-between">
+            <h2 class="text-base font-semibold text-slate-900">Ringkasan Slot</h2>
+            <button class="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-500">Ubah Tanggal</button>
+          </div>
+          <dl class="mt-4 space-y-3 text-sm text-slate-600">
+            <div class="flex items-center justify-between">
+              <dt class="text-xs uppercase tracking-wide text-slate-400">Tanggal</dt>
+              <dd class="font-semibold text-slate-900">Sel, 18 Mar 2025</dd>
+            </div>
+            <div class="flex items-center justify-between">
+              <dt class="text-xs uppercase tracking-wide text-slate-400">Waktu</dt>
+              <dd class="font-semibold text-emerald-600">08:30 WIB</dd>
+            </div>
+            <div class="flex items-center justify-between">
+              <dt class="text-xs uppercase tracking-wide text-slate-400">Durasi</dt>
+              <dd class="font-semibold text-slate-900">30 menit</dd>
+            </div>
+            <div class="flex items-center justify-between">
+              <dt class="text-xs uppercase tracking-wide text-slate-400">Tipe</dt>
+              <dd class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-600">Tatap muka</dd>
+            </div>
+          </dl>
+          <button class="mt-6 w-full rounded-2xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-200/70">Konfirmasi Slot</button>
+        </div>
+
+        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60">
+          <h2 class="text-base font-semibold text-slate-900">Persiapan Kunjungan</h2>
+          <ul class="mt-3 space-y-3 text-xs text-slate-500">
+            <li class="flex items-start gap-3">
+              <span class="mt-1 h-2 w-2 rounded-full bg-emerald-500"></span>
+              <div>
+                <p>Bawa hasil lab terakhir (maks 3 bulan).</p>
+                <p class="text-[11px] text-slate-400">Checklist otomatis ditandai setelah dokumen terunggah.</p>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-1 h-2 w-2 rounded-full bg-amber-500"></span>
+              <div>
+                <p>Puasa minimal 6 jam sebelum pemeriksaan.</p>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-1 h-2 w-2 rounded-full bg-slate-400"></span>
+              <div>
+                <p>Minum obat rutin seperti biasa kecuali beta blocker (hentikan 2 hari sebelumnya).</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    const slotTabs = document.querySelectorAll('.slot-tab');
+    const slotPanels = document.querySelectorAll('.slot-panel');
+    slotTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        slotTabs.forEach(t => t.classList.remove('bg-white', 'shadow'));
+        tab.classList.add('bg-white', 'shadow');
+        slotPanels.forEach(panel => panel.classList.add('hidden'));
+        document.getElementById(tab.dataset.target).classList.remove('hidden');
+      });
+    });
+  </script>
+</body>
+</html>

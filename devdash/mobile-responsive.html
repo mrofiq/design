@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DevDash Mobile Responsive Design - Touch-optimized developer dashboard">
+    <title>DevDash - Mobile Responsive Design</title>
+    
+    <!-- CSS Framework and Custom Styles -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="assets/css/dashboard.css" rel="stylesheet">
+    
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1f2937">
+    <link rel="icon" href="assets/images/favicon.ico">
+    
+    <style>
+        /* Mobile-First Responsive Design */
+        
+        /* Touch-friendly interactive elements */
+        .touch-target {
+            min-height: 44px;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Mobile navigation */
+        .mobile-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            z-index: 50;
+            padding: 0.5rem;
+        }
+        
+        .mobile-nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem;
+            text-decoration: none;
+            color: #6b7280;
+            transition: color 0.2s ease;
+        }
+        
+        .mobile-nav-item.active,
+        .mobile-nav-item:hover {
+            color: #2563eb;
+        }
+        
+        .mobile-nav-icon {
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .mobile-nav-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        /* Swipeable cards */
+        .swipeable-container {
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .swipeable-container::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .swipeable-cards {
+            display: flex;
+            gap: 1rem;
+            padding: 0 1rem;
+        }
+        
+        .swipeable-card {
+            flex: 0 0 280px;
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Mobile header */
+        .mobile-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            z-index: 40;
+            padding: 1rem;
+        }
+        
+        /* Pull-to-refresh indicator */
+        .pull-to-refresh {
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2563eb;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            transition: top 0.3s ease;
+        }
+        
+        .pull-to-refresh.visible {
+            top: 10px;
+        }
+        
+        /* Collapsible sections */
+        .collapsible-section {
+            background: white;
+            border-radius: 0.5rem;
+            margin: 0.5rem 0;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .collapsible-header {
+            padding: 1rem;
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+            cursor: pointer;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+        
+        .collapsible-content {
+            padding: 1rem;
+            display: none;
+        }
+        
+        .collapsible-content.expanded {
+            display: block;
+        }
+        
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .collapsible-icon.rotated {
+            transform: rotate(180deg);
+        }
+        
+        /* Mobile metric cards */
+        .mobile-metric-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            items: center;
+            justify-content: between;
+        }
+        
+        .mobile-metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+        
+        .mobile-metric-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
+        /* Fab button */
+        .fab {
+            position: fixed;
+            bottom: 80px;
+            right: 1rem;
+            width: 56px;
+            height: 56px;
+            background: #2563eb;
+            color: white;
+            border-radius: 50%;
+            border: none;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 30;
+        }
+        
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.5);
+        }
+        
+        /* Offline indicator */
+        .offline-indicator {
+            position: fixed;
+            top: 70px;
+            left: 1rem;
+            right: 1rem;
+            background: #f59e0b;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            text-align: center;
+            z-index: 60;
+            transform: translateY(-100px);
+            transition: transform 0.3s ease;
+        }
+        
+        .offline-indicator.visible {
+            transform: translateY(0);
+        }
+        
+        /* Mobile-specific adjustments */
+        @media (max-width: 768px) {
+            .desktop-sidebar {
+                display: none;
+            }
+            
+            .mobile-content {
+                padding-top: 70px;
+                padding-bottom: 80px;
+            }
+            
+            .metric-card {
+                margin: 0.5rem 0;
+            }
+            
+            .chart-container {
+                height: 200px;
+            }
+            
+            /* Stack form elements on mobile */
+            .mobile-form-stack > * {
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+            
+            /* Full-width buttons on mobile */
+            .mobile-btn {
+                width: 100%;
+                justify-content: center;
+                margin: 0.5rem 0;
+            }
+        }
+        
+        /* Tablet-specific adjustments */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .tablet-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .mobile-nav {
+                display: none;
+            }
+            
+            .desktop-sidebar {
+                width: 200px;
+            }
+        }
+        
+        /* Large screen optimizations */
+        @media (min-width: 1024px) {
+            .mobile-nav {
+                display: none;
+            }
+            
+            .mobile-header {
+                position: static;
+                background: transparent;
+                border: none;
+                padding: 0;
+            }
+            
+            .mobile-content {
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+            
+            .fab {
+                display: none;
+            }
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .mobile-nav {
+                background: #1f2937;
+                border-top-color: #374151;
+            }
+            
+            .mobile-nav-item {
+                color: #9ca3af;
+            }
+            
+            .mobile-nav-item.active,
+            .mobile-nav-item:hover {
+                color: #60a5fa;
+            }
+            
+            .mobile-header {
+                background: #1f2937;
+                border-bottom-color: #374151;
+                color: white;
+            }
+            
+            .mobile-metric-card,
+            .swipeable-card,
+            .collapsible-section {
+                background: #374151;
+                color: white;
+            }
+            
+            .collapsible-header {
+                background: #4b5563;
+                border-bottom-color: #6b7280;
+            }
+        }
+        
+        /* Accessibility improvements for mobile */
+        @media (prefers-reduced-motion: reduce) {
+            .swipeable-container {
+                scroll-behavior: auto;
+            }
+            
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+        
+        /* High contrast mode */
+        @media (prefers-contrast: high) {
+            .mobile-nav {
+                border-top-width: 2px;
+            }
+            
+            .mobile-metric-card,
+            .swipeable-card {
+                border: 2px solid #000;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+    <!-- Desktop Sidebar (hidden on mobile) -->
+    <nav class="desktop-sidebar bg-gray-900 text-white w-64 min-h-screen fixed left-0 top-0 hidden lg:block" 
+         role="navigation" aria-label="Main navigation">
+        <!-- Logo -->
+        <div class="p-4 border-b border-gray-700">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-chart-line text-blue-400 text-2xl" aria-hidden="true"></i>
+                <h1 class="text-xl font-bold">DevDash</h1>
+            </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <ul class="p-4 space-y-2" role="menu">
+            <li><a href="#" class="nav-link active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li><a href="#" class="nav-link"><i class="fas fa-users"></i> Team</a></li>
+            <li><a href="#" class="nav-link"><i class="fas fa-tasks"></i> Projects</a></li>
+            <li><a href="#" class="nav-link"><i class="fas fa-file-alt"></i> Reports</a></li>
+            <li><a href="#" class="nav-link"><i class="fas fa-cog"></i> Settings</a></li>
+        </ul>
+    </nav>
+
+    <!-- Mobile Header -->
+    <header class="mobile-header lg:hidden">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <button class="touch-target" id="mobile-menu-trigger" aria-label="Open menu">
+                    <i class="fas fa-bars text-gray-700"></i>
+                </button>
+                <h1 class="text-lg font-bold text-gray-900">DevDash</h1>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button class="touch-target" aria-label="Search">
+                    <i class="fas fa-search text-gray-700"></i>
+                </button>
+                <button class="touch-target" aria-label="Notifications">
+                    <i class="fas fa-bell text-gray-700"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Pull to Refresh Indicator -->
+    <div class="pull-to-refresh" id="pull-refresh-indicator">
+        <i class="fas fa-sync-alt mr-2"></i>
+        Pull to refresh
+    </div>
+
+    <!-- Offline Indicator -->
+    <div class="offline-indicator" id="offline-indicator">
+        <i class="fas fa-wifi mr-2"></i>
+        You're offline. Data may not be up to date.
+    </div>
+
+    <!-- Main Content -->
+    <main class="mobile-content lg:ml-64 p-4">
+        <!-- Mobile Quick Stats (Swipeable) -->
+        <section class="mb-6">
+            <h2 class="text-lg font-semibold text-gray-900 mb-4 px-4 lg:px-0">Quick Stats</h2>
+            <div class="swipeable-container">
+                <div class="swipeable-cards">
+                    <div class="swipeable-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="mobile-metric-value text-blue-600">24</div>
+                                <div class="text-sm text-gray-600">Commits Today</div>
+                                <div class="text-xs text-green-600 mt-1">
+                                    <i class="fas fa-arrow-up mr-1"></i>+15%
+                                </div>
+                            </div>
+                            <div class="mobile-metric-icon bg-blue-100 text-blue-600">
+                                <i class="fab fa-git-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="swipeable-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="mobile-metric-value text-green-600">94%</div>
+                                <div class="text-sm text-gray-600">Code Quality</div>
+                                <div class="text-xs text-green-600 mt-1">
+                                    <i class="fas fa-arrow-up mr-1"></i>+2%
+                                </div>
+                            </div>
+                            <div class="mobile-metric-icon bg-green-100 text-green-600">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="swipeable-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="mobile-metric-value text-purple-600">7</div>
+                                <div class="text-sm text-gray-600">PRs Open</div>
+                                <div class="text-xs text-yellow-600 mt-1">
+                                    <i class="fas fa-minus mr-1"></i>Same
+                                </div>
+                            </div>
+                            <div class="mobile-metric-icon bg-purple-100 text-purple-600">
+                                <i class="fas fa-code-branch"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="swipeable-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="mobile-metric-value text-orange-600">2.3h</div>
+                                <div class="text-sm text-gray-600">Avg Review Time</div>
+                                <div class="text-xs text-green-600 mt-1">
+                                    <i class="fas fa-arrow-down mr-1"></i>-0.5h
+                                </div>
+                            </div>
+                            <div class="mobile-metric-icon bg-orange-100 text-orange-600">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Collapsible Sections for Mobile -->
+        <section class="mb-6">
+            <!-- Team Performance Section -->
+            <div class="collapsible-section">
+                <div class="collapsible-header" onclick="toggleSection('team-performance')">
+                    <div>
+                        <h3 class="font-semibold text-gray-900">Team Performance</h3>
+                        <p class="text-sm text-gray-600">6 developers, Sprint 23</p>
+                    </div>
+                    <i class="fas fa-chevron-down collapsible-icon" id="team-performance-icon"></i>
+                </div>
+                <div class="collapsible-content" id="team-performance-content">
+                    <div class="space-y-4">
+                        <!-- Team Member Cards -->
+                        <div class="mobile-metric-card">
+                            <div class="flex items-center">
+                                <div class="team-member-avatar avatar-blue mr-3">AM</div>
+                                <div class="flex-1">
+                                    <div class="font-medium text-gray-900">Alex Martinez</div>
+                                    <div class="text-sm text-gray-600">85% workload</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm font-semibold text-yellow-600">Good</div>
+                                <div class="text-xs text-gray-500">12 PRs</div>
+                            </div>
+                        </div>
+                        
+                        <div class="mobile-metric-card">
+                            <div class="flex items-center">
+                                <div class="team-member-avatar avatar-green mr-3">SC</div>
+                                <div class="flex-1">
+                                    <div class="font-medium text-gray-900">Sarah Chen</div>
+                                    <div class="text-sm text-gray-600">65% workload</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm font-semibold text-green-600">Excellent</div>
+                                <div class="text-xs text-gray-500">15 PRs</div>
+                            </div>
+                        </div>
+                        
+                        <div class="mobile-metric-card">
+                            <div class="flex items-center">
+                                <div class="team-member-avatar avatar-purple mr-3">MJ</div>
+                                <div class="flex-1">
+                                    <div class="font-medium text-gray-900">Mike Johnson</div>
+                                    <div class="text-sm text-gray-600">95% workload</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm font-semibold text-red-600">Needs Help</div>
+                                <div class="text-xs text-gray-500">6 PRs</div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary mobile-btn">
+                            View Full Team Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity Section -->
+            <div class="collapsible-section">
+                <div class="collapsible-header" onclick="toggleSection('recent-activity')">
+                    <div>
+                        <h3 class="font-semibold text-gray-900">Recent Activity</h3>
+                        <p class="text-sm text-gray-600">Last 24 hours</p>
+                    </div>
+                    <i class="fas fa-chevron-down collapsible-icon" id="recent-activity-icon"></i>
+                </div>
+                <div class="collapsible-content" id="recent-activity-content">
+                    <div class="space-y-3">
+                        <div class="flex items-start space-x-3">
+                            <div class="activity-icon gitlab mt-1">
+                                <i class="fab fa-gitlab"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm text-gray-900">Merged PR #342: Add user authentication</p>
+                                <p class="text-xs text-gray-500">2 minutes ago</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-3">
+                            <div class="activity-icon sonar mt-1">
+                                <i class="fas fa-bug"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm text-gray-900">Fixed 3 code quality issues</p>
+                                <p class="text-xs text-gray-500">15 minutes ago</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-3">
+                            <div class="activity-icon openproject mt-1">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm text-gray-900">Completed task: Update API documentation</p>
+                                <p class="text-xs text-gray-500">1 hour ago</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div class="collapsible-section">
+                <div class="collapsible-header" onclick="toggleSection('analytics')">
+                    <div>
+                        <h3 class="font-semibold text-gray-900">Analytics</h3>
+                        <p class="text-sm text-gray-600">Performance trends</p>
+                    </div>
+                    <i class="fas fa-chevron-down collapsible-icon" id="analytics-icon"></i>
+                </div>
+                <div class="collapsible-content" id="analytics-content">
+                    <div class="metric-card p-4">
+                        <h4 class="font-semibold text-gray-900 mb-4">Weekly Velocity Trend</h4>
+                        <div class="chart-container">
+                            <canvas id="mobileVelocityChart" aria-label="Weekly velocity trend chart optimized for mobile"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions Grid -->
+        <section class="mb-6">
+            <h2 class="text-lg font-semibold text-gray-900 mb-4 px-4 lg:px-0">Quick Actions</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 px-4 lg:px-0">
+                <button class="btn btn-secondary mobile-btn touch-target">
+                    <i class="fas fa-plus mr-2"></i>
+                    New Report
+                </button>
+                <button class="btn btn-secondary mobile-btn touch-target">
+                    <i class="fas fa-eye mr-2"></i>
+                    View PRs
+                </button>
+                <button class="btn btn-secondary mobile-btn touch-target">
+                    <i class="fas fa-chart-bar mr-2"></i>
+                    Analytics
+                </button>
+                <button class="btn btn-secondary mobile-btn touch-target">
+                    <i class="fas fa-cog mr-2"></i>
+                    Settings
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Floating Action Button (Mobile Only) -->
+    <button class="fab lg:hidden" aria-label="Add new report" onclick="showNewReportModal()">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav lg:hidden" role="navigation" aria-label="Mobile navigation">
+        <a href="#" class="mobile-nav-item active">
+            <i class="mobile-nav-icon fas fa-chart-line"></i>
+            <span class="mobile-nav-label">Dashboard</span>
+        </a>
+        <a href="#" class="mobile-nav-item">
+            <i class="mobile-nav-icon fas fa-users"></i>
+            <span class="mobile-nav-label">Team</span>
+        </a>
+        <a href="#" class="mobile-nav-item">
+            <i class="mobile-nav-icon fas fa-tasks"></i>
+            <span class="mobile-nav-label">Projects</span>
+        </a>
+        <a href="#" class="mobile-nav-item">
+            <i class="mobile-nav-icon fas fa-file-alt"></i>
+            <span class="mobile-nav-label">Reports</span>
+        </a>
+        <a href="#" class="mobile-nav-item">
+            <i class="mobile-nav-icon fas fa-user"></i>
+            <span class="mobile-nav-label">Profile</span>
+        </a>
+    </nav>
+
+    <!-- JavaScript -->
+    <script>
+        // Initialize mobile-optimized chart
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeMobileChart();
+            setupPullToRefresh();
+            setupOfflineDetection();
+            setupSwipeGestures();
+        });
+
+        function initializeMobileChart() {
+            const ctx = document.getElementById('mobileVelocityChart');
+            if (!ctx) return;
+            
+            new Chart(ctx.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+                    datasets: [{
+                        label: 'Velocity',
+                        data: [18, 22, 20, 24, 26],
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                display: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId + '-content');
+            const icon = document.getElementById(sectionId + '-icon');
+            
+            content.classList.toggle('expanded');
+            icon.classList.toggle('rotated');
+        }
+
+        function setupPullToRefresh() {
+            let startY = 0;
+            let pullDistance = 0;
+            const pullThreshold = 100;
+            const indicator = document.getElementById('pull-refresh-indicator');
+            
+            document.addEventListener('touchstart', function(e) {
+                if (window.scrollY === 0) {
+                    startY = e.touches[0].pageY;
+                }
+            });
+            
+            document.addEventListener('touchmove', function(e) {
+                if (window.scrollY === 0 && startY > 0) {
+                    pullDistance = e.touches[0].pageY - startY;
+                    
+                    if (pullDistance > 0) {
+                        e.preventDefault();
+                        
+                        if (pullDistance > pullThreshold) {
+                            indicator.classList.add('visible');
+                            indicator.innerHTML = '<i class="fas fa-sync-alt mr-2"></i>Release to refresh';
+                        } else {
+                            indicator.classList.remove('visible');
+                            indicator.innerHTML = '<i class="fas fa-sync-alt mr-2"></i>Pull to refresh';
+                        }
+                    }
+                }
+            });
+            
+            document.addEventListener('touchend', function(e) {
+                if (pullDistance > pullThreshold) {
+                    // Trigger refresh
+                    indicator.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Refreshing...';
+                    setTimeout(() => {
+                        indicator.classList.remove('visible');
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    indicator.classList.remove('visible');
+                }
+                
+                startY = 0;
+                pullDistance = 0;
+            });
+        }
+
+        function setupOfflineDetection() {
+            const indicator = document.getElementById('offline-indicator');
+            
+            function updateOnlineStatus() {
+                if (navigator.onLine) {
+                    indicator.classList.remove('visible');
+                } else {
+                    indicator.classList.add('visible');
+                }
+            }
+            
+            window.addEventListener('online', updateOnlineStatus);
+            window.addEventListener('offline', updateOnlineStatus);
+            updateOnlineStatus();
+        }
+
+        function setupSwipeGestures() {
+            const container = document.querySelector('.swipeable-container');
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+            
+            container.addEventListener('mousedown', (e) => {
+                isDown = true;
+                startX = e.pageX - container.offsetLeft;
+                scrollLeft = container.scrollLeft;
+            });
+            
+            container.addEventListener('mouseleave', () => {
+                isDown = false;
+            });
+            
+            container.addEventListener('mouseup', () => {
+                isDown = false;
+            });
+            
+            container.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - container.offsetLeft;
+                const walk = (x - startX) * 2;
+                container.scrollLeft = scrollLeft - walk;
+            });
+        }
+
+        function showNewReportModal() {
+            // In a real app, this would show a modal or navigate to a new report page
+            alert('New report creation would open here');
+        }
+
+        // Mobile navigation
+        document.querySelectorAll('.mobile-nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all items
+                document.querySelectorAll('.mobile-nav-item').forEach(nav => nav.classList.remove('active'));
+                
+                // Add active class to clicked item
+                this.classList.add('active');
+            });
+        });
+
+        // Service Worker registration for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(function(err) {
+                        console.log('ServiceWorker registration failed');
+                    });
+            });
+        }
+
+        // Keyboard navigation support for mobile
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab') {
+                // Ensure tab navigation works properly on mobile
+                document.body.classList.add('keyboard-navigation');
+            }
+        });
+
+        document.addEventListener('click', function() {
+            document.body.classList.remove('keyboard-navigation');
+        });
+    </script>
+</body>
+</html>

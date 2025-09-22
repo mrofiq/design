@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedCore Patient - Payment</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+<body class="min-h-full">
+  <div class="mx-auto flex min-h-screen max-w-5xl flex-col px-4 py-8">
+    <header class="flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <h1 class="text-2xl font-semibold text-slate-900">Pembayaran Janji Temu</h1>
+        <p class="text-sm text-slate-500">Langkah terakhir untuk menyelesaikan konsultasi Anda.</p>
+      </div>
+      <div class="flex items-center gap-2 text-xs text-slate-500">
+        <span class="rounded-full bg-emerald-100 px-3 py-1 font-medium text-emerald-600">Secure • PCI DSS</span>
+        <button class="rounded-full border border-slate-200 bg-white px-3 py-1.5 font-medium">Butuh bantuan?</button>
+      </div>
+    </header>
+
+    <main class="mt-8 grid flex-1 gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+      <section class="space-y-6">
+        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <h2 class="text-lg font-semibold text-slate-900">Metode Pembayaran</h2>
+            <div class="flex items-center gap-2 text-xs text-slate-500">
+              <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600">IDR 1.560.000</span>
+              <button class="rounded-full border border-slate-200 bg-white px-3 py-1 font-medium">Split bill</button>
+            </div>
+          </div>
+
+          <div class="mt-6 space-y-6 text-sm text-slate-600">
+            <div class="flex rounded-full border border-slate-200 bg-slate-100 p-1 text-xs font-medium text-slate-500">
+              <button class="payment-tab w-1/3 rounded-full bg-white py-2 shadow" data-target="card">Kartu Debit</button>
+              <button class="payment-tab w-1/3 rounded-full py-2" data-target="qris">QRIS</button>
+              <button class="payment-tab w-1/3 rounded-full py-2" data-target="va">Virtual Account</button>
+            </div>
+
+            <div id="card" class="payment-panel space-y-5">
+              <label class="block space-y-2">
+                <span class="text-xs uppercase tracking-wide text-slate-400">Nama di Kartu</span>
+                <input type="text" value="Aulia R" class="w-full rounded-2xl border border-slate-200 px-3 py-3 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200" />
+              </label>
+              <label class="block space-y-2">
+                <span class="text-xs uppercase tracking-wide text-slate-400">Nomor Kartu</span>
+                <div class="flex items-center gap-3 rounded-2xl border border-slate-200 px-3 py-3 shadow-sm focus-within:border-sky-500 focus-within:ring-2 focus-within:ring-sky-200">
+                  <img src="https://www.svgrepo.com/show/396961/visa.svg" alt="Visa" class="h-6" />
+                  <input type="text" value="4925 6012 0899 1181" class="w-full border-none bg-transparent text-sm focus:outline-none" />
+                </div>
+              </label>
+              <div class="grid gap-4 md:grid-cols-[1fr_1fr_120px]">
+                <label class="space-y-2">
+                  <span class="text-xs uppercase tracking-wide text-slate-400">Masa Berlaku</span>
+                  <input type="text" value="07/27" class="w-full rounded-2xl border border-slate-200 px-3 py-3 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200" />
+                </label>
+                <label class="space-y-2">
+                  <span class="text-xs uppercase tracking-wide text-slate-400">CVV</span>
+                  <input type="password" value="123" class="w-full rounded-2xl border border-slate-200 px-3 py-3 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200" />
+                </label>
+                <label class="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 text-xs text-slate-500">
+                  <input type="checkbox" class="h-4 w-4 rounded border-slate-300 text-sky-500 focus:ring-sky-500" checked />
+                  Simpan kartu saya
+                </label>
+              </div>
+              <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-500">
+                <p class="text-[11px] uppercase tracking-wide text-slate-400">3D Secure</p>
+                <p>Kode OTP akan dikirim oleh bank Anda. Harap siapkan perangkat mobile banking.</p>
+              </div>
+              <button class="w-full rounded-2xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-200/70">Bayar Sekarang</button>
+            </div>
+
+            <div id="qris" class="payment-panel hidden space-y-5">
+              <div class="rounded-3xl border border-slate-200 bg-slate-50 p-6 text-center">
+                <p class="text-xs uppercase tracking-wide text-slate-400">Scan QRIS</p>
+                <div class="mt-4 flex justify-center">
+                  <div class="h-48 w-48 rounded-3xl border-8 border-white bg-[url('https://api.qrserver.com/v1/create-qr-code/?data=MEDCORE-QRIS-29831&size=200x200')] bg-cover bg-center shadow-inner"></div>
+                </div>
+                <p class="mt-4 text-xs text-slate-500">Kode berlaku sampai <span class="font-semibold text-slate-700">09:45</span></p>
+                <button class="mt-3 rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-medium text-slate-600">Salin kode pembayaran</button>
+              </div>
+              <div class="grid gap-3 text-xs text-slate-500">
+                <div class="flex items-center justify-between rounded-2xl bg-slate-50 p-3">
+                  <span>Status</span>
+                  <span class="rounded-full bg-amber-100 px-3 py-1 font-semibold text-amber-600">Menunggu</span>
+                </div>
+                <div class="flex items-center justify-between rounded-2xl bg-slate-50 p-3">
+                  <span>Provider</span>
+                  <span class="font-semibold text-slate-600">DANA • GOPAY • OVO</span>
+                </div>
+                <div class="rounded-2xl bg-slate-50 p-3">
+                  <p class="text-[11px] uppercase tracking-wide text-slate-400">Instruksi</p>
+                  <ol class="mt-2 space-y-1 list-decimal pl-4">
+                    <li>Buka aplikasi mobile banking / e-wallet.</li>
+                    <li>Pilih menu bayar via QRIS dan scan kode.</li>
+                    <li>Pastikan nominal sesuai, kemudian konfirmasi.</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+
+            <div id="va" class="payment-panel hidden space-y-5">
+              <label class="block space-y-2">
+                <span class="text-xs uppercase tracking-wide text-slate-400">Pilih Bank</span>
+                <select class="w-full rounded-2xl border border-slate-200 px-3 py-3 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200">
+                  <option>BCA Virtual Account</option>
+                  <option>Bank Mandiri</option>
+                  <option>BNI</option>
+                  <option>BRI</option>
+                </select>
+              </label>
+              <div class="rounded-3xl border border-slate-200 bg-slate-900 p-6 text-white">
+                <p class="text-xs uppercase tracking-widest text-slate-300">Virtual Account Number</p>
+                <p class="mt-3 text-2xl font-semibold tracking-[0.3em]">781 0089 2281</p>
+                <div class="mt-4 flex flex-wrap items-center gap-2 text-[11px] text-slate-300">
+                  <span>Berlaku hingga 19 Mar 2025 • 23:59</span>
+                  <button class="rounded-full bg-slate-800 px-3 py-1 font-medium text-white">Salin</button>
+                </div>
+              </div>
+              <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-500">
+                <p>Transfer tepat sesuai nominal: <span class="font-semibold text-slate-700">IDR 1.560.000</span></p>
+                <p class="mt-1">Konfirmasi otomatis dalam 1-3 menit setelah pembayaran.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="space-y-6">
+        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60">
+          <h2 class="text-base font-semibold text-slate-900">Ringkasan Tagihan</h2>
+          <dl class="mt-4 space-y-3 text-sm text-slate-600">
+            <div class="flex items-center justify-between">
+              <dt>Biaya konsultasi</dt>
+              <dd>IDR 950.000</dd>
+            </div>
+            <div class="flex items-center justify-between">
+              <dt>Pemeriksaan EKG</dt>
+              <dd>IDR 280.000</dd>
+            </div>
+            <div class="flex items-center justify-between">
+              <dt>Lab panel darah</dt>
+              <dd>IDR 450.000</dd>
+            </div>
+            <div class="flex items-center justify-between text-emerald-600">
+              <dt class="flex items-center gap-2">Coverage Allianz <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold">-35%</span></dt>
+              <dd>-IDR 120.000</dd>
+            </div>
+            <div class="flex items-center justify-between">
+              <dt>Subtotal</dt>
+              <dd>IDR 1.560.000</dd>
+            </div>
+            <div class="flex items-center justify-between border-t border-dashed border-slate-200 pt-3 text-base font-semibold text-slate-900">
+              <dt>Total dibayar</dt>
+              <dd>IDR 1.560.000</dd>
+            </div>
+          </dl>
+          <div class="mt-4 rounded-2xl bg-slate-50 p-4 text-xs text-slate-500">
+            <p class="text-[11px] uppercase tracking-wide text-slate-400">Catatan</p>
+            <p>Jika pembayaran dilakukan melalui asuransi, pastikan kartu masih aktif. Konfirmasi otomatis dalam 2 menit setelah berhasil.</p>
+          </div>
+        </div>
+
+        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60">
+          <h2 class="text-base font-semibold text-slate-900">Riwayat Pembayaran</h2>
+          <div class="mt-4 space-y-3 text-xs text-slate-500">
+            <div class="flex items-center justify-between rounded-2xl bg-slate-50 p-3">
+              <span>Jan 2025 • MC-APT-1289</span>
+              <span class="rounded-full bg-emerald-100 px-3 py-1 font-semibold text-emerald-600">Success</span>
+            </div>
+            <div class="flex items-center justify-between rounded-2xl bg-slate-50 p-3">
+              <span>Nov 2024 • MC-APT-9834</span>
+              <span class="rounded-full bg-rose-100 px-3 py-1 font-semibold text-rose-600">Refunded</span>
+            </div>
+            <div class="flex items-center justify-between rounded-2xl bg-slate-50 p-3">
+              <span>Oct 2024 • MC-APT-8721</span>
+              <span class="rounded-full bg-slate-900 px-3 py-1 font-semibold text-white">Cashless</span>
+            </div>
+          </div>
+          <button class="mt-4 w-full rounded-2xl bg-slate-900 px-4 py-3 text-xs font-semibold text-white">Download Invoice</button>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    const paymentTabs = document.querySelectorAll('.payment-tab');
+    const paymentPanels = document.querySelectorAll('.payment-panel');
+    paymentTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        paymentTabs.forEach(t => t.classList.remove('bg-white', 'shadow'));
+        tab.classList.add('bg-white', 'shadow');
+        paymentPanels.forEach(panel => panel.classList.add('hidden'));
+        document.getElementById(tab.dataset.target).classList.remove('hidden');
+      });
+    });
+  </script>
+</body>
+</html>

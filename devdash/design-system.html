@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevDash Design System & Component Library</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="assets/css/dashboard.css" rel="stylesheet">
+    <style>
+        .design-system-section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .color-swatch {
+            width: 80px;
+            height: 80px;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .typography-example {
+            border-left: 4px solid #e5e7eb;
+            padding-left: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .component-showcase {
+            border: 2px dashed #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            margin: 1rem 0;
+            background: #f9fafb;
+        }
+        
+        .spacing-example {
+            background: linear-gradient(45deg, #f3f4f6 25%, transparent 25%),
+                        linear-gradient(-45deg, #f3f4f6 25%, transparent 25%),
+                        linear-gradient(45deg, transparent 75%, #f3f4f6 75%),
+                        linear-gradient(-45deg, transparent 75%, #f3f4f6 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        
+        .elevation-example {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #374151;
+            margin: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+    <!-- Header -->
+    <div class="bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">DevDash Design System</h1>
+                    <p class="text-gray-600 mt-1">Complete component library and design tokens for enterprise dashboard development</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-500">Version 2.0</span>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-download mr-2"></i>
+                        Export Tokens
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Color System -->
+        <section class="design-system-section">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Color System</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Primary Colors -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Primary Palette</h3>
+                    <div class="grid grid-cols-5 gap-4">
+                        <div class="text-center">
+                            <div class="color-swatch" style="background-color: #2563eb;">
+                                Primary
+                            </div>
+                            <div class="text-xs text-gray-600 mt-2">#2563eb</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="color-swatch" style="background-color: #10b981;">
+                                Success
+                            </div>
+                            <div class="text-xs text-gray-600 mt-2">#10b981</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="color-swatch" style="background-color: #f59e0b;">
+                                Warning
+                            </div>
+                            <div class="text-xs text-gray-600 mt-2">#f59e0b</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="color-swatch" style="background-color: #ef4444;">
+                                Error
+                            </div>
+                            <div class="text-xs text-gray-600 mt-2">#ef4444</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="color-swatch" style="background-color: #64748b;">
+                                Secondary
+                            </div>
+                            <div class="text-xs text-gray-600 mt-2">#64748b</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Integration Colors -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Integration Palette</h3>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="text-center">
+                            <div class="color-swatch" style="background-color: #fc6d26;">
+                                GitLab
+                            </div>
+                            <div class="text-xs text-gray-600 mt-2">#fc6d26</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="color-swatch" style="background-color: #4e9bcd;">
+                                SonarQube
+                            </div>
+                            <div class="text-xs text-gray-600 mt-2">#4e9bcd</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="color-swatch" style="background-color: #3493df;">
+                                OpenProject
+                            </div>
+                            <div class="text-xs text-gray-600 mt-2">#3493df</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accessibility Note -->
+            <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <h4 class="font-semibold text-blue-900 mb-2">
+                    <i class="fas fa-universal-access mr-2"></i>
+                    Accessibility Compliance
+                </h4>
+                <p class="text-blue-800 text-sm">
+                    All color combinations meet WCAG 2.1 AA contrast requirements (4.5:1 minimum). 
+                    Color is never the only means of conveying information.
+                </p>
+            </div>
+        </section>
+
+        <!-- Typography System -->
+        <section class="design-system-section">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Typography</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Heading Scale</h3>
+                    <div class="space-y-4">
+                        <div class="typography-example">
+                            <h1 class="text-4xl font-bold text-gray-900">H1 - Dashboard Title</h1>
+                            <code class="text-xs text-gray-500">text-4xl font-bold (36px)</code>
+                        </div>
+                        <div class="typography-example">
+                            <h2 class="text-2xl font-bold text-gray-900">H2 - Section Header</h2>
+                            <code class="text-xs text-gray-500">text-2xl font-bold (24px)</code>
+                        </div>
+                        <div class="typography-example">
+                            <h3 class="text-xl font-semibold text-gray-700">H3 - Subsection</h3>
+                            <code class="text-xs text-gray-500">text-xl font-semibold (20px)</code>
+                        </div>
+                        <div class="typography-example">
+                            <h4 class="text-lg font-medium text-gray-700">H4 - Card Title</h4>
+                            <code class="text-xs text-gray-500">text-lg font-medium (18px)</code>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Body Text</h3>
+                    <div class="space-y-4">
+                        <div class="typography-example">
+                            <p class="text-base text-gray-900">Body Large - Primary content</p>
+                            <code class="text-xs text-gray-500">text-base (16px)</code>
+                        </div>
+                        <div class="typography-example">
+                            <p class="text-sm text-gray-700">Body Regular - Secondary content</p>
+                            <code class="text-xs text-gray-500">text-sm (14px)</code>
+                        </div>
+                        <div class="typography-example">
+                            <p class="text-xs text-gray-600">Caption - Metadata and labels</p>
+                            <code class="text-xs text-gray-500">text-xs (12px)</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Component Library -->
+        <section class="design-system-section">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Component Library</h2>
+            
+            <!-- Buttons -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-700 mb-4">Buttons</h3>
+                <div class="component-showcase">
+                    <div class="flex flex-wrap gap-4">
+                        <button class="btn btn-primary">Primary Button</button>
+                        <button class="btn btn-secondary">Secondary Button</button>
+                        <button class="btn btn-success">Success Button</button>
+                        <button class="btn btn-warning">Warning Button</button>
+                        <button class="btn btn-error">Error Button</button>
+                        <button class="btn btn-primary" disabled>Disabled Button</button>
+                    </div>
+                    
+                    <div class="mt-4 flex flex-wrap gap-4">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-plus mr-2"></i>
+                            With Icon
+                        </button>
+                        <button class="btn btn-secondary btn-sm">Small Button</button>
+                        <button class="btn btn-primary loading">Loading</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cards -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-700 mb-4">Cards</h3>
+                <div class="component-showcase">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Metric Card -->
+                        <div class="metric-card p-6">
+                            <div class="metric-value">142</div>
+                            <div class="metric-label">Total Commits</div>
+                            <div class="metric-change positive">
+                                <i class="fas fa-arrow-up mr-1"></i>
+                                +12% from last week
+                            </div>
+                        </div>
+                        
+                        <!-- Status Card -->
+                        <div class="metric-card p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="font-medium text-gray-900">Code Quality</h4>
+                                <span class="badge success">Excellent</span>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm">
+                                    <span>Coverage</span>
+                                    <span>94%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-green-500 h-2 rounded-full" style="width: 94%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Activity Card -->
+                        <div class="metric-card p-6">
+                            <div class="flex items-center mb-4">
+                                <div class="activity-icon gitlab mr-3">
+                                    <i class="fab fa-gitlab"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-gray-900">Latest Activity</div>
+                                    <div class="text-sm text-gray-600">2 minutes ago</div>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-700">Merged PR #342: Add user authentication</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Forms -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-700 mb-4">Form Elements</h3>
+                <div class="component-showcase">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div class="form-group">
+                                <label class="form-label" for="demo-input">Text Input</label>
+                                <input type="text" id="demo-input" class="form-input" placeholder="Enter text here">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="demo-select">Select Dropdown</label>
+                                <select id="demo-select" class="form-input">
+                                    <option>Choose option</option>
+                                    <option>Option 1</option>
+                                    <option>Option 2</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="form-group">
+                                <label class="form-label" for="demo-textarea">Textarea</label>
+                                <textarea id="demo-textarea" class="form-input form-textarea" placeholder="Enter description"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="mr-2">
+                                    <span class="form-label mb-0">Checkbox option</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-700 mb-4">Navigation</h3>
+                <div class="component-showcase">
+                    <div class="bg-gray-900 rounded-lg p-4 max-w-md">
+                        <nav class="space-y-2">
+                            <a href="#" class="nav-link active">
+                                <i class="fas fa-chart-line"></i>
+                                Dashboard
+                            </a>
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-users"></i>
+                                Team Performance
+                            </a>
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-file-alt"></i>
+                                Reports
+                            </a>
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-cog"></i>
+                                Settings
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Layout System -->
+        <section class="design-system-section">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Layout System</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Spacing -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Spacing Scale</h3>
+                    <div class="space-y-2">
+                        <div class="flex items-center">
+                            <div class="w-12 text-sm text-gray-600">xs (4px)</div>
+                            <div class="spacing-example h-1" style="width: 4px;"></div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-12 text-sm text-gray-600">sm (8px)</div>
+                            <div class="spacing-example h-1" style="width: 8px;"></div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-12 text-sm text-gray-600">md (16px)</div>
+                            <div class="spacing-example h-1" style="width: 16px;"></div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-12 text-sm text-gray-600">lg (24px)</div>
+                            <div class="spacing-example h-1" style="width: 24px;"></div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-12 text-sm text-gray-600">xl (32px)</div>
+                            <div class="spacing-example h-1" style="width: 32px;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Elevation -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Shadow Elevation</h3>
+                    <div class="flex flex-wrap">
+                        <div class="elevation-example shadow-sm">
+                            Level 1
+                        </div>
+                        <div class="elevation-example shadow-md">
+                            Level 2
+                        </div>
+                        <div class="elevation-example shadow-lg">
+                            Level 3
+                        </div>
+                        <div class="elevation-example shadow-xl">
+                            Level 4
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Responsive Breakpoints -->
+        <section class="design-system-section">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Responsive Design</h2>
+            
+            <div class="overflow-x-auto">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Breakpoint</th>
+                            <th>Screen Size</th>
+                            <th>Container Width</th>
+                            <th>Columns</th>
+                            <th>Gutter</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>xs</code></td>
+                            <td>0px - 639px</td>
+                            <td>100%</td>
+                            <td>1</td>
+                            <td>16px</td>
+                        </tr>
+                        <tr>
+                            <td><code>sm</code></td>
+                            <td>640px - 767px</td>
+                            <td>640px</td>
+                            <td>2</td>
+                            <td>16px</td>
+                        </tr>
+                        <tr>
+                            <td><code>md</code></td>
+                            <td>768px - 1023px</td>
+                            <td>768px</td>
+                            <td>3</td>
+                            <td>24px</td>
+                        </tr>
+                        <tr>
+                            <td><code>lg</code></td>
+                            <td>1024px - 1279px</td>
+                            <td>1024px</td>
+                            <td>4</td>
+                            <td>24px</td>
+                        </tr>
+                        <tr>
+                            <td><code>xl</code></td>
+                            <td>1280px+</td>
+                            <td>1280px</td>
+                            <td>6</td>
+                            <td>32px</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Design Tokens -->
+        <section class="design-system-section">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Design Tokens</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">CSS Custom Properties</h3>
+                    <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm overflow-x-auto">
+<pre>:root {
+  /* Colors */
+  --color-primary: #2563eb;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  
+  /* Layout */
+  --sidebar-width: 16rem;
+  --header-height: 4rem;
+  
+  /* Animation */
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 250ms ease-in-out;
+}</pre>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Usage Guidelines</h3>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                            Use semantic color names (primary, success) not specific colors (blue, green)
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                            Always test color combinations for accessibility compliance
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                            Use consistent spacing increments from the scale
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                            Apply elevation systematically to establish hierarchy
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                            Test all interactions across breakpoints
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="font-semibold">DevDash Design System</h3>
+                    <p class="text-gray-400 text-sm">Enterprise-grade components for developer performance dashboards</p>
+                </div>
+                <div class="text-sm text-gray-400">
+                    Last updated: September 2024
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

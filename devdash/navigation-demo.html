@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DevDash Navigation Demo - Cross-level hierarchy navigation patterns">
+    <title>DevDash - Multi-Level Navigation Demo</title>
+    
+    <!-- CSS Framework and Custom Styles -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="assets/css/dashboard.css" rel="stylesheet">
+    
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Accessibility and SEO -->
+    <meta name="theme-color" content="#1f2937">
+    <link rel="icon" href="assets/images/favicon.ico">
+    
+    <style>
+        .demo-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .level-selector {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .level-button {
+            background: #f3f4f6;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: #374151;
+            display: block;
+        }
+        
+        .level-button:hover {
+            border-color: #2563eb;
+            background: #eff6ff;
+            color: #2563eb;
+            transform: translateY(-2px);
+        }
+        
+        .level-button.active {
+            border-color: #2563eb;
+            background: #2563eb;
+            color: white;
+        }
+        
+        .breadcrumb-demo {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .breadcrumb-navigation {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .breadcrumb-item {
+            display: flex;
+            align-items: center;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+        .breadcrumb-item.current {
+            color: #1f2937;
+            font-weight: 600;
+        }
+        
+        .breadcrumb-separator {
+            color: #9ca3af;
+            margin: 0 0.5rem;
+        }
+        
+        .drill-down-demo {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .hierarchy-tree {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .hierarchy-level {
+            display: flex;
+            items: center;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 0.5rem;
+            border-left: 4px solid #e5e7eb;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .hierarchy-level:hover {
+            background: #f3f4f6;
+            border-left-color: #2563eb;
+        }
+        
+        .hierarchy-level.level-0 { border-left-color: #8b5cf6; margin-left: 0; }
+        .hierarchy-level.level-1 { border-left-color: #3b82f6; margin-left: 2rem; }
+        .hierarchy-level.level-2 { border-left-color: #10b981; margin-left: 4rem; }
+        .hierarchy-level.level-3 { border-left-color: #f59e0b; margin-left: 6rem; }
+        
+        .role-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-right: 1rem;
+        }
+        
+        .role-director { background: #fef3c7; color: #92400e; }
+        .role-manager { background: #dbeafe; color: #1e40af; }
+        .role-lead { background: #d1fae5; color: #065f46; }
+        .role-developer { background: #fee2e2; color: #991b1b; }
+        
+        .navigation-pattern {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pattern-demo {
+            border: 2px dashed #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            background: #f9fafb;
+        }
+        
+        .access-matrix {
+            overflow-x: auto;
+        }
+        
+        .access-table {
+            width: 100%;
+            background: white;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .access-table th {
+            background: #f3f4f6;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.875rem;
+        }
+        
+        .access-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 0.875rem;
+        }
+        
+        .access-level {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .access-full { background: #d1fae5; color: #065f46; }
+        .access-limited { background: #fef3c7; color: #92400e; }
+        .access-view { background: #dbeafe; color: #1e40af; }
+        .access-none { background: #f3f4f6; color: #6b7280; }
+        
+        .mobile-nav-demo {
+            background: #1f2937;
+            color: white;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .mobile-nav-items {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem;
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        
+        .mobile-nav-item.active {
+            color: #60a5fa;
+        }
+        
+        .mobile-nav-icon {
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .mobile-nav-label {
+            font-size: 0.75rem;
+        }
+        
+        .demo-section {
+            margin: 2rem 0;
+            padding: 2rem;
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-highlight {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .highlight-title {
+            font-weight: 600;
+            color: #0369a1;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .highlight-description {
+            color: #075985;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+    <!-- Demo Banner -->
+    <div class="demo-banner">
+        <h1 class="text-3xl font-bold mb-2">
+            <i class="fas fa-sitemap mr-3"></i>
+            DevDash Multi-Level Navigation Demo
+        </h1>
+        <p class="text-lg opacity-90">
+            Explore how users navigate through organizational hierarchy levels with role-based access and smart breadcrumbs
+        </p>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Level Selector -->
+        <section class="demo-section">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Interactive Level Selector</h2>
+            <p class="text-gray-600 mb-6">Click on different organizational levels to see how navigation adapts based on user role and access permissions.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <a href="manager-dashboard.html" class="level-button" id="director-level">
+                    <div class="role-badge role-director">Director</div>
+                    <div class="font-semibold text-lg">Level 4-6</div>
+                    <div class="text-sm text-gray-600 mt-1">Strategic Overview</div>
+                    <div class="text-xs text-gray-500 mt-2">
+                        • Cross-team comparison<br>
+                        • ROI analytics<br>
+                        • Resource planning
+                    </div>
+                </a>
+                
+                <a href="team-lead-dashboard.html" class="level-button" id="manager-level">
+                    <div class="role-badge role-manager">Manager</div>
+                    <div class="font-semibold text-lg">Level 3-4</div>
+                    <div class="text-sm text-gray-600 mt-1">Team Management</div>
+                    <div class="text-xs text-gray-500 mt-2">
+                        • Team performance<br>
+                        • Coaching insights<br>
+                        • Workload balancing
+                    </div>
+                </a>
+                
+                <a href="team-lead-dashboard.html" class="level-button" id="lead-level">
+                    <div class="role-badge role-lead">Team Lead</div>
+                    <div class="font-semibold text-lg">Level 2-3</div>
+                    <div class="text-sm text-gray-600 mt-1">Team Coordination</div>
+                    <div class="text-xs text-gray-500 mt-2">
+                        • Individual mentoring<br>
+                        • Sprint planning<br>
+                        • Bottleneck resolution
+                    </div>
+                </a>
+                
+                <a href="developer-dashboard.html" class="level-button active" id="developer-level">
+                    <div class="role-badge role-developer">Developer</div>
+                    <div class="font-semibold text-lg">Level 1</div>
+                    <div class="text-sm text-gray-600 mt-1">Personal Dashboard</div>
+                    <div class="text-xs text-gray-500 mt-2">
+                        • Personal metrics<br>
+                        • Daily reports<br>
+                        • Goal tracking
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Smart Breadcrumb Navigation -->
+        <section class="demo-section">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Smart Breadcrumb Navigation</h2>
+            <p class="text-gray-600 mb-6">Breadcrumbs adapt to show the organizational path and allow quick navigation between levels.</p>
+            
+            <div class="space-y-4">
+                <!-- Director Level Breadcrumb -->
+                <div class="breadcrumb-demo">
+                    <div class="text-sm font-medium text-gray-700 mb-2">Director View:</div>
+                    <nav class="breadcrumb-navigation" aria-label="Director breadcrumb">
+                        <div class="breadcrumb-item current">
+                            <i class="fas fa-building mr-2"></i>
+                            Organization
+                        </div>
+                    </nav>
+                </div>
+                
+                <!-- Manager Level Breadcrumb -->
+                <div class="breadcrumb-demo">
+                    <div class="text-sm font-medium text-gray-700 mb-2">Manager View:</div>
+                    <nav class="breadcrumb-navigation" aria-label="Manager breadcrumb">
+                        <div class="breadcrumb-item">
+                            <a href="#" class="text-blue-600 hover:underline">
+                                <i class="fas fa-building mr-2"></i>
+                                Organization
+                            </a>
+                        </div>
+                        <div class="breadcrumb-separator">→</div>
+                        <div class="breadcrumb-item current">
+                            <i class="fas fa-layer-group mr-2"></i>
+                            Engineering Division
+                        </div>
+                    </nav>
+                </div>
+                
+                <!-- Team Lead Breadcrumb -->
+                <div class="breadcrumb-demo">
+                    <div class="text-sm font-medium text-gray-700 mb-2">Team Lead View:</div>
+                    <nav class="breadcrumb-navigation" aria-label="Team lead breadcrumb">
+                        <div class="breadcrumb-item">
+                            <a href="#" class="text-blue-600 hover:underline">
+                                <i class="fas fa-building mr-2"></i>
+                                Organization
+                            </a>
+                        </div>
+                        <div class="breadcrumb-separator">→</div>
+                        <div class="breadcrumb-item">
+                            <a href="#" class="text-blue-600 hover:underline">
+                                <i class="fas fa-layer-group mr-2"></i>
+                                Engineering
+                            </a>
+                        </div>
+                        <div class="breadcrumb-separator">→</div>
+                        <div class="breadcrumb-item current">
+                            <i class="fas fa-users mr-2"></i>
+                            Frontend Team
+                        </div>
+                    </nav>
+                </div>
+                
+                <!-- Developer Breadcrumb -->
+                <div class="breadcrumb-demo">
+                    <div class="text-sm font-medium text-gray-700 mb-2">Developer View:</div>
+                    <nav class="breadcrumb-navigation" aria-label="Developer breadcrumb">
+                        <div class="breadcrumb-item">
+                            <a href="#" class="text-blue-600 hover:underline">
+                                <i class="fas fa-building mr-2"></i>
+                                Organization
+                            </a>
+                        </div>
+                        <div class="breadcrumb-separator">→</div>
+                        <div class="breadcrumb-item">
+                            <a href="#" class="text-blue-600 hover:underline">
+                                <i class="fas fa-layer-group mr-2"></i>
+                                Engineering
+                            </a>
+                        </div>
+                        <div class="breadcrumb-separator">→</div>
+                        <div class="breadcrumb-item">
+                            <a href="#" class="text-blue-600 hover:underline">
+                                <i class="fas fa-users mr-2"></i>
+                                Frontend Team
+                            </a>
+                        </div>
+                        <div class="breadcrumb-separator">→</div>
+                        <div class="breadcrumb-item current">
+                            <i class="fas fa-user mr-2"></i>
+                            John Developer
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </section>
+
+        <!-- Drill-Down Patterns -->
+        <section class="demo-section">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Drill-Down Navigation Patterns</h2>
+            <p class="text-gray-600 mb-6">Demonstrate how users can navigate from high-level views to specific individual performance.</p>
+            
+            <div class="hierarchy-tree">
+                <div class="hierarchy-level level-0" onclick="showDrillDown('organization')">
+                    <div class="flex-1">
+                        <div class="font-semibold text-gray-900">
+                            <i class="fas fa-building text-purple-500 mr-2"></i>
+                            Engineering Organization
+                        </div>
+                        <div class="text-sm text-gray-600 mt-1">34 developers across 5 teams</div>
+                        <div class="text-xs text-gray-500">Click to view divisional breakdown</div>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+                
+                <div class="hierarchy-level level-1" onclick="showDrillDown('division')">
+                    <div class="flex-1">
+                        <div class="font-semibold text-gray-900">
+                            <i class="fas fa-layer-group text-blue-500 mr-2"></i>
+                            Frontend Division
+                        </div>
+                        <div class="text-sm text-gray-600 mt-1">12 developers across 2 teams</div>
+                        <div class="text-xs text-gray-500">Click to view team breakdown</div>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+                
+                <div class="hierarchy-level level-2" onclick="showDrillDown('team')">
+                    <div class="flex-1">
+                        <div class="font-semibold text-gray-900">
+                            <i class="fas fa-users text-green-500 mr-2"></i>
+                            React Team
+                        </div>
+                        <div class="text-sm text-gray-600 mt-1">6 developers, Team Lead: Sarah Chen</div>
+                        <div class="text-xs text-gray-500">Click to view individual performance</div>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+                
+                <div class="hierarchy-level level-3" onclick="showDrillDown('individual')">
+                    <div class="flex-1">
+                        <div class="font-semibold text-gray-900">
+                            <i class="fas fa-user text-yellow-500 mr-2"></i>
+                            John Developer
+                        </div>
+                        <div class="text-sm text-gray-600 mt-1">Senior Frontend Developer, 3 years experience</div>
+                        <div class="text-xs text-gray-500">Click to view detailed performance dashboard</div>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Role-Based Access Matrix -->
+        <section class="demo-section">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Role-Based Access Control</h2>
+            <p class="text-gray-600 mb-6">Different roles have different levels of access to organizational data and functionality.</p>
+            
+            <div class="access-matrix">
+                <table class="access-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Director (L4-6)</th>
+                            <th>Manager (L3-4)</th>
+                            <th>Team Lead (L2-3)</th>
+                            <th>Developer (L1)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="font-medium">Personal Dashboard</td>
+                            <td><span class="access-level access-full">Full Access</span></td>
+                            <td><span class="access-level access-full">Full Access</span></td>
+                            <td><span class="access-level access-full">Full Access</span></td>
+                            <td><span class="access-level access-full">Full Access</span></td>
+                        </tr>
+                        <tr>
+                            <td class="font-medium">Team Performance</td>
+                            <td><span class="access-level access-full">All Teams</span></td>
+                            <td><span class="access-level access-limited">Own Division</span></td>
+                            <td><span class="access-level access-limited">Own Team</span></td>
+                            <td><span class="access-level access-view">View Only</span></td>
+                        </tr>
+                        <tr>
+                            <td class="font-medium">Individual Metrics</td>
+                            <td><span class="access-level access-limited">Aggregated</span></td>
+                            <td><span class="access-level access-limited">Direct Reports</span></td>
+                            <td><span class="access-level access-full">Team Members</span></td>
+                            <td><span class="access-level access-limited">Own Only</span></td>
+                        </tr>
+                        <tr>
+                            <td class="font-medium">Resource Planning</td>
+                            <td><span class="access-level access-full">Organization</span></td>
+                            <td><span class="access-level access-full">Division</span></td>
+                            <td><span class="access-level access-limited">Team Budget</span></td>
+                            <td><span class="access-level access-none">No Access</span></td>
+                        </tr>
+                        <tr>
+                            <td class="font-medium">Strategic Initiatives</td>
+                            <td><span class="access-level access-full">Create & Manage</span></td>
+                            <td><span class="access-level access-limited">View & Update</span></td>
+                            <td><span class="access-level access-view">View Only</span></td>
+                            <td><span class="access-level access-none">No Access</span></td>
+                        </tr>
+                        <tr>
+                            <td class="font-medium">ROI Analytics</td>
+                            <td><span class="access-level access-full">Full Access</span></td>
+                            <td><span class="access-level access-limited">Division ROI</span></td>
+                            <td><span class="access-level access-view">Team Metrics</span></td>
+                            <td><span class="access-level access-none">No Access</span></td>
+                        </tr>
+                        <tr>
+                            <td class="font-medium">Coaching Tools</td>
+                            <td><span class="access-level access-view">View Reports</span></td>
+                            <td><span class="access-level access-full">Full Access</span></td>
+                            <td><span class="access-level access-full">Team Members</span></td>
+                            <td><span class="access-level access-none">No Access</span></td>
+                        </tr>
+                        <tr>
+                            <td class="font-medium">Daily Reports</td>
+                            <td><span class="access-level access-view">Summary Only</span></td>
+                            <td><span class="access-level access-limited">Team Reports</span></td>
+                            <td><span class="access-level access-full">Review & Approve</span></td>
+                            <td><span class="access-level access-full">Submit Own</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Mobile Navigation Patterns -->
+        <section class="demo-section">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Mobile Navigation Adaptation</h2>
+            <p class="text-gray-600 mb-6">Mobile navigation adapts based on user role to prioritize the most relevant features.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Director Mobile Nav -->
+                <div>
+                    <h4 class="font-semibold text-gray-900 mb-3">Director Mobile Navigation</h4>
+                    <div class="mobile-nav-demo">
+                        <div class="mobile-nav-items">
+                            <a href="#" class="mobile-nav-item active">
+                                <i class="mobile-nav-icon fas fa-tachometer-alt"></i>
+                                <span class="mobile-nav-label">Overview</span>
+                            </a>
+                            <a href="#" class="mobile-nav-item">
+                                <i class="mobile-nav-icon fas fa-chart-bar"></i>
+                                <span class="mobile-nav-label">Analytics</span>
+                            </a>
+                            <a href="#" class="mobile-nav-item">
+                                <i class="mobile-nav-icon fas fa-sitemap"></i>
+                                <span class="mobile-nav-label">Teams</span>
+                            </a>
+                            <a href="#" class="mobile-nav-item">
+                                <i class="mobile-nav-icon fas fa-road"></i>
+                                <span class="mobile-nav-label">Initiatives</span>
+                            </a>
+                            <a href="#" class="mobile-nav-item">
+                                <i class="mobile-nav-icon fas fa-file-invoice-dollar"></i>
+                                <span class="mobile-nav-label">Reports</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Developer Mobile Nav -->
+                <div>
+                    <h4 class="font-semibold text-gray-900 mb-3">Developer Mobile Navigation</h4>
+                    <div class="mobile-nav-demo">
+                        <div class="mobile-nav-items">
+                            <a href="#" class="mobile-nav-item active">
+                                <i class="mobile-nav-icon fas fa-chart-line"></i>
+                                <span class="mobile-nav-label">Dashboard</span>
+                            </a>
+                            <a href="#" class="mobile-nav-item">
+                                <i class="mobile-nav-icon fas fa-tasks"></i>
+                                <span class="mobile-nav-label">Tasks</span>
+                            </a>
+                            <a href="#" class="mobile-nav-item">
+                                <i class="mobile-nav-icon fas fa-code-branch"></i>
+                                <span class="mobile-nav-label">PRs</span>
+                            </a>
+                            <a href="#" class="mobile-nav-item">
+                                <i class="mobile-nav-icon fas fa-clock"></i>
+                                <span class="mobile-nav-label">Time</span>
+                            </a>
+                            <a href="#" class="mobile-nav-item">
+                                <i class="mobile-nav-icon fas fa-user"></i>
+                                <span class="mobile-nav-label">Profile</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation Features -->
+        <section class="demo-section">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Advanced Navigation Features</h2>
+            <p class="text-gray-600 mb-6">Additional navigation enhancements that improve user experience across all levels.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="feature-highlight">
+                    <div class="highlight-title">
+                        <i class="fas fa-search mr-2"></i>
+                        Smart Search
+                    </div>
+                    <div class="highlight-description">
+                        Global search that understands user context and role. Directors can search across all teams, while developers get personalized results.
+                    </div>
+                </div>
+                
+                <div class="feature-highlight">
+                    <div class="highlight-title">
+                        <i class="fas fa-bookmark mr-2"></i>
+                        Quick Bookmarks
+                    </div>
+                    <div class="highlight-description">
+                        Frequently accessed views are automatically bookmarked. Team leads get quick access to their team members, managers to their divisions.
+                    </div>
+                </div>
+                
+                <div class="feature-highlight">
+                    <div class="highlight-title">
+                        <i class="fas fa-history mr-2"></i>
+                        Navigation History
+                    </div>
+                    <div class="highlight-description">
+                        Recent navigation paths are remembered, allowing users to quickly return to previously viewed dashboards or reports.
+                    </div>
+                </div>
+                
+                <div class="feature-highlight">
+                    <div class="highlight-title">
+                        <i class="fas fa-keyboard mr-2"></i>
+                        Keyboard Shortcuts
+                    </div>
+                    <div class="highlight-description">
+                        Power users can navigate quickly using keyboard shortcuts. Different shortcut sets for different roles ensure efficiency.
+                    </div>
+                </div>
+                
+                <div class="feature-highlight">
+                    <div class="highlight-title">
+                        <i class="fas fa-bell mr-2"></i>
+                        Contextual Notifications
+                    </div>
+                    <div class="highlight-description">
+                        Notifications adapt to user level. Directors get strategic alerts, while developers get task-specific notifications.
+                    </div>
+                </div>
+                
+                <div class="feature-highlight">
+                    <div class="highlight-title">
+                        <i class="fas fa-eye mr-2"></i>
+                        View Persistence
+                    </div>
+                    <div class="highlight-description">
+                        Filter settings, sort preferences, and view configurations are remembered across sessions for consistent user experience.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Demo -->
+        <section class="demo-section">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Try the Navigation</h2>
+            <p class="text-gray-600 mb-6">Click the buttons below to experience different dashboard views.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <a href="manager-dashboard.html" class="btn btn-primary btn-lg">
+                    <i class="fas fa-tachometer-alt mr-2"></i>
+                    Director View
+                </a>
+                
+                <a href="team-lead-dashboard.html" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-users mr-2"></i>
+                    Team Lead View
+                </a>
+                
+                <a href="developer-dashboard.html" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-user mr-2"></i>
+                    Developer View
+                </a>
+                
+                <a href="mobile-responsive.html" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-mobile-alt mr-2"></i>
+                    Mobile View
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Demo interactions
+        function showDrillDown(level) {
+            const levels = {
+                'organization': 'Viewing organizational overview with all 5 teams and 34 developers',
+                'division': 'Drilling down to Frontend Division with 2 teams and 12 developers',
+                'team': 'Focusing on React Team with 6 developers and current sprint metrics',
+                'individual': 'Viewing John Developer\'s personal performance dashboard'
+            };
+            
+            alert(levels[level] + '\n\nIn a real implementation, this would navigate to the appropriate dashboard view.');
+        }
+
+        // Level selection highlighting
+        document.querySelectorAll('.level-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                // Remove active class from all buttons
+                document.querySelectorAll('.level-button').forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                this.classList.add('active');
+            });
+        });
+
+        // Breadcrumb interaction
+        document.querySelectorAll('.breadcrumb-item a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Navigating to: ' + this.textContent.trim());
+            });
+        });
+
+        // Keyboard shortcuts demo
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case '1':
+                        e.preventDefault();
+                        alert('Keyboard shortcut: Navigate to Dashboard');
+                        break;
+                    case '2':
+                        e.preventDefault();
+                        alert('Keyboard shortcut: Navigate to Team View');
+                        break;
+                    case '3':
+                        e.preventDefault();
+                        alert('Keyboard shortcut: Navigate to Reports');
+                        break;
+                    case '/':
+                        e.preventDefault();
+                        alert('Keyboard shortcut: Open Search');
+                        break;
+                }
+            }
+        });
+
+        // Mobile navigation simulation
+        document.querySelectorAll('.mobile-nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from siblings
+                this.parentElement.querySelectorAll('.mobile-nav-item').forEach(nav => nav.classList.remove('active'));
+                
+                // Add active class to clicked item
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

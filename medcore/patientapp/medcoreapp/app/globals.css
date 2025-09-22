@@ -1,0 +1,176 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* Medical App Color System */
+    --background: 250 251 252; /* #FAFBFC - Off-white */
+    --foreground: 26 26 46; /* #1A1A2E - Deep navy */
+    --card: 255 255 255; /* #FFFFFF - Pure white */
+    --card-foreground: 26 26 46;
+    --popover: 255 255 255;
+    --popover-foreground: 26 26 46;
+    --primary: 0 102 255; /* #0066FF - Bright blue */
+    --primary-foreground: 255 255 255;
+    --secondary: 0 212 170; /* #00D4AA - Mint green */
+    --secondary-foreground: 255 255 255;
+    --muted: 107 114 128; /* #6B7280 - Cool gray */
+    --muted-foreground: 107 114 128;
+    --accent: 255 107 107; /* #FF6B6B - Coral red */
+    --accent-foreground: 255 255 255;
+    --destructive: 239 68 68; /* #EF4444 - Red */
+    --destructive-foreground: 255 255 255;
+    --border: 229 231 235; /* #E5E7EB - Light gray */
+    --input: 229 231 235;
+    --ring: 0 102 255;
+    --radius: 12px; /* Modern 12px border radius */
+
+    /* Medical App Semantic Colors */
+    --success: 16 185 129; /* #10B981 - Green */
+    --warning: 245 158 11; /* #F59E0B - Amber */
+    --error: 239 68 68; /* #EF4444 - Red */
+    --info: 59 130 246; /* #3B82F6 - Blue */
+  }
+
+  .dark {
+    --background: 10 10 10; /* #0A0A0A - Dark background */
+    --foreground: 237 237 237; /* #EDEDED - Light text */
+    --card: 26 26 46; /* #1A1A2E - Dark card */
+    --card-foreground: 237 237 237;
+    --popover: 26 26 46;
+    --popover-foreground: 237 237 237;
+    --primary: 77 148 255; /* #4D94FF - Light blue for dark mode */
+    --primary-foreground: 26 26 46;
+    --secondary: 0 212 170; /* Keep mint green */
+    --secondary-foreground: 26 26 46;
+    --muted: 75 85 99; /* #4B5563 - Darker gray */
+    --muted-foreground: 156 163 175;
+    --accent: 255 107 107; /* Keep coral red */
+    --accent-foreground: 26 26 46;
+    --destructive: 220 38 38; /* #DC2626 - Darker red */
+    --destructive-foreground: 255 255 255;
+    --border: 75 85 99;
+    --input: 75 85 99;
+    --ring: 77 148 255;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-solid;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    /* Smooth scrolling for better UX */
+    scroll-behavior: smooth;
+    /* Better text rendering */
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Improved focus styles for accessibility */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  /* Mobile-first touch targets */
+  @media (pointer: coarse) {
+    button,
+    a,
+    input,
+    select,
+    textarea {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+
+  /* Reduced motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    :root {
+      --border: 0 0 0; /* Pure black borders */
+      --ring: 0 0 0;
+    }
+  }
+
+  /* Safe area insets for mobile devices */
+  .safe-area-inset-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-area-inset-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-area-inset-left {
+    padding-left: env(safe-area-inset-left);
+  }
+
+  .safe-area-inset-right {
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* Medical App Specific Utility Classes */
+@layer utilities {
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  .glass-morphism {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .medical-shadow {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .medical-shadow-hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Scrollbar styles for webkit browsers */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+    border-radius: 3px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground));
+    border-radius: 3px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--accent));
+  }
+}

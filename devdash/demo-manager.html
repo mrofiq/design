@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevDash Manager Demo - Team Report Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="assets/css/dashboard.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .demo-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .demo-instructions {
+            background: #f8fafc;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .feature-highlight {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+    <!-- Demo Banner -->
+    <div class="demo-banner">
+        <h1 class="text-xl font-bold">
+            <i class="fas fa-flask mr-2"></i>
+            DevDash Manager Demo - Team Report Management System
+        </h1>
+        <p class="text-sm opacity-90 mt-1">
+            Comprehensive report review and approval workflow for development teams
+        </p>
+    </div>
+
+    <!-- Demo Instructions -->
+    <div class="max-w-7xl mx-auto px-4 py-6">
+        <div class="demo-instructions">
+            <h2 class="text-lg font-semibold text-gray-900 mb-3">
+                <i class="fas fa-info-circle mr-2 text-blue-600"></i>
+                Demo Instructions
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                    <h3 class="font-medium text-gray-800 mb-2">Getting Started:</h3>
+                    <ol class="list-decimal list-inside space-y-1 text-gray-700">
+                        <li>Open browser developer tools (F12)</li>
+                        <li>Go to Console tab</li>
+                        <li>Type: <code class="bg-gray-200 px-1 rounded">localStorage.setItem('userRole', 'manager')</code></li>
+                        <li>Refresh the page to see manager features</li>
+                    </ol>
+                </div>
+                <div>
+                    <h3 class="font-medium text-gray-800 mb-2">Key Features to Test:</h3>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700">
+                        <li>View and filter team reports</li>
+                        <li>Approve/reject individual reports</li>
+                        <li>Bulk actions for multiple reports</li>
+                        <li>Export reports in different formats</li>
+                        <li>Real-time notifications system</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Highlights -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="feature-highlight">
+                <h3 class="font-semibold text-gray-900 mb-2">
+                    <i class="fas fa-clipboard-list mr-2 text-blue-600"></i>
+                    Report Management
+                </h3>
+                <p class="text-sm text-gray-700">
+                    View, filter, and manage team member daily reports with comprehensive search and status tracking.
+                </p>
+            </div>
+            
+            <div class="feature-highlight">
+                <h3 class="font-semibold text-gray-900 mb-2">
+                    <i class="fas fa-tasks mr-2 text-green-600"></i>
+                    Approval Workflow
+                </h3>
+                <p class="text-sm text-gray-700">
+                    Streamlined approval process with bulk actions, comments, and detailed feedback capabilities.
+                </p>
+            </div>
+            
+            <div class="feature-highlight">
+                <h3 class="font-semibold text-gray-900 mb-2">
+                    <i class="fas fa-chart-bar mr-2 text-purple-600"></i>
+                    Analytics & Export
+                </h3>
+                <p class="text-sm text-gray-700">
+                    Export reports in multiple formats and track team performance metrics over time.
+                </p>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Test Actions</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <button id="demo-switch-manager" class="btn btn-primary">
+                    <i class="fas fa-user-tie mr-2"></i>
+                    Switch to Manager
+                </button>
+                <button id="demo-switch-developer" class="btn btn-secondary">
+                    <i class="fas fa-user-code mr-2"></i>
+                    Switch to Developer
+                </button>
+                <button id="demo-generate-reports" class="btn btn-success">
+                    <i class="fas fa-plus mr-2"></i>
+                    Generate Sample Reports
+                </button>
+                <button id="demo-reset-data" class="btn btn-warning">
+                    <i class="fas fa-refresh mr-2"></i>
+                    Reset Demo Data
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include the main application -->
+    <div id="app" class="min-h-screen flex" style="margin-top: -2rem;">
+        <!-- Sidebar Navigation -->
+        <nav id="sidebar" class="bg-gray-900 text-white w-64 min-h-screen transition-all duration-300 ease-in-out" 
+             role="navigation" aria-label="Main navigation">
+            <!-- Logo -->
+            <div class="p-4 border-b border-gray-700">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-chart-line text-blue-400 text-2xl" aria-hidden="true"></i>
+                    <h1 class="text-xl font-bold">DevDash</h1>
+                </div>
+            </div>
+
+            <!-- User Profile -->
+            <div class="p-4 border-b border-gray-700">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                        <span class="text-white font-semibold" id="user-initials">MG</span>
+                    </div>
+                    <div>
+                        <p class="font-medium" id="user-name">Demo Manager</p>
+                        <p class="text-sm text-gray-400" id="user-role">Manager</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Menu -->
+            <ul class="py-4" role="menu">
+                <li role="none">
+                    <a href="#dashboard" class="nav-link" role="menuitem">
+                        <i class="fas fa-tachometer-alt" aria-hidden="true"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="#daily-reports" class="nav-link" role="menuitem">
+                        <i class="fas fa-calendar-day" aria-hidden="true"></i>
+                        <span>Daily Reports</span>
+                    </a>
+                </li>
+                
+                <!-- Manager-only navigation -->
+                <li role="none" class="manager-only">
+                    <a href="#team-reports" class="nav-link active" role="menuitem" aria-current="page">
+                        <i class="fas fa-clipboard-list" aria-hidden="true"></i>
+                        <span>Team Reports</span>
+                        <span id="pending-reports-badge" class="ml-auto bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </a>
+                </li>
+                <li role="none" class="manager-only">
+                    <a href="#team-overview" class="nav-link" role="menuitem">
+                        <i class="fas fa-users" aria-hidden="true"></i>
+                        <span>Team Overview</span>
+                    </a>
+                </li>
+                <li role="none" class="manager-only">
+                    <a href="#analytics" class="nav-link" role="menuitem">
+                        <i class="fas fa-chart-bar" aria-hidden="true"></i>
+                        <span>Analytics</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main id="main-content" class="flex-1 flex flex-col min-h-screen">
+            <!-- Top Header -->
+            <header class="bg-white shadow-sm border-b border-gray-200 p-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 id="page-title" class="text-2xl font-bold text-gray-900">Team Reports</h2>
+                        <p id="page-subtitle" class="text-gray-600">Review and manage team member daily reports</p>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <!-- Notifications -->
+                        <button id="notifications-btn" class="relative p-2 text-gray-600 hover:text-gray-900 transition-colors"
+                                aria-label="Notifications">
+                            <i class="fas fa-bell text-xl"></i>
+                            <span id="notification-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                5
+                            </span>
+                        </button>
+                        
+                        <!-- Manager Quick Actions -->
+                        <div class="manager-only flex items-center space-x-2">
+                            <button id="bulk-approve-btn" class="p-2 text-gray-600 hover:text-green-600 transition-colors" 
+                                    aria-label="Bulk approve reports" title="Bulk approve pending reports">
+                                <i class="fas fa-check-double text-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Views -->
+            <div class="flex-1 p-6">
+                <!-- Team Reports View (Manager Only) -->
+                <div id="team-reports-view" class="view active manager-only">
+                    <!-- Report Management Header -->
+                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 gap-4">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <h2 class="text-2xl font-bold text-gray-900">Team Reports</h2>
+                                <span id="total-reports-badge" class="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded-full">15 reports</span>
+                            </div>
+                            <p class="text-gray-600 mt-1">Review and manage team member daily reports</p>
+                        </div>
+                        
+                        <!-- Quick Actions -->
+                        <div class="flex items-center space-x-3">
+                            <div class="flex items-center space-x-2 text-sm text-gray-600">
+                                <span id="pending-count">3</span> pending • 
+                                <span id="approved-today-count">2</span> approved today
+                            </div>
+                            <button id="bulk-actions-btn" class="btn btn-secondary">
+                                <i class="fas fa-tasks mr-2"></i>
+                                Bulk Actions
+                            </button>
+                            <button id="export-reports-btn" class="btn btn-primary">
+                                <i class="fas fa-download mr-2"></i>
+                                Export
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filters and Search -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+                        <div class="flex flex-col lg:flex-row gap-4">
+                            <div class="flex-1">
+                                <label for="report-search" class="sr-only">Search reports</label>
+                                <div class="relative">
+                                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                    <input id="report-search" type="text" 
+                                           class="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                           placeholder="Search by team member name or report content...">
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-3">
+                                <select id="status-filter" class="border border-gray-300 rounded-md px-3 py-2 text-sm min-w-32">
+                                    <option value="all">All Status</option>
+                                    <option value="pending" selected>Pending</option>
+                                    <option value="approved">Approved</option>
+                                    <option value="rejected">Rejected</option>
+                                </select>
+                                
+                                <select id="member-filter" class="border border-gray-300 rounded-md px-3 py-2 text-sm min-w-36">
+                                    <option value="all">All Members</option>
+                                </select>
+                                
+                                <input id="date-filter" type="date" 
+                                       class="border border-gray-300 rounded-md px-3 py-2 text-sm">
+                                
+                                <button id="clear-filters-btn" class="px-3 py-2 text-gray-600 hover:text-gray-900" 
+                                        title="Clear all filters">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reports List -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                        <!-- List Header -->
+                        <div class="p-4 border-b border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4">
+                                    <label class="flex items-center">
+                                        <input id="select-all-reports" type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                        <span class="ml-2 text-sm text-gray-700">Select All</span>
+                                    </label>
+                                    <span id="selected-count" class="text-sm text-gray-500">0 selected</span>
+                                </div>
+                                
+                                <div id="bulk-actions-panel" class="hidden flex items-center space-x-2">
+                                    <button class="bulk-approve-btn px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700">
+                                        <i class="fas fa-check mr-1"></i>
+                                        Approve Selected
+                                    </button>
+                                    <button class="bulk-reject-btn px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700">
+                                        <i class="fas fa-times mr-1"></i>
+                                        Reject Selected
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Reports Container -->
+                        <div id="reports-container" class="divide-y divide-gray-200">
+                            <!-- Reports will be populated by JavaScript -->
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <div id="reports-pagination" class="p-4 border-t border-gray-200 flex items-center justify-between">
+                            <div class="text-sm text-gray-700">
+                                Showing <span id="reports-start">1</span> to <span id="reports-end">10</span> 
+                                of <span id="reports-total">15</span> reports
+                            </div>
+                            <div class="flex space-x-2">
+                                <button id="reports-prev-btn" class="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50">
+                                    Previous
+                                </button>
+                                <button id="reports-next-btn" class="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50">
+                                    Next
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals and Panels -->
+    <!-- Report Detail Modal -->
+    <div id="report-detail-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden" 
+         role="dialog" aria-labelledby="modal-title" aria-modal="true">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-md bg-white">
+            <div class="flex items-center justify-between pb-4 border-b border-gray-200">
+                <h3 id="modal-title" class="text-lg font-semibold text-gray-900">Daily Report Details</h3>
+                <button id="close-modal-btn" class="text-gray-400 hover:text-gray-600" aria-label="Close modal">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div id="modal-content" class="mt-4"></div>
+        </div>
+    </div>
+
+    <!-- Bulk Actions Confirmation Modal -->
+    <div id="bulk-confirm-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden"
+         role="dialog" aria-labelledby="bulk-modal-title" aria-modal="true">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 max-w-md shadow-lg rounded-md bg-white">
+            <div class="text-center">
+                <i id="bulk-confirm-icon" class="fas fa-question-circle text-4xl text-yellow-500 mb-4"></i>
+                <h3 id="bulk-modal-title" class="text-lg font-semibold text-gray-900 mb-2">Confirm Bulk Action</h3>
+                <p id="bulk-confirm-message" class="text-gray-600 mb-6"></p>
+                
+                <div class="flex justify-center space-x-3">
+                    <button id="bulk-cancel-btn" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
+                        Cancel
+                    </button>
+                    <button id="bulk-confirm-btn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                        Confirm
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Panel -->
+    <div id="notification-panel" class="fixed top-16 right-4 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-40 hidden">
+        <div class="p-4 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <h3 class="font-semibold text-gray-900">Notifications</h3>
+                <button id="mark-all-read-btn" class="text-sm text-blue-600 hover:text-blue-800">
+                    Mark all read
+                </button>
+            </div>
+        </div>
+        <div id="notifications-list" class="max-h-96 overflow-y-auto"></div>
+        <div class="p-3 border-t border-gray-200 text-center">
+            <button class="text-sm text-blue-600 hover:text-blue-800">View all notifications</button>
+        </div>
+    </div>
+
+    <!-- Demo Scripts -->
+    <script>
+        // Demo helper functions
+        document.getElementById('demo-switch-manager').addEventListener('click', () => {
+            localStorage.setItem('userRole', 'manager');
+            location.reload();
+        });
+
+        document.getElementById('demo-switch-developer').addEventListener('click', () => {
+            localStorage.setItem('userRole', 'developer');
+            location.reload();
+        });
+
+        document.getElementById('demo-generate-reports').addEventListener('click', () => {
+            if (window.reportsManager) {
+                window.reportsManager.loadReports();
+                alert('Sample reports generated! Check the Team Reports section.');
+            } else {
+                alert('Switch to Manager mode first to generate reports.');
+            }
+        });
+
+        document.getElementById('demo-reset-data').addEventListener('click', () => {
+            if (confirm('Are you sure you want to reset all demo data?')) {
+                localStorage.clear();
+                location.reload();
+            }
+        });
+
+        // Set manager role by default for demo
+        if (!localStorage.getItem('userRole')) {
+            localStorage.setItem('userRole', 'manager');
+        }
+    </script>
+
+    <!-- Main Application Scripts -->
+    <script src="config.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+    <script src="assets/js/charts.js"></script>
+    <script src="assets/js/navigation.js"></script>
+    <script src="assets/js/reports-manager.js"></script>
+</body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedCore Patient - Doctor Discovery</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    ::-webkit-scrollbar { height: 6px; width: 6px; }
+    ::-webkit-scrollbar-thumb { background-color: rgba(15, 23, 42, 0.2); border-radius: 9999px; }
+  </style>
+</head>
+<body class="min-h-full">
+  <div class="mx-auto flex min-h-screen max-w-6xl flex-col px-4 py-8">
+    <header class="flex flex-wrap items-center justify-between gap-6">
+      <div>
+        <h1 class="text-2xl font-semibold text-slate-900">Temukan Dokter Pilihan</h1>
+        <p class="text-sm text-slate-500">Cari berdasarkan spesialisasi, lokasi, atau kebutuhan khusus Anda.</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <button class="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm">
+          <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+          Online Booking Active
+        </button>
+        <button class="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm">Journey</button>
+        <button class="rounded-full bg-sky-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-sky-200/70">My Appointments</button>
+      </div>
+    </header>
+
+    <main class="mt-8 grid flex-1 gap-8 lg:grid-cols-[1fr_320px]">
+      <section class="space-y-6">
+        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60">
+          <div class="flex flex-wrap items-center gap-3">
+            <div class="relative flex-1">
+              <input type="search" placeholder="Cari nama dokter, spesialisasi, atau rumah sakit" class="w-full rounded-2xl border border-slate-200 px-4 py-3 pl-12 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200" />
+              <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103.6 3.6a7.5 7.5 0 0013.05 13.05z" />
+              </svg>
+            </div>
+            <button class="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-900 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/30">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18m9-9H3" />
+              </svg>
+              Filter Lengkap
+            </button>
+          </div>
+          <div class="mt-4 flex flex-wrap items-center gap-2 text-xs">
+            <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600">Jakarta Selatan</span>
+            <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600">Cardiology</span>
+            <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600">Bahasa Indonesia</span>
+            <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600">Available Today</span>
+            <button class="rounded-full border border-slate-200 px-3 py-1 font-medium text-slate-500">Reset</button>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between text-xs text-slate-500">
+          <p>Menampilkan 24 dokter • Disortir berdasarkan relevansi</p>
+          <div class="flex items-center gap-3">
+            <button class="flex items-center gap-1 rounded-full border border-slate-200 bg-white px-3 py-1.5 font-medium text-slate-500">
+              <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+              Available Today
+            </button>
+            <button class="rounded-full border border-slate-200 bg-white px-3 py-1.5 font-medium text-slate-500">Rating 4.5+</button>
+            <button class="rounded-full border border-slate-200 bg-white px-3 py-1.5 font-medium text-slate-500">Fee &lt; IDR 250K</button>
+          </div>
+        </div>
+
+        <div class="grid gap-6">
+          <!-- Doctor Card -->
+          <article class="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/70 transition hover:-translate-y-0.5 hover:shadow-2xl">
+            <div class="flex flex-col gap-5 sm:flex-row">
+              <div class="relative">
+                <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=300&q=80" class="h-40 w-40 rounded-3xl object-cover" alt="Doctor" />
+                <span class="absolute -top-2 -right-2 rounded-full bg-emerald-500 px-3 py-1 text-xs font-semibold text-white shadow-lg">Live slot</span>
+              </div>
+              <div class="flex-1 space-y-4">
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h2 class="text-xl font-semibold text-slate-900">dr. Kamila Putri, Sp.JP (K)
+                        <span class="ml-2 rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-500">15 yrs</span>
+                      </h2>
+                    </div>
+                    <p class="text-sm text-slate-500">Interventional Cardiologist • MedCore Heart Center</p>
+                    <div class="mt-2 flex flex-wrap items-center gap-2 text-xs">
+                      <span class="flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 font-medium text-emerald-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.801 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.801-2.034a1 1 0 00-1.175 0l-2.801 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.88 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        4.9 (312 reviews)
+                      </span>
+                      <span class="rounded-full bg-slate-100 px-2.5 py-1 font-medium text-slate-500">English, Bahasa Indonesia</span>
+                      <span class="rounded-full bg-slate-100 px-2.5 py-1 font-medium text-slate-500">Allianz, BPJS, Prudential</span>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-xs uppercase tracking-wide text-slate-400">Consultation Fee</p>
+                    <p class="text-lg font-semibold text-slate-900">IDR 350.000</p>
+                    <p class="text-xs text-emerald-600">Covered up to 80% with Allianz</p>
+                  </div>
+                </div>
+                <div class="rounded-2xl bg-slate-50 p-4">
+                  <div class="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
+                    <div class="flex items-center gap-2">
+                      <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                      Available Today · 6 slots
+                    </div>
+                    <div class="flex items-center gap-3">
+                      <button class="rounded-full border border-slate-200 bg-white px-3 py-1.5 font-medium text-slate-500">Lihat Profil</button>
+                      <button class="rounded-full bg-sky-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-sky-200/70">Book Appointment</button>
+                    </div>
+                  </div>
+                  <div class="mt-3 flex gap-2 overflow-x-auto">
+                    <button class="min-w-[110px] rounded-2xl border border-sky-200 bg-white px-4 py-3 text-sm font-semibold text-sky-600 shadow-sm">10:00 • 30m</button>
+                    <button class="min-w-[110px] rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-500">10:45 • 30m</button>
+                    <button class="min-w-[110px] rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-500">11:30 • 30m</button>
+                    <button class="min-w-[110px] rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-500">13:15 • 45m</button>
+                    <button class="min-w-[110px] rounded-2xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm font-medium text-slate-400 line-through">14:00 • Full</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Another card -->
+          <article class="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/70">
+            <div class="flex flex-col gap-5 sm:flex-row">
+              <div class="relative">
+                <img src="https://images.unsplash.com/photo-1527613426441-4da17471b66d?auto=format&fit=crop&w=300&q=80" class="h-40 w-40 rounded-3xl object-cover" alt="Doctor" />
+                <span class="absolute -top-2 -right-2 rounded-full bg-amber-500 px-3 py-1 text-xs font-semibold text-white shadow">Limited
+                  <span class="ml-1 text-[10px]">2 slots</span>
+                </span>
+              </div>
+              <div class="flex-1 space-y-4">
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <h2 class="text-xl font-semibold text-slate-900">dr. Bintang Rahman, Sp.A</h2>
+                    <p class="text-sm text-slate-500">Pediatrician • MedCore Kids Clinic</p>
+                    <div class="mt-2 flex flex-wrap items-center gap-2 text-xs">
+                      <span class="rounded-full bg-emerald-100 px-2.5 py-1 font-medium text-emerald-600">4.7 (128 reviews)</span>
+                      <span class="rounded-full bg-slate-100 px-2.5 py-1 font-medium text-slate-500">English, Bahasa Indonesia</span>
+                      <span class="rounded-full bg-slate-100 px-2.5 py-1 font-medium text-slate-500">Telemedicine available</span>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-xs uppercase tracking-wide text-slate-400">Consultation Fee</p>
+                    <p class="text-lg font-semibold text-slate-900">IDR 180.000</p>
+                    <p class="text-xs text-amber-500">Telemedicine IDR 140.000</p>
+                  </div>
+                </div>
+                <div class="rounded-2xl bg-slate-50 p-4">
+                  <div class="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
+                    <div class="flex items-center gap-2">
+                      <span class="h-2 w-2 rounded-full bg-amber-500"></span>
+                      Available besok • 2 slots tersisa
+                    </div>
+                    <div class="flex items-center gap-3">
+                      <button class="rounded-full border border-slate-200 bg-white px-3 py-1.5 font-medium text-slate-500">Lihat Profil</button>
+                      <button class="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white">Join Telemedicine Queue</button>
+                    </div>
+                  </div>
+                  <div class="mt-3 grid gap-2 text-xs text-slate-500 sm:grid-cols-2">
+                    <div class="rounded-2xl bg-white p-3">
+                      <p class="text-[11px] uppercase tracking-wide text-slate-400">Clinic</p>
+                      <p class="mt-1 text-sm font-semibold text-slate-700">MedCore Kids Clinic - Senopati</p>
+                      <p class="mt-1">Available Tue • Thu • Sat</p>
+                    </div>
+                    <div class="rounded-2xl bg-white p-3">
+                      <p class="text-[11px] uppercase tracking-wide text-slate-400">Insurance</p>
+                      <p class="mt-1 text-sm font-semibold text-slate-700">BPJS • Lippo Insurance • Prudential</p>
+                      <p class="mt-1">Cashless supported</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <div class="rounded-3xl border border-dashed border-slate-300 bg-white p-12 text-center text-sm text-slate-500">
+            <p class="font-medium text-slate-600">Butuh rekomendasi lebih personal?</p>
+            <p class="mt-2">Gunakan MedCore Match untuk melihat dokter dengan kecocokan terbaik berdasarkan kebutuhan Anda.</p>
+            <button class="mt-5 rounded-full bg-emerald-500 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-200/70">Mulai Kuesioner 2 Menit</button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="space-y-6">
+        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/70">
+          <h3 class="text-base font-semibold text-slate-900">Filter Aktif</h3>
+          <div class="mt-4 space-y-4 text-sm">
+            <div>
+              <p class="text-xs uppercase tracking-wide text-slate-400">Spesialisasi Populer</p>
+              <div class="mt-2 flex flex-wrap gap-2">
+                <button class="rounded-full bg-slate-900 px-3 py-1.5 text-xs font-medium text-white">Cardiology</button>
+                <button class="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-500">Dermatology</button>
+                <button class="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-500">Pediatrics</button>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-xs uppercase tracking-wide text-slate-400">
+                <span>Lokasi</span>
+                <span>Radius 10km</span>
+              </div>
+              <div class="h-1.5 rounded-full bg-slate-100">
+                <div class="h-full w-3/4 rounded-full bg-sky-500"></div>
+              </div>
+              <div class="flex items-center justify-between text-xs text-slate-500">
+                <span>Jakarta Selatan</span>
+                <span>Mampang</span>
+              </div>
+            </div>
+            <div>
+              <p class="text-xs uppercase tracking-wide text-slate-400">Fasilitas</p>
+              <div class="mt-2 space-y-2 text-xs text-slate-500">
+                <label class="flex items-center justify-between gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2">
+                  <span>Telemedicine tersedia</span>
+                  <input type="checkbox" class="h-4 w-4 rounded border-slate-300 text-sky-500 focus:ring-sky-500" checked />
+                </label>
+                <label class="flex items-center justify-between gap-2 rounded-2xl border border-slate-200 px-3 py-2">
+                  <span>Home visit</span>
+                  <input type="checkbox" class="h-4 w-4 rounded border-slate-300 text-sky-500 focus:ring-sky-500" />
+                </label>
+                <label class="flex items-center justify-between gap-2 rounded-2xl border border-slate-200 px-3 py-2">
+                  <span>BPJS support</span>
+                  <input type="checkbox" class="h-4 w-4 rounded border-slate-300 text-sky-500 focus:ring-sky-500" checked />
+                </label>
+              </div>
+            </div>
+            <div>
+              <p class="text-xs uppercase tracking-wide text-slate-400">Fee Range</p>
+              <div class="mt-3 grid grid-cols-2 gap-3 text-xs text-slate-500">
+                <div class="rounded-2xl border border-slate-200 px-4 py-3">
+                  <p class="text-[11px] uppercase tracking-wide text-slate-400">Minimum</p>
+                  <p class="text-sm font-semibold text-slate-700">IDR 100K</p>
+                </div>
+                <div class="rounded-2xl border border-slate-200 px-4 py-3">
+                  <p class="text-[11px] uppercase tracking-wide text-slate-400">Maximum</p>
+                  <p class="text-sm font-semibold text-slate-700">IDR 400K</p>
+                </div>
+              </div>
+            </div>
+            <button class="w-full rounded-2xl bg-sky-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-sky-200/70">Terapkan Filter</button>
+          </div>
+        </div>
+
+        <div class="rounded-3xl bg-gradient-to-br from-slate-900 to-slate-800 p-6 text-white shadow-lg">
+          <p class="text-sm uppercase tracking-[0.2em]">Tip</p>
+          <h3 class="mt-3 text-xl font-semibold">Smart Availability Grid</h3>
+          <p class="mt-2 text-sm text-slate-200">Aktifkan toggle "Show Weekly View" untuk melihat slot 7 hari sekaligus dengan indikator warna real-time.</p>
+          <button class="mt-6 w-full rounded-2xl border border-white/40 bg-white/10 px-4 py-3 text-sm font-semibold text-white">Lihat Demo</button>
+        </div>
+      </aside>
+    </main>
+  </div>
+</body>
+</html>

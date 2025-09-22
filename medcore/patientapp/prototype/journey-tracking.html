@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedCore Patient - Journey Tracking</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .journey-dot { box-shadow: 0 10px 20px rgba(14, 165, 233, 0.25); }
+  </style>
+</head>
+<body class="min-h-full">
+  <div class="mx-auto flex min-h-screen max-w-6xl flex-col px-4 py-8">
+    <header class="flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <h1 class="text-2xl font-semibold text-slate-900">Patient Journey Tracking</h1>
+        <p class="text-sm text-slate-500">Monitor status kunjungan rawat jalan secara real-time.</p>
+      </div>
+      <div class="flex items-center gap-3 text-xs text-slate-500">
+        <span class="rounded-full bg-emerald-100 px-3 py-1 font-medium text-emerald-600">Live Sync</span>
+        <button class="rounded-full border border-slate-200 bg-white px-3 py-1.5 font-medium">Share Timeline</button>
+        <button class="rounded-full bg-sky-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-sky-200/70">Download PDF</button>
+      </div>
+    </header>
+
+    <main class="mt-8 grid flex-1 gap-8 lg:grid-cols-[1fr_320px]">
+      <section class="space-y-6">
+        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p class="text-xs uppercase tracking-wider text-slate-400">Today</p>
+              <h2 class="text-lg font-semibold text-slate-900">Selasa, 18 Maret 2025</h2>
+              <p class="text-xs text-slate-500">MedCore Heart Center • Queue A-027</p>
+            </div>
+            <div class="rounded-2xl bg-slate-50 p-4 text-xs text-slate-500">
+              <p class="text-[11px] uppercase tracking-widest text-slate-400">Estimated wait</p>
+              <p class="mt-1 text-2xl font-semibold text-slate-900">12 menit</p>
+              <p class="mt-1">Doctor running late 5 menit</p>
+            </div>
+          </div>
+
+          <div class="mt-6 space-y-6">
+            <div class="relative flex gap-5">
+              <div class="flex flex-col items-center">
+                <span class="journey-dot flex h-9 w-9 items-center justify-center rounded-full bg-sky-500 text-xs font-semibold text-white">1</span>
+                <div class="h-full w-px flex-1 bg-gradient-to-b from-sky-500 via-sky-200 to-transparent"></div>
+              </div>
+              <div class="flex-1 rounded-3xl bg-sky-50 p-4">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                  <h3 class="text-sm font-semibold text-slate-900">Appointment Confirmed</h3>
+                  <span class="rounded-full bg-white px-3 py-1 text-xs font-medium text-sky-600">07:45</span>
+                </div>
+                <p class="mt-2 text-xs text-slate-500">Kode booking MC-APT-392883 dikirim ke email dan WhatsApp.</p>
+                <div class="mt-3 rounded-2xl bg-white p-3 text-xs text-slate-500">
+                  Reminder check-in otomatis 2 jam sebelum janji.
+                </div>
+              </div>
+            </div>
+
+            <div class="relative flex gap-5">
+              <div class="flex flex-col items-center">
+                <span class="journey-dot flex h-9 w-9 items-center justify-center rounded-full bg-emerald-500 text-xs font-semibold text-white">2</span>
+                <div class="h-full w-px flex-1 bg-gradient-to-b from-emerald-500 via-emerald-200 to-transparent"></div>
+              </div>
+              <div class="flex-1 rounded-3xl bg-emerald-50 p-4">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                  <h3 class="text-sm font-semibold text-slate-900">Arrived at Clinic</h3>
+                  <span class="rounded-full bg-white px-3 py-1 text-xs font-medium text-emerald-600">08:12</span>
+                </div>
+                <p class="mt-2 text-xs text-slate-500">Check-in mandiri dilakukan via QR di lobby. Nomor antrian A-027.</p>
+                <div class="mt-3 grid gap-3 text-xs text-slate-500 sm:grid-cols-2">
+                  <div class="rounded-2xl bg-white p-3">
+                    <p class="text-[11px] uppercase tracking-wide text-slate-400">Vitals</p>
+                    <p>BP 120/80 • HR 74 • Temp 36.5°C</p>
+                  </div>
+                  <div class="rounded-2xl bg-white p-3">
+                    <p class="text-[11px] uppercase tracking-wide text-slate-400">Documents</p>
+                    <p>BPJS card verified • Referral uploaded</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="relative flex gap-5">
+              <div class="flex flex-col items-center">
+                <span class="journey-dot flex h-9 w-9 items-center justify-center rounded-full bg-amber-500 text-xs font-semibold text-white">3</span>
+                <div class="h-full w-px flex-1 bg-gradient-to-b from-amber-500 via-amber-200 to-transparent"></div>
+              </div>
+              <div class="flex-1 rounded-3xl bg-amber-50 p-4">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                  <h3 class="text-sm font-semibold text-slate-900">Waiting for Doctor</h3>
+                  <span class="rounded-full bg-white px-3 py-1 text-xs font-medium text-amber-600">08:20</span>
+                </div>
+                <p class="mt-2 text-xs text-slate-500">Antrian di depan Anda: 2 pasien • Est. 12 menit.</p>
+                <div class="mt-3 flex flex-wrap items-center gap-2 text-xs">
+                  <span class="rounded-full bg-white px-3 py-1 font-medium text-amber-600">Doctor running late 5m</span>
+                  <span class="rounded-full bg-white px-3 py-1 font-medium text-slate-500">Notify me when 1 patient remaining</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="relative flex gap-5">
+              <div class="flex flex-col items-center">
+                <span class="journey-dot flex h-9 w-9 items-center justify-center rounded-full bg-sky-500 text-xs font-semibold text-white">4</span>
+                <div class="h-full w-px flex-1 bg-gradient-to-b from-sky-500 via-sky-200 to-transparent"></div>
+              </div>
+              <div class="flex-1 rounded-3xl bg-sky-50 p-4">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                  <h3 class="text-sm font-semibold text-slate-900">Consultation in Progress</h3>
+                  <span class="rounded-full bg-white px-3 py-1 text-xs font-medium text-sky-600">08:35</span>
+                </div>
+                <p class="mt-2 text-xs text-slate-500">Sesi tatap muka dimulai. Catatan otomatis akan tersimpan di rekam medis.</p>
+                <div class="mt-3 grid gap-3 text-xs text-slate-500 sm:grid-cols-2">
+                  <div class="rounded-2xl bg-white p-3">
+                    <p class="text-[11px] uppercase tracking-wide text-slate-400">Agenda</p>
+                    <ul class="mt-1 list-disc pl-4">
+                      <li>Review hasil lab terbaru</li>
+                      <li>Evaluasi gejala chest pain</li>
+                      <li>Diskusi opsi intervensi</li>
+                    </ul>
+                  </div>
+                  <div class="rounded-2xl bg-white p-3">
+                    <p class="text-[11px] uppercase tracking-wide text-slate-400">Notes</p>
+                    <p>Dokter meminta family member hadir untuk edukasi diet.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="relative flex gap-5 opacity-60">
+              <div class="flex flex-col items-center">
+                <span class="flex h-9 w-9 items-center justify-center rounded-full border-2 border-slate-200 bg-white text-xs font-semibold text-slate-400">5</span>
+              </div>
+              <div class="flex-1 rounded-3xl border border-dashed border-slate-200 bg-white p-4 text-xs text-slate-400">
+                <h3 class="text-sm font-semibold text-slate-500">Consultation Completed</h3>
+                <p class="mt-2">Status berikutnya akan muncul setelah sesi selesai.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60">
+          <h2 class="text-base font-semibold text-slate-900">Live Queue Snapshot</h2>
+          <div class="mt-4 grid gap-3 md:grid-cols-3">
+            <div class="rounded-2xl bg-slate-900 p-4 text-white">
+              <p class="text-xs uppercase tracking-widest text-slate-300">Current</p>
+              <p class="mt-2 text-3xl font-semibold">A-025</p>
+              <p class="text-xs text-slate-300">Estimated finish 08:27</p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+              <p class="text-xs uppercase tracking-wide text-slate-400">Next</p>
+              <p class="mt-2 text-lg font-semibold text-slate-900">A-026 • 8 menit</p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+              <p class="text-xs uppercase tracking-wide text-slate-400">You</p>
+              <p class="mt-2 text-lg font-semibold text-emerald-600">A-027 • 12 menit</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="space-y-6">
+        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60">
+          <h2 class="text-base font-semibold text-slate-900">Status Overview</h2>
+          <div class="mt-4 grid gap-3 text-xs text-slate-500">
+            <div class="flex items-center justify-between rounded-2xl bg-slate-50 p-3">
+              <span class="font-medium text-slate-600">Journey Completion</span>
+              <span class="rounded-full bg-emerald-100 px-3 py-1 font-semibold text-emerald-600">48%</span>
+            </div>
+            <div class="flex items-center justify-between rounded-2xl bg-slate-50 p-3">
+              <span class="font-medium text-slate-600">Queue Position</span>
+              <span class="rounded-full bg-slate-900 px-3 py-1 font-semibold text-white">3rd</span>
+            </div>
+            <div class="flex items-center justify-between rounded-2xl bg-slate-50 p-3">
+              <span class="font-medium text-slate-600">Doctor ETA</span>
+              <span class="rounded-full bg-amber-100 px-3 py-1 font-semibold text-amber-600">+5m</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60">
+          <h2 class="text-base font-semibold text-slate-900">Notifications</h2>
+          <div class="mt-4 space-y-3 text-xs text-slate-500">
+            <div class="rounded-2xl bg-slate-50 p-3">
+              <p class="text-[11px] uppercase tracking-wide text-slate-400">08:28</p>
+              <p>Dokter selesai dengan pasien A-025. Bersiap-siap ke ruang konsultasi.</p>
+            </div>
+            <div class="rounded-2xl bg-slate-50 p-3">
+              <p class="text-[11px] uppercase tracking-wide text-slate-400">08:20</p>
+              <p>Vitals check completed. Semua data otomatis tersinkron.</p>
+            </div>
+            <div class="rounded-2xl bg-slate-50 p-3">
+              <p class="text-[11px] uppercase tracking-wide text-slate-400">08:05</p>
+              <p>Parkir gratis 3 jam telah diaktivasi.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60">
+          <h2 class="text-base font-semibold text-slate-900">Next Steps</h2>
+          <ul class="mt-4 space-y-3 text-xs text-slate-500">
+            <li class="flex items-center justify-between rounded-2xl bg-slate-50 p-3">
+              <span>Pharmacy pickup</span>
+              <span class="rounded-full bg-slate-900 px-3 py-1 font-semibold text-white">Pending</span>
+            </li>
+            <li class="flex items-center justify-between rounded-2xl bg-slate-50 p-3">
+              <span>Payment confirmation</span>
+              <span class="rounded-full bg-emerald-100 px-3 py-1 font-semibold text-emerald-600">Auto</span>
+            </li>
+            <li class="flex items-center justify-between rounded-2xl bg-slate-50 p-3">
+              <span>Upload doctor's notes</span>
+              <span class="rounded-full bg-amber-100 px-3 py-1 font-semibold text-amber-600">In Progress</span>
+            </li>
+          </ul>
+        </div>
+      </aside>
+    </main>
+  </div>
+</body>
+</html>

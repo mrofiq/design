@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DevDash Team Lead Dashboard - Team performance overview with coaching insights">
+    <title>DevDash - Team Lead Dashboard</title>
+    
+    <!-- CSS Framework and Custom Styles -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="assets/css/dashboard.css" rel="stylesheet">
+    
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Accessibility and SEO -->
+    <meta name="theme-color" content="#1f2937">
+    <link rel="icon" href="assets/images/favicon.ico">
+    
+    <style>
+        .team-performance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .team-member-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s ease-in-out;
+            position: relative;
+        }
+        
+        .team-member-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .performance-indicator {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .performance-indicator.excellent { background-color: #10b981; }
+        .performance-indicator.good { background-color: #f59e0b; }
+        .performance-indicator.needs-attention { background-color: #ef4444; }
+        
+        .coaching-alert {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid #f59e0b;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .bottleneck-indicator {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-left: 4px solid #ef4444;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .team-health-score {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #10b981, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .workload-bar {
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+        
+        .workload-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+        
+        .workload-optimal { background: #10b981; }
+        .workload-high { background: #f59e0b; }
+        .workload-overloaded { background: #ef4444; }
+        
+        .drill-down-card {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .drill-down-card:hover {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+        }
+        
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+        .breadcrumb-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .breadcrumb-item:not(:last-child)::after {
+            content: '>';
+            margin: 0 0.5rem;
+            color: #9ca3af;
+        }
+        
+        .breadcrumb-link {
+            color: #2563eb;
+            text-decoration: none;
+            hover:underline;
+        }
+        
+        .escalation-badge {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .coaching-suggestion {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 0.5rem 0;
+        }
+        
+        .coaching-suggestion .title {
+            font-weight: 600;
+            color: #0369a1;
+            margin-bottom: 0.5rem;
+        }
+        
+        .coaching-suggestion .description {
+            color: #075985;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+    <!-- Skip to main content for screen readers -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-blue-600 text-white p-2 rounded">
+        Skip to main content
+    </a>
+
+    <!-- Application Shell -->
+    <div id="app" class="min-h-screen flex">
+        <!-- Sidebar Navigation -->
+        <nav id="sidebar" class="bg-gray-900 text-white w-64 min-h-screen transition-all duration-300 ease-in-out" 
+             role="navigation" aria-label="Main navigation">
+            <!-- Logo -->
+            <div class="p-4 border-b border-gray-700">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-chart-line text-blue-400 text-2xl" aria-hidden="true"></i>
+                    <h1 class="text-xl font-bold">DevDash</h1>
+                </div>
+            </div>
+
+            <!-- User Profile -->
+            <div class="p-4 border-b border-gray-700">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                        <span class="text-white font-semibold">TL</span>
+                    </div>
+                    <div>
+                        <p class="font-medium">Sarah Team Lead</p>
+                        <p class="text-sm text-gray-400">Team Lead - Frontend</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Menu -->
+            <ul class="p-4 space-y-2" role="menu">
+                <li role="none">
+                    <a href="#" class="nav-link active" role="menuitem" aria-current="page">
+                        <i class="fas fa-chart-line" aria-hidden="true"></i>
+                        Team Overview
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="#" class="nav-link" role="menuitem">
+                        <i class="fas fa-users" aria-hidden="true"></i>
+                        Individual Performance
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="#" class="nav-link" role="menuitem">
+                        <i class="fas fa-tasks" aria-hidden="true"></i>
+                        Workload Management
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="#" class="nav-link" role="menuitem">
+                        <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+                        Bottleneck Analysis
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="#" class="nav-link" role="menuitem">
+                        <i class="fas fa-lightbulb" aria-hidden="true"></i>
+                        Coaching Insights
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="#" class="nav-link" role="menuitem">
+                        <i class="fas fa-file-alt" aria-hidden="true"></i>
+                        Team Reports
+                    </a>
+                </li>
+                <li role="none">
+                    <a href="#" class="nav-link" role="menuitem">
+                        <i class="fas fa-cog" aria-hidden="true"></i>
+                        Team Settings
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Quick Actions -->
+            <div class="mt-auto p-4 border-t border-gray-700">
+                <button class="w-full btn btn-primary btn-sm">
+                    <i class="fas fa-plus mr-2"></i>
+                    Schedule 1-on-1
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main id="main-content" class="flex-1 overflow-x-hidden bg-gray-50">
+            <!-- Header -->
+            <header class="bg-white shadow-sm border-b border-gray-200">
+                <div class="px-6 py-4">
+                    <!-- Breadcrumb Navigation -->
+                    <nav class="breadcrumb" aria-label="Breadcrumb">
+                        <div class="breadcrumb-item">
+                            <a href="#" class="breadcrumb-link">Organization</a>
+                        </div>
+                        <div class="breadcrumb-item">
+                            <a href="#" class="breadcrumb-link">Engineering</a>
+                        </div>
+                        <div class="breadcrumb-item">
+                            <span>Frontend Team</span>
+                        </div>
+                    </nav>
+                    
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-900">Frontend Team Dashboard</h2>
+                            <p class="text-gray-600">Performance overview and team insights for 6 developers</p>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <select class="form-input w-40" aria-label="Time period">
+                                <option>Last 7 days</option>
+                                <option>Last 30 days</option>
+                                <option>Last quarter</option>
+                            </select>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-download mr-2"></i>
+                                Export Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="p-6">
+                <!-- Team Health Overview -->
+                <section class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">Team Health Overview</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Team Health Score -->
+                        <div class="metric-card p-6 text-center">
+                            <div class="team-health-score">87</div>
+                            <div class="metric-label mb-2">Team Health Score</div>
+                            <div class="metric-change positive">
+                                <i class="fas fa-arrow-up mr-1"></i>
+                                +5 points this week
+                            </div>
+                        </div>
+
+                        <!-- Velocity -->
+                        <div class="metric-card p-6">
+                            <div class="metric-value text-blue-600">24</div>
+                            <div class="metric-label">Story Points/Sprint</div>
+                            <div class="metric-change positive">
+                                <i class="fas fa-arrow-up mr-1"></i>
+                                +12% from last sprint
+                            </div>
+                        </div>
+
+                        <!-- Code Quality -->
+                        <div class="metric-card p-6">
+                            <div class="metric-value text-green-600">92%</div>
+                            <div class="metric-label">Code Quality Score</div>
+                            <div class="metric-change neutral">
+                                <i class="fas fa-minus mr-1"></i>
+                                No change
+                            </div>
+                        </div>
+
+                        <!-- Escalations -->
+                        <div class="metric-card p-6">
+                            <div class="metric-value text-red-600">2</div>
+                            <div class="metric-label">Active Escalations</div>
+                            <div class="metric-change negative">
+                                <i class="fas fa-arrow-up mr-1"></i>
+                                +1 from yesterday
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Alert Sections -->
+                <section class="mb-8 space-y-4">
+                    <!-- Coaching Alert -->
+                    <div class="coaching-alert">
+                        <div class="flex items-start">
+                            <i class="fas fa-lightbulb text-yellow-600 mr-3 mt-1"></i>
+                            <div>
+                                <h4 class="font-semibold text-yellow-800">Coaching Opportunity</h4>
+                                <p class="text-yellow-700 text-sm mt-1">
+                                    Alex Martinez shows declining PR review turnaround time. Consider discussing time management strategies.
+                                </p>
+                                <button class="btn btn-warning btn-sm mt-2">
+                                    Schedule 1-on-1
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottleneck Alert -->
+                    <div class="bottleneck-indicator">
+                        <div class="flex items-start">
+                            <i class="fas fa-exclamation-triangle text-red-600 mr-3 mt-1"></i>
+                            <div>
+                                <h4 class="font-semibold text-red-800">Bottleneck Detected</h4>
+                                <p class="text-red-700 text-sm mt-1">
+                                    UI components review process has 5+ pending PRs. Consider redistributing review load.
+                                </p>
+                                <button class="btn btn-error btn-sm mt-2">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Team Performance Grid -->
+                <section class="mb-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900">Team Member Performance</h3>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-gray-600">Sort by:</span>
+                            <select class="form-input w-32 text-sm" aria-label="Sort team members">
+                                <option>Performance</option>
+                                <option>Workload</option>
+                                <option>Last Activity</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="team-performance-grid">
+                        <!-- Team Member 1 -->
+                        <div class="team-member-card drill-down-card" onclick="showMemberDetails('alex')" role="button" tabindex="0" aria-label="View Alex Martinez details">
+                            <div class="performance-indicator good" title="Good performance"></div>
+                            <div class="flex items-center mb-4">
+                                <div class="team-member-avatar avatar-blue mr-3">AM</div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Alex Martinez</h4>
+                                    <p class="text-sm text-gray-600">Senior Frontend Developer</p>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>Current Workload</span>
+                                        <span class="font-medium">85%</span>
+                                    </div>
+                                    <div class="workload-bar">
+                                        <div class="workload-fill workload-high" style="width: 85%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div>
+                                        <div class="text-gray-600">PRs Merged</div>
+                                        <div class="font-semibold">12</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-600">Review Time</div>
+                                        <div class="font-semibold text-yellow-600">2.4h ↗</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-600">Code Quality</div>
+                                        <div class="font-semibold text-green-600">94%</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-600">Velocity</div>
+                                        <div class="font-semibold">8 pts</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 pt-3 border-t border-gray-100">
+                                <div class="text-xs text-gray-500">Last activity: 2 hours ago</div>
+                            </div>
+                        </div>
+
+                        <!-- Team Member 2 -->
+                        <div class="team-member-card drill-down-card" onclick="showMemberDetails('sarah')" role="button" tabindex="0" aria-label="View Sarah Chen details">
+                            <div class="performance-indicator excellent" title="Excellent performance"></div>
+                            <div class="flex items-center mb-4">
+                                <div class="team-member-avatar avatar-green mr-3">SC</div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Sarah Chen</h4>
+                                    <p class="text-sm text-gray-600">Frontend Developer</p>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>Current Workload</span>
+                                        <span class="font-medium">65%</span>
+                                    </div>
+                                    <div class="workload-bar">
+                                        <div class="workload-fill workload-optimal" style="width: 65%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div>
+                                        <div class="text-gray-600">PRs Merged</div>
+                                        <div class="font-semibold">15</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-600">Review Time</div>
+                                        <div class="font-semibold text-green-600">1.2h ↘</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-600">Code Quality</div>
+                                        <div class="font-semibold text-green-600">97%</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-600">Velocity</div>
+                                        <div class="font-semibold">10 pts</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 pt-3 border-t border-gray-100">
+                                <div class="text-xs text-gray-500">Last activity: 30 minutes ago</div>
+                            </div>
+                        </div>
+
+                        <!-- Team Member 3 -->
+                        <div class="team-member-card drill-down-card" onclick="showMemberDetails('mike')" role="button" tabindex="0" aria-label="View Mike Johnson details">
+                            <div class="performance-indicator needs-attention" title="Needs attention"></div>
+                            <div class="flex items-center mb-4">
+                                <div class="team-member-avatar avatar-purple mr-3">MJ</div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Mike Johnson</h4>
+                                    <p class="text-sm text-gray-600">Junior Frontend Developer</p>
+                                    <span class="escalation-badge mt-1">Escalation</span>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>Current Workload</span>
+                                        <span class="font-medium">95%</span>
+                                    </div>
+                                    <div class="workload-bar">
+                                        <div class="workload-fill workload-overloaded" style="width: 95%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div>
+                                        <div class="text-gray-600">PRs Merged</div>
+                                        <div class="font-semibold">6</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-600">Review Time</div>
+                                        <div class="font-semibold text-red-600">4.8h ↗</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-600">Code Quality</div>
+                                        <div class="font-semibold text-yellow-600">78%</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-600">Velocity</div>
+                                        <div class="font-semibold">3 pts</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 pt-3 border-t border-gray-100">
+                                <div class="text-xs text-gray-500">Last activity: 4 hours ago</div>
+                            </div>
+                        </div>
+
+                        <!-- Team Member 4 -->
+                        <div class="team-member-card drill-down-card" onclick="showMemberDetails('emma')" role="button" tabindex="0" aria-label="View Emma Wilson details">
+                            <div class="performance-indicator excellent" title="Excellent performance"></div>
+                            <div class="flex items-center mb-4">
+                                <div class="team-member-avatar avatar-pink mr-3">EW</div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Emma Wilson</h4>
+                                    <p class="text-sm text-gray-600">Senior Frontend Developer</p>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>Current Workload</span>
+                                        <span class="font-medium">70%</span>
+                                    </div>
+                                    <div class="workload-bar">
+                                        <div class="workload-fill workload-optimal" style="width: 70%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div>
+                                        <div class="text-gray-600">PRs Merged</div>
+                                        <div class="font-semibold">18</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-600">Review Time</div>
+                                        <div class="font-semibold text-green-600">0.9h ↘</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-600">Code Quality</div>
+                                        <div class="font-semibold text-green-600">96%</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-600">Velocity</div>
+                                        <div class="font-semibold">12 pts</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 pt-3 border-t border-gray-100">
+                                <div class="text-xs text-gray-500">Last activity: 1 hour ago</div>
+                            </div>
+                        </div>
+
+                        <!-- Team Member 5 -->
+                        <div class="team-member-card drill-down-card" onclick="showMemberDetails('david')" role="button" tabindex="0" aria-label="View David Kim details">
+                            <div class="performance-indicator good" title="Good performance"></div>
+                            <div class="flex items-center mb-4">
+                                <div class="team-member-avatar avatar-indigo mr-3">DK</div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">David Kim</h4>
+                                    <p class="text-sm text-gray-600">Frontend Developer</p>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>Current Workload</span>
+                                        <span class="font-medium">80%</span>
+                                    </div>
+                                    <div class="workload-bar">
+                                        <div class="workload-fill workload-optimal" style="width: 80%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div>
+                                        <div class="text-gray-600">PRs Merged</div>
+                                        <div class="font-semibold">11</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-600">Review Time</div>
+                                        <div class="font-semibold text-green-600">1.5h ↘</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-600">Code Quality</div>
+                                        <div class="font-semibold text-green-600">89%</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-600">Velocity</div>
+                                        <div class="font-semibold">9 pts</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 pt-3 border-t border-gray-100">
+                                <div class="text-xs text-gray-500">Last activity: 3 hours ago</div>
+                            </div>
+                        </div>
+
+                        <!-- Team Member 6 -->
+                        <div class="team-member-card drill-down-card" onclick="showMemberDetails('lisa')" role="button" tabindex="0" aria-label="View Lisa Brown details">
+                            <div class="performance-indicator good" title="Good performance"></div>
+                            <div class="flex items-center mb-4">
+                                <div class="team-member-avatar avatar-yellow mr-3">LB</div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Lisa Brown</h4>
+                                    <p class="text-sm text-gray-600">Frontend Developer</p>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>Current Workload</span>
+                                        <span class="font-medium">75%</span>
+                                    </div>
+                                    <div class="workload-bar">
+                                        <div class="workload-fill workload-optimal" style="width: 75%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div>
+                                        <div class="text-gray-600">PRs Merged</div>
+                                        <div class="font-semibold">13</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-600">Review Time</div>
+                                        <div class="font-semibold text-green-600">1.8h ↘</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-600">Code Quality</div>
+                                        <div class="font-semibold text-green-600">91%</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-600">Velocity</div>
+                                        <div class="font-semibold">7 pts</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 pt-3 border-t border-gray-100">
+                                <div class="text-xs text-gray-500">Last activity: 1 hour ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Analytics Charts -->
+                <section class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">Team Analytics</h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Team Velocity Trend -->
+                        <div class="metric-card p-6">
+                            <h4 class="font-semibold text-gray-900 mb-4">Team Velocity Trend</h4>
+                            <div class="chart-container">
+                                <canvas id="velocityChart" aria-label="Team velocity over the last 8 sprints"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Workload Distribution -->
+                        <div class="metric-card p-6">
+                            <h4 class="font-semibold text-gray-900 mb-4">Workload Distribution</h4>
+                            <div class="chart-container">
+                                <canvas id="workloadChart" aria-label="Current workload distribution across team members"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Coaching Suggestions -->
+                <section class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">AI-Powered Coaching Suggestions</h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="coaching-suggestion">
+                            <div class="title">
+                                <i class="fas fa-lightbulb mr-2"></i>
+                                Pair Programming Opportunity
+                            </div>
+                            <div class="description">
+                                Consider pairing Emma Wilson (high performer) with Mike Johnson to improve code quality and reduce review cycles. Emma's expertise in component architecture could benefit Mike's current project.
+                            </div>
+                            <button class="btn btn-primary btn-sm mt-2">Schedule Pairing</button>
+                        </div>
+
+                        <div class="coaching-suggestion">
+                            <div class="title">
+                                <i class="fas fa-chart-line mr-2"></i>
+                                Review Process Optimization
+                            </div>
+                            <div class="description">
+                                Alex Martinez's review time is increasing. Consider implementing async review guidelines or redistributing review load to maintain team velocity.
+                            </div>
+                            <button class="btn btn-primary btn-sm mt-2">View Details</button>
+                        </div>
+
+                        <div class="coaching-suggestion">
+                            <div class="title">
+                                <i class="fas fa-graduation-cap mr-2"></i>
+                                Skill Development
+                            </div>
+                            <div class="description">
+                                Team shows strong frontend skills but limited testing coverage. Consider organizing a testing workshop led by Sarah Chen.
+                            </div>
+                            <button class="btn btn-primary btn-sm mt-2">Plan Workshop</button>
+                        </div>
+
+                        <div class="coaching-suggestion">
+                            <div class="title">
+                                <i class="fas fa-balance-scale mr-2"></i>
+                                Workload Balancing
+                            </div>
+                            <div class="description">
+                                Mike Johnson is at 95% capacity while Sarah Chen is at 65%. Consider redistributing tasks to balance workload more effectively.
+                            </div>
+                            <button class="btn btn-primary btn-sm mt-2">Rebalance Tasks</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Initialize charts
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeVelocityChart();
+            initializeWorkloadChart();
+        });
+
+        function initializeVelocityChart() {
+            const ctx = document.getElementById('velocityChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Sprint 1', 'Sprint 2', 'Sprint 3', 'Sprint 4', 'Sprint 5', 'Sprint 6', 'Sprint 7', 'Sprint 8'],
+                    datasets: [{
+                        label: 'Team Velocity',
+                        data: [18, 22, 20, 24, 26, 23, 27, 24],
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Story Points'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initializeWorkloadChart() {
+            const ctx = document.getElementById('workloadChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Alex Martinez', 'Sarah Chen', 'Mike Johnson', 'Emma Wilson', 'David Kim', 'Lisa Brown'],
+                    datasets: [{
+                        data: [85, 65, 95, 70, 80, 75],
+                        backgroundColor: [
+                            '#f59e0b',
+                            '#10b981',
+                            '#ef4444',
+                            '#10b981',
+                            '#10b981',
+                            '#10b981'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function showMemberDetails(memberId) {
+            // Navigate to individual performance view
+            console.log(`Showing details for member: ${memberId}`);
+            // In a real application, this would navigate to a detailed view
+            alert(`Navigating to detailed performance view for ${memberId}`);
+        }
+
+        // Mobile menu toggle
+        const sidebar = document.getElementById('sidebar');
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('open');
+            });
+        }
+
+        // Keyboard navigation for drill-down cards
+        document.querySelectorAll('.drill-down-card').forEach(card => {
+            card.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    card.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedCore Patient - Schedule Viewer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  </style>
+</head>
+<body class="min-h-full">
+  <div class="mx-auto flex min-h-screen max-w-6xl flex-col px-4 py-8">
+    <header class="flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <h1 class="text-2xl font-semibold text-slate-900">Jadwal dr. Kamila Putri</h1>
+        <p class="text-sm text-slate-500">Pilih tanggal untuk melihat slot konsultasi tersedia.</p>
+      </div>
+      <div class="flex items-center gap-3 text-xs">
+        <button class="rounded-full border border-slate-200 bg-white px-4 py-2 font-medium text-slate-600 shadow-sm">
+          Dokter Lainnya
+        </button>
+        <button class="rounded-full bg-sky-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-sky-200/70">
+          Lanjut ke Booking
+        </button>
+      </div>
+    </header>
+
+    <main class="mt-8 grid flex-1 gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+      <section class="space-y-6">
+        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <button class="rounded-full border border-slate-200 bg-white p-3 text-slate-500 shadow-sm" aria-label="Previous week">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                </svg>
+              </button>
+              <div>
+                <p class="text-xs uppercase tracking-wider text-slate-400">Week of</p>
+                <p class="text-lg font-semibold text-slate-900">18 - 24 Maret 2025</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 text-xs text-slate-500">
+              <button class="rounded-full border border-slate-200 bg-white px-3 py-1.5 font-medium text-slate-500">
+                Today
+              </button>
+              <button class="rounded-full border border-slate-200 bg-white px-3 py-1.5 font-medium text-slate-500">
+                Export iCal
+              </button>
+            </div>
+          </div>
+
+          <div class="mt-6 overflow-x-auto pb-2">
+            <div class="flex gap-3">
+              <!-- Day card -->
+              <button class="min-w-[160px] rounded-3xl border-2 border-sky-500 bg-sky-50 p-4 text-left shadow-md shadow-sky-100">
+                <p class="text-xs uppercase tracking-wide text-sky-600">Today</p>
+                <p class="mt-1 text-lg font-semibold text-slate-900">Sel, 18 Mar</p>
+                <p class="mt-3 text-xs font-medium text-slate-500">Morning • 3 slots</p>
+                <div class="mt-3 flex flex-wrap gap-2 text-xs">
+                  <span class="rounded-full bg-white px-3 py-1 font-medium text-sky-600">08.30</span>
+                  <span class="rounded-full bg-white px-3 py-1 font-medium text-sky-600">09.15</span>
+                  <span class="rounded-full bg-white px-3 py-1 font-medium text-slate-400 line-through">10.00</span>
+                </div>
+              </button>
+              <button class="min-w-[160px] rounded-3xl border border-slate-200 bg-white p-4 text-left shadow-sm">
+                <p class="text-xs uppercase tracking-wide text-emerald-500">Green • Available</p>
+                <p class="mt-1 text-lg font-semibold text-slate-900">Rab, 19 Mar</p>
+                <p class="mt-3 text-xs font-medium text-slate-500">Afternoon • 4 slots</p>
+                <div class="mt-3 flex flex-wrap gap-2 text-xs">
+                  <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600">13.00</span>
+                  <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600">13.45</span>
+                  <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600">14.30</span>
+                  <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600">15.15</span>
+                </div>
+              </button>
+              <button class="min-w-[160px] rounded-3xl border border-slate-200 bg-white p-4 text-left shadow-sm">
+                <p class="text-xs uppercase tracking-wide text-amber-500">Yellow • Limited</p>
+                <p class="mt-1 text-lg font-semibold text-slate-900">Kam, 20 Mar</p>
+                <p class="mt-3 text-xs font-medium text-slate-500">Evening • 1 slot</p>
+                <div class="mt-3 flex flex-wrap gap-2 text-xs">
+                  <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600">19.45</span>
+                </div>
+              </button>
+              <button class="min-w-[160px] rounded-3xl border border-slate-200 bg-white p-4 text-left shadow-sm">
+                <p class="text-xs uppercase tracking-wide text-slate-400">Gray • Unavailable</p>
+                <p class="mt-1 text-lg font-semibold text-slate-900">Jum, 21 Mar</p>
+                <p class="mt-3 text-xs font-medium text-slate-400">Libur Nasional</p>
+                <div class="mt-3 rounded-2xl bg-slate-50 p-3 text-xs text-slate-500">
+                  Klinik tutup karena Nyepi
+                </div>
+              </button>
+              <button class="min-w-[160px] rounded-3xl border border-slate-200 bg-white p-4 text-left shadow-sm">
+                <p class="text-xs uppercase tracking-wide text-emerald-500">Green • Available</p>
+                <p class="mt-1 text-lg font-semibold text-slate-900">Sab, 22 Mar</p>
+                <p class="mt-3 text-xs font-medium text-slate-500">Morning • 5 slots</p>
+                <div class="mt-3 flex flex-wrap gap-2 text-xs">
+                  <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600">08.00</span>
+                  <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600">08.45</span>
+                  <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600">09.30</span>
+                  <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600">10.15</span>
+                  <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600">11.00</span>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <dl class="mt-6 grid gap-4 rounded-3xl bg-slate-50 p-4 text-xs text-slate-500 sm:grid-cols-3">
+            <div class="rounded-2xl bg-white p-4">
+              <dt class="uppercase tracking-wide text-slate-400">Total Slots Week</dt>
+              <dd class="mt-1 text-lg font-semibold text-slate-900">27</dd>
+            </div>
+            <div class="rounded-2xl bg-white p-4">
+              <dt class="uppercase tracking-wide text-slate-400">Booked</dt>
+              <dd class="mt-1 text-lg font-semibold text-amber-500">12</dd>
+            </div>
+            <div class="rounded-2xl bg-white p-4">
+              <dt class="uppercase tracking-wide text-slate-400">Available</dt>
+              <dd class="mt-1 text-lg font-semibold text-emerald-500">15</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60">
+          <h2 class="text-lg font-semibold text-slate-900">Session Breakdown · 18 Maret 2025</h2>
+          <div class="mt-4 grid gap-4 md:grid-cols-3">
+            <div class="rounded-2xl border border-slate-200 bg-sky-50 p-4">
+              <p class="text-xs uppercase tracking-wide text-sky-600">Morning</p>
+              <p class="mt-2 text-2xl font-semibold text-slate-900">08.00 - 11.30</p>
+              <p class="mt-2 text-xs text-slate-500">Slot 30 menit • 3 tersedia</p>
+              <div class="mt-3 flex flex-wrap gap-2 text-xs">
+                <span class="rounded-full bg-white px-3 py-1 font-medium text-sky-600">08.30</span>
+                <span class="rounded-full bg-white px-3 py-1 font-medium text-slate-500">09.15</span>
+                <span class="rounded-full bg-white px-3 py-1 font-medium text-slate-500">10.45</span>
+              </div>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-white p-4">
+              <p class="text-xs uppercase tracking-wide text-slate-400">Afternoon</p>
+              <p class="mt-2 text-2xl font-semibold text-slate-900">13.00 - 16.00</p>
+              <p class="mt-2 text-xs text-slate-500">Slot 30 menit • 2 tersedia</p>
+              <div class="mt-3 flex flex-wrap gap-2 text-xs">
+                <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600">13.00</span>
+                <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600">15.30</span>
+              </div>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-white p-4">
+              <p class="text-xs uppercase tracking-wide text-slate-400">Evening</p>
+              <p class="mt-2 text-2xl font-semibold text-slate-900">18.30 - 20.00</p>
+              <p class="mt-2 text-xs text-slate-500">Slot 30 menit • 0 tersedia</p>
+              <div class="mt-3 rounded-2xl bg-slate-50 p-3 text-xs text-slate-500">
+                Semua slot telah dibooking. Nyalakan notifikasi untuk slot baru.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="space-y-6">
+        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-base font-semibold text-slate-900">Kalender Ketersediaan</h2>
+              <p class="text-xs text-slate-500">Tap tanggal untuk loncat ke minggu terkait.</p>
+            </div>
+            <button class="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-500">Maret 2025</button>
+          </div>
+          <div class="mt-6 calendar-grid gap-2 text-center text-xs">
+            <div class="rounded-xl bg-slate-100 p-3 text-slate-400">Sen</div>
+            <div class="rounded-xl bg-slate-100 p-3 text-slate-400">Sel</div>
+            <div class="rounded-xl bg-slate-100 p-3 text-slate-400">Rab</div>
+            <div class="rounded-xl bg-slate-100 p-3 text-slate-400">Kam</div>
+            <div class="rounded-xl bg-slate-100 p-3 text-slate-400">Jum</div>
+            <div class="rounded-xl bg-slate-100 p-3 text-slate-400">Sab</div>
+            <div class="rounded-xl bg-slate-100 p-3 text-slate-400">Min</div>
+            <!-- filler -->
+            <div></div><div></div><div></div><div></div><div></div>
+            <button class="rounded-xl border border-slate-200 bg-white p-3 font-medium text-slate-600">1</button>
+            <button class="rounded-xl border border-slate-200 bg-white p-3 font-medium text-slate-600">2</button>
+            <button class="rounded-xl border border-slate-200 bg-white p-3 font-medium text-slate-600">3</button>
+            <button class="rounded-xl border-2 border-emerald-500 bg-emerald-50 p-3 font-semibold text-emerald-600">4</button>
+            <button class="rounded-xl border border-slate-200 bg-white p-3 font-medium text-slate-600">5</button>
+            <button class="rounded-xl border border-slate-200 bg-white p-3 font-medium text-slate-600">6</button>
+            <button class="rounded-xl border border-slate-200 bg-white p-3 font-medium text-slate-600">7</button>
+            <button class="rounded-xl border border-slate-200 bg-white p-3 font-medium text-slate-600">8</button>
+            <button class="rounded-xl border border-slate-200 bg-white p-3 font-medium text-slate-600">9</button>
+            <button class="rounded-xl border border-slate-200 bg-white p-3 font-medium text-slate-600">10</button>
+            <button class="rounded-xl border border-slate-200 bg-white p-3 font-medium text-slate-600">11</button>
+            <button class="rounded-xl border border-amber-500 bg-amber-50 p-3 font-semibold text-amber-500">12</button>
+            <button class="rounded-xl border border-slate-200 bg-white p-3 font-medium text-slate-600">13</button>
+            <button class="rounded-xl border border-slate-200 bg-white p-3 font-medium text-slate-600">14</button>
+            <button class="rounded-xl border border-rose-300 bg-rose-50 p-3 font-semibold text-rose-500">15</button>
+            <button class="rounded-xl border-2 border-sky-500 bg-sky-50 p-3 font-semibold text-sky-600">16</button>
+            <button class="rounded-xl border border-slate-200 bg-white p-3 font-medium text-slate-600">17</button>
+            <button class="rounded-xl border-2 border-sky-500 bg-sky-50 p-3 font-semibold text-sky-600">18</button>
+            <button class="rounded-xl border border-slate-200 bg-white p-3 font-medium text-slate-600">19</button>
+            <button class="rounded-xl border border-amber-500 bg-amber-50 p-3 font-semibold text-amber-500">20</button>
+            <button class="rounded-xl border border-rose-200 bg-rose-50 p-3 font-semibold text-rose-500">21</button>
+            <button class="rounded-xl border-2 border-emerald-500 bg-emerald-50 p-3 font-semibold text-emerald-600">22</button>
+            <button class="rounded-xl border border-slate-200 bg-white p-3 font-medium text-slate-600">23</button>
+            <button class="rounded-xl border border-slate-200 bg-white p-3 font-medium text-slate-600">24</button>
+            <button class="rounded-xl border border-slate-200 bg-white p-3 font-medium text-slate-600">25</button>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-3 text-xs text-slate-500">
+            <span class="flex items-center gap-2 rounded-full bg-white px-3 py-1 font-medium">
+              <span class="h-2 w-2 rounded-full bg-emerald-500"></span> Available
+            </span>
+            <span class="flex items-center gap-2 rounded-full bg-white px-3 py-1 font-medium">
+              <span class="h-2 w-2 rounded-full bg-amber-500"></span> Limited
+            </span>
+            <span class="flex items-center gap-2 rounded-full bg-white px-3 py-1 font-medium">
+              <span class="h-2 w-2 rounded-full bg-rose-500"></span> Unavailable
+            </span>
+            <span class="flex items-center gap-2 rounded-full bg-white px-3 py-1 font-medium">
+              <span class="h-2 w-2 rounded-full bg-sky-500"></span> Selected
+            </span>
+          </div>
+        </div>
+
+        <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60">
+          <h2 class="text-base font-semibold text-slate-900">Catatan Dokter</h2>
+          <ul class="mt-3 space-y-3 text-sm text-slate-600">
+            <li class="flex items-start gap-3 rounded-2xl bg-slate-50 p-3">
+              <span class="mt-1 h-2 w-2 rounded-full bg-sky-500"></span>
+              <div>
+                <p>Pasien diminta hadir 15 menit sebelum jadwal konsultasi untuk pemeriksaan vital.</p>
+                <p class="text-xs text-slate-400">Last updated: 15 Mar 2025</p>
+              </div>
+            </li>
+            <li class="flex items-start gap-3 rounded-2xl bg-slate-50 p-3">
+              <span class="mt-1 h-2 w-2 rounded-full bg-amber-500"></span>
+              <div>
+                <p>Tanggal 21 Maret tutup karena libur nasional Nyepi.</p>
+              </div>
+            </li>
+          </ul>
+          <button class="mt-4 w-full rounded-2xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-200/70">Nyalakan Reminder Slot Baru</button>
+        </div>
+      </aside>
+    </main>
+  </div>
+</body>
+</html>

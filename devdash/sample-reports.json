@@ -1,0 +1,275 @@
+{
+  "sampleTeamMembers": [
+    {
+      "id": "1",
+      "name": "Alice Johnson",
+      "initials": "AJ",
+      "avatar": "blue",
+      "role": "Senior Developer",
+      "email": "alice.johnson@company.com",
+      "department": "Frontend",
+      "joinDate": "2022-03-15",
+      "timezone": "America/New_York"
+    },
+    {
+      "id": "2", 
+      "name": "Bob Wilson",
+      "initials": "BW",
+      "avatar": "green",
+      "role": "Backend Developer", 
+      "email": "bob.wilson@company.com",
+      "department": "Backend",
+      "joinDate": "2021-11-20",
+      "timezone": "America/Los_Angeles"
+    },
+    {
+      "id": "3",
+      "name": "Carol Martinez",
+      "initials": "CM", 
+      "avatar": "purple",
+      "role": "Full Stack Developer",
+      "email": "carol.martinez@company.com",
+      "department": "Full Stack",
+      "joinDate": "2023-01-10",
+      "timezone": "America/Chicago"
+    },
+    {
+      "id": "4",
+      "name": "David Chen", 
+      "initials": "DC",
+      "avatar": "yellow",
+      "role": "DevOps Engineer",
+      "email": "david.chen@company.com", 
+      "department": "Infrastructure",
+      "joinDate": "2022-07-08",
+      "timezone": "America/New_York"
+    },
+    {
+      "id": "5",
+      "name": "Emma Davis",
+      "initials": "ED",
+      "avatar": "pink", 
+      "role": "QA Engineer",
+      "email": "emma.davis@company.com",
+      "department": "Quality Assurance",
+      "joinDate": "2023-04-12",
+      "timezone": "America/Denver"
+    }
+  ],
+  "sampleReports": [
+    {
+      "id": "report-2024-03-15-001",
+      "memberId": "1",
+      "memberName": "Alice Johnson",
+      "memberInitials": "AJ",
+      "memberAvatar": "blue",
+      "memberRole": "Senior Developer",
+      "date": "2024-03-15",
+      "submittedAt": "2024-03-15T17:30:00Z",
+      "status": "pending",
+      "priority": "medium",
+      "tasksCompleted": 4,
+      "hoursWorked": "8.5",
+      "accomplishments": "• Completed implementation of user authentication system with JWT tokens\n• Fixed critical bug in payment processing that was causing transaction failures\n• Reviewed and approved 3 pull requests from junior developers\n• Updated API documentation for new endpoints",
+      "challenges": "Encountered integration issues with the third-party payment gateway API. The documentation was outdated and required extensive trial-and-error to get the webhooks working properly.",
+      "tomorrowPlans": "• Complete integration testing for the authentication system\n• Begin work on the user dashboard redesign\n• Conduct code review session with the team",
+      "commitCount": 12,
+      "mergeRequests": 2,
+      "codeReviews": 3,
+      "comments": []
+    },
+    {
+      "id": "report-2024-03-15-002",
+      "memberId": "2", 
+      "memberName": "Bob Wilson",
+      "memberInitials": "BW",
+      "memberAvatar": "green",
+      "memberRole": "Backend Developer",
+      "date": "2024-03-15",
+      "submittedAt": "2024-03-15T16:45:00Z", 
+      "status": "approved",
+      "priority": "high",
+      "tasksCompleted": 5,
+      "hoursWorked": "8.0",
+      "accomplishments": "• Optimized database queries reducing API response time by 40%\n• Implemented caching layer for frequently accessed data\n• Added comprehensive unit tests for user service module\n• Resolved 4 high-priority bugs reported by QA team",
+      "challenges": "",
+      "tomorrowPlans": "• Continue performance optimization work\n• Start implementation of notification service\n• Review database schema changes with DBA",
+      "commitCount": 8,
+      "mergeRequests": 1,
+      "codeReviews": 2,
+      "comments": [
+        {
+          "id": "comment-001",
+          "author": "Manager",
+          "content": "Excellent work on the performance optimizations! The 40% improvement in response time is impressive. Keep up the great work!",
+          "timestamp": "2024-03-15T18:00:00Z",
+          "type": "approval"
+        }
+      ],
+      "approvedBy": "Manager",
+      "approvedAt": "2024-03-15T18:00:00Z"
+    },
+    {
+      "id": "report-2024-03-14-001",
+      "memberId": "3",
+      "memberName": "Carol Martinez", 
+      "memberInitials": "CM",
+      "memberAvatar": "purple",
+      "memberRole": "Full Stack Developer",
+      "date": "2024-03-14",
+      "submittedAt": "2024-03-14T17:15:00Z",
+      "status": "rejected",
+      "priority": "low",
+      "tasksCompleted": 2,
+      "hoursWorked": "7.5",
+      "accomplishments": "• Worked on frontend components\n• Fixed some CSS issues",
+      "challenges": "Had some issues with the build process",
+      "tomorrowPlans": "Continue working on the frontend",
+      "commitCount": 3,
+      "mergeRequests": 0,
+      "codeReviews": 1,
+      "comments": [
+        {
+          "id": "comment-002",
+          "author": "Manager",
+          "content": "Please provide more specific details about what frontend components were worked on and what exact CSS issues were fixed. The accomplishments are too vague for proper evaluation.",
+          "timestamp": "2024-03-14T19:00:00Z", 
+          "type": "rejection"
+        }
+      ],
+      "rejectedBy": "Manager",
+      "rejectedAt": "2024-03-14T19:00:00Z",
+      "rejectionReason": "Insufficient detail in accomplishments"
+    },
+    {
+      "id": "report-2024-03-15-003",
+      "memberId": "4",
+      "memberName": "David Chen",
+      "memberInitials": "DC", 
+      "memberAvatar": "yellow",
+      "memberRole": "DevOps Engineer",
+      "date": "2024-03-15",
+      "submittedAt": "2024-03-15T18:00:00Z",
+      "status": "pending",
+      "priority": "high",
+      "tasksCompleted": 3,
+      "hoursWorked": "8.0",
+      "accomplishments": "• Set up automated CI/CD pipeline for the new microservice\n• Configured monitoring and alerting for production systems\n• Updated deployment scripts to handle blue-green deployments\n• Resolved critical infrastructure issue that was causing downtime",
+      "challenges": "The blue-green deployment configuration required more complex networking setup than initially anticipated. Spent extra time ensuring zero-downtime transitions.",
+      "tomorrowPlans": "• Complete infrastructure monitoring dashboard\n• Review security compliance for new deployment process\n• Optimize container resource allocation",
+      "commitCount": 6,
+      "mergeRequests": 1, 
+      "codeReviews": 2,
+      "comments": []
+    },
+    {
+      "id": "report-2024-03-15-004",
+      "memberId": "5",
+      "memberName": "Emma Davis",
+      "memberInitials": "ED",
+      "memberAvatar": "pink",
+      "role": "QA Engineer", 
+      "date": "2024-03-15",
+      "submittedAt": "2024-03-15T16:30:00Z",
+      "status": "pending",
+      "priority": "medium",
+      "tasksCompleted": 6,
+      "hoursWorked": "8.0",
+      "accomplishments": "• Completed comprehensive testing of authentication module\n• Created automated test scripts for payment processing flow\n• Identified and reported 5 critical bugs in the new user interface\n• Updated test documentation with new scenarios\n• Conducted accessibility testing for WCAG compliance",
+      "challenges": "",
+      "tomorrowPlans": "• Continue regression testing for upcoming release\n• Create performance test scenarios\n• Review test coverage reports with development team",
+      "commitCount": 4,
+      "mergeRequests": 0,
+      "codeReviews": 4,
+      "comments": []
+    }
+  ],
+  "reportTemplates": {
+    "daily": {
+      "fields": [
+        {
+          "name": "tasksCompleted",
+          "label": "Tasks Completed",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 20
+        },
+        {
+          "name": "hoursWorked", 
+          "label": "Hours Worked",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 24,
+          "step": 0.5
+        },
+        {
+          "name": "accomplishments",
+          "label": "Key Accomplishments", 
+          "type": "textarea",
+          "required": true,
+          "placeholder": "List your main accomplishments for today...",
+          "minLength": 50,
+          "maxLength": 2000
+        },
+        {
+          "name": "challenges",
+          "label": "Challenges & Blockers",
+          "type": "textarea",
+          "required": false,
+          "placeholder": "Any challenges or blockers you encountered...",
+          "maxLength": 1000
+        },
+        {
+          "name": "tomorrowPlans",
+          "label": "Plans for Tomorrow",
+          "type": "textarea", 
+          "required": true,
+          "placeholder": "What do you plan to work on tomorrow...",
+          "minLength": 30,
+          "maxLength": 1000
+        }
+      ]
+    }
+  },
+  "reportStatuses": {
+    "pending": {
+      "label": "Pending Review",
+      "color": "yellow",
+      "description": "Report submitted and awaiting manager review"
+    },
+    "approved": {
+      "label": "Approved",
+      "color": "green", 
+      "description": "Report reviewed and approved by manager"
+    },
+    "rejected": {
+      "label": "Rejected",
+      "color": "red",
+      "description": "Report requires revision before approval"
+    },
+    "draft": {
+      "label": "Draft",
+      "color": "gray",
+      "description": "Report saved but not yet submitted"
+    }
+  },
+  "reportPriorities": {
+    "high": {
+      "label": "High Priority",
+      "color": "red",
+      "description": "Urgent review required"
+    },
+    "medium": {
+      "label": "Medium Priority", 
+      "color": "yellow",
+      "description": "Standard review timeline"
+    },
+    "low": {
+      "label": "Low Priority",
+      "color": "gray", 
+      "description": "Review when convenient"
+    }
+  }
+}

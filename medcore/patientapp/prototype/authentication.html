@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedCore Patient - Authentication</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+<body class="min-h-full">
+  <div class="mx-auto flex min-h-screen max-w-5xl flex-col px-4 py-10">
+    <header class="flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-500 text-lg font-semibold text-white shadow-lg shadow-sky-500/40">
+          MC
+        </div>
+        <div>
+          <h1 class="text-xl font-semibold text-slate-900">MedCore Patient</h1>
+          <p class="text-sm text-slate-500">Book, track, and manage your care journey</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <button class="flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm" id="languageToggle">
+          <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-900 text-xs font-semibold text-white">ID</span>
+          <span class="text-xs uppercase tracking-wide text-slate-400">Switch</span>
+        </button>
+        <button class="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700">Help</button>
+      </div>
+    </header>
+
+    <main class="mt-10 grid flex-1 gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+      <section class="flex flex-col justify-center gap-6">
+        <div>
+          <span class="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
+            <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+            Trusted by 125k+ patients in Indonesia
+          </span>
+          <h2 class="mt-4 text-3xl font-semibold text-slate-900">Satu akun untuk semua layanan MedCore</h2>
+          <p class="mt-3 text-base text-slate-600">Masuk dengan metode pilihan Anda atau buat akun baru dalam hitungan detik. Dapatkan akses ke jadwal dokter, riwayat kunjungan, dan pembayaran tanpa ribet.</p>
+        </div>
+        <div class="grid gap-4 rounded-2xl bg-white p-6 shadow-xl shadow-slate-200/60">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-lg font-semibold text-slate-900">Keamanan Berlapis</h3>
+              <p class="mt-1 text-sm text-slate-500">Verifikasi dua langkah & dukungan biometrik.</p>
+            </div>
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-sky-100 text-sky-500">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 7.5h10.5a2.25 2.25 0 002.25-2.25v-3.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v3.75a2.25 2.25 0 002.25 2.25z" />
+              </svg>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="flex-1 rounded-xl bg-slate-50 p-4">
+              <p class="text-xs uppercase tracking-wide text-slate-400">OTP Status</p>
+              <p class="mt-2 text-sm font-medium text-slate-700">Kode OTP otomatis terbaca pada device yang kompatibel.</p>
+            </div>
+            <div class="flex-1 rounded-xl bg-slate-50 p-4">
+              <p class="text-xs uppercase tracking-wide text-slate-400">Autentikasi Sosial</p>
+              <p class="mt-2 text-sm font-medium text-slate-700">Gunakan Google atau Facebook tanpa perlu password tambahan.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="rounded-3xl bg-white p-8 shadow-2xl shadow-slate-300/40">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-xl font-semibold text-slate-900">Selamat Datang Kembali</h2>
+              <p class="text-sm text-slate-500">Masuk atau daftar untuk memulai perjalanan kesehatan Anda.</p>
+            </div>
+            <div class="flex items-center gap-2 text-xs text-slate-500">
+              <span class="font-medium text-slate-700">EN</span>
+              <span class="text-slate-300">•</span>
+              <span>ID</span>
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <div class="flex items-center rounded-full bg-slate-100 p-1">
+              <button class="login-tab w-1/2 rounded-full bg-white py-2 text-sm font-semibold text-slate-900 shadow" data-target="login">Masuk</button>
+              <button class="login-tab w-1/2 rounded-full py-2 text-sm font-semibold text-slate-500" data-target="register">Daftar</button>
+            </div>
+            <div class="mt-6 space-y-6">
+              <form id="login" class="login-panel space-y-5">
+                <div class="space-y-2">
+                  <label for="email" class="text-sm font-medium text-slate-700">Email atau Nomor Telepon</label>
+                  <input id="email" type="text" placeholder="contoh@email.com" class="w-full rounded-xl border border-slate-200 px-3 py-3 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200" />
+                </div>
+                <div class="space-y-2">
+                  <label for="password" class="text-sm font-medium text-slate-700">Kata Sandi</label>
+                  <div class="relative">
+                    <input id="password" type="password" placeholder="••••••••" class="w-full rounded-xl border border-slate-200 px-3 py-3 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200" />
+                    <button type="button" class="absolute inset-y-0 right-3 flex items-center text-xs font-medium text-sky-500">Lihat</button>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between text-xs text-slate-500">
+                  <label class="inline-flex items-center gap-2">
+                    <input type="checkbox" class="h-4 w-4 rounded border-slate-300 text-sky-500 focus:ring-sky-500" checked />
+                    Ingat saya
+                  </label>
+                  <a href="#" class="font-medium text-sky-600">Lupa password?</a>
+                </div>
+                <button type="button" class="w-full rounded-xl bg-sky-500 py-3 text-sm font-semibold text-white shadow-lg shadow-sky-200/80 transition hover:bg-sky-600">Masuk</button>
+                <div class="relative text-center text-xs text-slate-400">
+                  <span class="bg-white px-3">atau masuk dengan</span>
+                </div>
+                <div class="grid gap-3 lg:grid-cols-2">
+                  <button type="button" class="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white py-3 text-sm font-medium text-slate-700 transition hover:border-slate-300">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="h-4" alt="Google" /> Google
+                  </button>
+                  <button type="button" class="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white py-3 text-sm font-medium text-slate-700 transition hover:border-slate-300">
+                    <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" class="h-4" alt="Facebook" /> Facebook
+                  </button>
+                </div>
+                <div class="rounded-xl bg-slate-50 p-4 text-xs text-slate-500">
+                  <div class="flex items-center justify-between">
+                    <span>Kode OTP terkirim ke +62 812 3456 7890</span>
+                    <button class="font-semibold text-sky-600">Kirim ulang (25s)</button>
+                  </div>
+                  <div class="mt-3 flex justify-between gap-2">
+                    <input class="h-12 w-12 rounded-xl border border-slate-200 text-center text-lg font-semibold text-slate-700 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200" maxlength="1" value="3" />
+                    <input class="h-12 w-12 rounded-xl border border-slate-200 text-center text-lg font-semibold text-slate-700 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200" maxlength="1" value="8" />
+                    <input class="h-12 w-12 rounded-xl border border-slate-200 text-center text-lg font-semibold text-slate-700 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200" maxlength="1" value="5" />
+                    <input class="h-12 w-12 rounded-xl border border-slate-200 text-center text-lg font-semibold text-slate-700 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200" maxlength="1" value="9" />
+                    <input class="h-12 w-12 rounded-xl border border-slate-200 text-center text-lg font-semibold text-slate-700 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200" maxlength="1" />
+                    <input class="h-12 w-12 rounded-xl border border-slate-200 text-center text-lg font-semibold text-slate-700 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200" maxlength="1" />
+                  </div>
+                </div>
+              </form>
+
+              <form id="register" class="login-panel hidden space-y-5">
+                <div class="grid gap-4 sm:grid-cols-2">
+                  <div class="space-y-2">
+                    <label class="text-sm font-medium text-slate-700">Nama Lengkap</label>
+                    <input type="text" placeholder="Nama sesuai KTP" class="w-full rounded-xl border border-slate-200 px-3 py-3 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200" />
+                  </div>
+                  <div class="space-y-2">
+                    <label class="text-sm font-medium text-slate-700">Tanggal Lahir</label>
+                    <input type="date" class="w-full rounded-xl border border-slate-200 px-3 py-3 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200" value="1993-06-21" />
+                  </div>
+                  <div class="space-y-2">
+                    <label class="text-sm font-medium text-slate-700">Gender</label>
+                    <div class="flex gap-3 rounded-xl border border-slate-200 p-2">
+                      <label class="flex flex-1 items-center justify-center gap-2 rounded-lg bg-white px-3 py-2 text-sm font-medium text-slate-600 shadow-sm">
+                        <input name="gender" type="radio" class="text-sky-500 focus:ring-sky-500" checked />
+                        Perempuan
+                      </label>
+                      <label class="flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600">
+                        <input name="gender" type="radio" class="text-sky-500 focus:ring-sky-500" />
+                        Laki-laki
+                      </label>
+                    </div>
+                  </div>
+                  <div class="space-y-2">
+                    <label class="text-sm font-medium text-slate-700">Nomor HP</label>
+                    <div class="flex rounded-xl border border-slate-200 text-sm shadow-sm focus-within:border-sky-500 focus-within:ring-2 focus-within:ring-sky-200">
+                      <span class="flex items-center gap-2 border-r border-slate-200 bg-slate-50 px-3 text-slate-500">+62</span>
+                      <input type="tel" placeholder="812 3456 7890" class="w-full border-none px-3 py-3 focus:outline-none" />
+                    </div>
+                  </div>
+                  <div class="space-y-2 sm:col-span-2">
+                    <label class="text-sm font-medium text-slate-700">Email</label>
+                    <input type="email" placeholder="user@medcore.id" class="w-full rounded-xl border border-slate-200 px-3 py-3 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200" />
+                  </div>
+                  <div class="space-y-2">
+                    <label class="text-sm font-medium text-slate-700">Kontak Darurat</label>
+                    <input type="tel" placeholder="Nama & nomor" class="w-full rounded-xl border border-slate-200 px-3 py-3 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200" />
+                  </div>
+                  <div class="space-y-2">
+                    <label class="text-sm font-medium text-slate-700">Golongan Darah</label>
+                    <select class="w-full rounded-xl border border-slate-200 px-3 py-3 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200">
+                      <option>A</option>
+                      <option>B</option>
+                      <option>AB</option>
+                      <option>O</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="grid gap-4 rounded-xl bg-slate-50 p-4 text-sm text-slate-600">
+                  <div class="flex items-center gap-3">
+                    <input type="checkbox" class="h-4 w-4 rounded border-slate-300 text-sky-500 focus:ring-sky-500" checked />
+                    Saya memiliki alergi makanan / obat tertentu
+                  </div>
+                  <textarea rows="3" class="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-200" placeholder="Tuliskan alergi atau kondisi kronis"></textarea>
+                  <button type="button" class="flex items-center justify-center gap-2 rounded-lg border border-dashed border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-600 hover:border-slate-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5v-9m4.5 4.5h-9" />
+                    </svg>
+                    Unggah Rekam Medis (PDF/JPG)
+                  </button>
+                </div>
+                <button type="button" class="w-full rounded-xl bg-emerald-500 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-200/80 transition hover:bg-emerald-600">Buat Akun</button>
+                <p class="text-center text-xs text-slate-400">Dengan mendaftar, Anda menyetujui <a href="#" class="text-sky-500">Syarat & Ketentuan</a> serta <a href="#" class="text-sky-500">Kebijakan Privasi</a>.</p>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="mt-12 flex flex-col items-center gap-2 text-xs text-slate-400">
+      <p>© 2025 MedCore Health Technologies. All rights reserved.</p>
+      <div class="flex gap-3">
+        <a href="#" class="hover:text-slate-600">Privacy</a>
+        <a href="#" class="hover:text-slate-600">Terms</a>
+        <a href="#" class="hover:text-slate-600">Support</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll('.login-tab');
+    const panels = document.querySelectorAll('.login-panel');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('bg-white', 'shadow', 'text-slate-900'));
+        tabs.forEach(t => t.classList.add('text-slate-500'));
+        tab.classList.add('bg-white', 'shadow', 'text-slate-900');
+        tab.classList.remove('text-slate-500');
+        panels.forEach(panel => {
+          panel.id === tab.dataset.target ? panel.classList.remove('hidden') : panel.classList.add('hidden');
+        });
+      });
+    });
+
+    const languageToggle = document.getElementById('languageToggle');
+    languageToggle?.addEventListener('click', () => {
+      alert('This prototype simulates instant language switching between Bahasa Indonesia and English.');
+    });
+  </script>
+</body>
+</html>
