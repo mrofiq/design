@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0066FF">
+    <title>Offline - MedCore Booking</title>
+    <style>
+        :root {
+            --color-primary: #0066FF;
+            --color-text: #111827;
+            --color-text-secondary: #6B7280;
+            --color-bg: #FFFFFF;
+            --color-bg-secondary: #F9FAFB;
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--color-bg-secondary);
+            color: var(--color-text);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 400px;
+            background: var(--color-bg);
+            padding: 3rem 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .offline-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--color-text);
+            margin: 0 0 1rem 0;
+        }
+
+        p {
+            color: var(--color-text-secondary);
+            margin: 0 0 2rem 0;
+            font-size: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2rem;
+            background: var(--color-primary);
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            background: #0052CC;
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .feature-list {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #E5E7EB;
+            text-align: left;
+        }
+
+        .feature-list h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin: 0 0 1rem 0;
+            text-align: center;
+        }
+
+        .feature-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .feature-list li {
+            padding: 0.5rem 0;
+            color: var(--color-text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            color: #10B981;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                margin: 1rem;
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="offline-icon">📱</div>
+        <h1>You're Offline</h1>
+        <p>Please check your internet connection and try again to access MedCore Booking.</p>
+
+        <button class="btn" onclick="window.location.reload()">Try Again</button>
+
+        <div class="feature-list">
+            <h3>When you're back online, you can:</h3>
+            <ul>
+                <li>Search for doctors by name or specialization</li>
+                <li>View available appointment time slots</li>
+                <li>Book appointments with instant confirmation</li>
+                <li>Get your unique ticket code</li>
+                <li>Manage your bookings easily</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Check if we're back online and auto-reload
+        window.addEventListener('online', () => {
+            window.location.reload();
+        });
+
+        // Update button text when offline/online
+        function updateConnectionStatus() {
+            const btn = document.querySelector('.btn');
+            if (navigator.onLine) {
+                btn.textContent = 'Go to MedCore';
+                btn.onclick = () => window.location.href = '/';
+            } else {
+                btn.textContent = 'Try Again';
+                btn.onclick = () => window.location.reload();
+            }
+        }
+
+        window.addEventListener('online', updateConnectionStatus);
+        window.addEventListener('offline', updateConnectionStatus);
+        updateConnectionStatus();
+    </script>
+</body>
+</html>
