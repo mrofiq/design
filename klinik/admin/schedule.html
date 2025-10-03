@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schedule - Klinik Admin</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <svg class="logo" viewBox="0 0 64 64" fill="none"><rect width="64" height="64" rx="16" fill="#00CED1"/><path d="M32 16v32M16 32h32" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="32" r="12" stroke="white" stroke-width="3" fill="none"/></svg>
+        <h2 class="clinic-name">Klinik Sehat</h2>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg><span>Dashboard</span></a>
+        <a href="bookings.html" class="nav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span>Bookings</span></a>
+        <a href="doctors.html" class="nav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg><span>Doctors</span></a>
+        <a href="schedule.html" class="nav-item active"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span>Schedule</span></a>
+        <a href="clinic-profile.html" class="nav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span>Clinic Profile</span></a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="avatar" style="background: var(--primary-500); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">AU</div>
+          <div class="user-info"><p class="name">Admin User</p><p class="role">Admin</p></div>
+        </div>
+        <button class="logout-button"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg></button>
+      </div>
+    </aside>
+    <div class="sidebar-overlay"></div>
+    <button class="hamburger-menu"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+
+    <main class="main-content">
+      <div class="page-header">
+        <h1 class="page-title">Schedule Management</h1>
+        <div class="breadcrumb"><span class="current">Doctor Schedules</span></div>
+      </div>
+
+      <div class="schedule-controls">
+        <div class="form-field doctor-selector">
+          <label>Select Doctor</label>
+          <select id="doctorSelect" class="filter-select">
+            <option value="1">Dr. Ahmad Surya</option>
+            <option value="2">Dr. Sarah Wijaya</option>
+          </select>
+        </div>
+        <div class="view-toggle">
+          <button type="button" class="active">Week View</button>
+          <button type="button">Month View</button>
+        </div>
+        <div class="schedule-actions">
+          <button class="button-secondary">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Add Exception
+          </button>
+          <button class="button-primary">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            Edit Schedule
+          </button>
+        </div>
+      </div>
+
+      <div class="schedule-calendar">
+        <div class="calendar-header">
+          <button id="prevWeek" class="calendar-nav">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <h3 id="weekTitle">Week of Oct 15-21, 2025</h3>
+          <button id="nextWeek" class="calendar-nav">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+
+        <div id="scheduleGrid" style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; min-width: 800px;">
+            <thead>
+              <tr>
+                <th style="width: 80px; padding: 12px; text-align: center; background: var(--bg-tertiary); border: 1px solid var(--border-light);">Time</th>
+                <th style="padding: 12px; text-align: center; background: var(--bg-tertiary); border: 1px solid var(--border-light); border-bottom: 3px solid var(--primary-500);" class="today">Mon<br><small>15</small></th>
+                <th style="padding: 12px; text-align: center; background: var(--bg-tertiary); border: 1px solid var(--border-light);">Tue<br><small>16</small></th>
+                <th style="padding: 12px; text-align: center; background: var(--bg-tertiary); border: 1px solid var(--border-light);">Wed<br><small>17</small></th>
+                <th style="padding: 12px; text-align: center; background: var(--bg-tertiary); border: 1px solid var(--border-light);">Thu<br><small>18</small></th>
+                <th style="padding: 12px; text-align: center; background: var(--bg-tertiary); border: 1px solid var(--border-light);">Fri<br><small>19</small></th>
+                <th style="padding: 12px; text-align: center; background: var(--bg-tertiary); border: 1px solid var(--border-light);">Sat<br><small>20</small></th>
+                <th style="padding: 12px; text-align: center; background: var(--bg-tertiary); border: 1px solid var(--border-light);">Sun<br><small>21</small></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 8px; text-align: right; color: var(--text-tertiary); font-size: 12px; border: 1px solid var(--border-light);">09:00</td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: #E0F7F7; cursor: pointer;"><div style="padding: 4px; border-radius: 6px; border: 2px solid var(--primary-500);"><strong style="font-size: 13px;">Budi S.</strong><br><small style="color: var(--text-tertiary);">09:00-10:00</small></div></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: #E0F7F7;"><div style="padding: 4px; border-radius: 6px; border: 2px solid var(--primary-500);"><strong>Siti A.</strong><br><small style="color: var(--text-tertiary);">09:00-10:00</small></div></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"><small style="color: var(--error-500);">Blocked</small></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"><small style="color: var(--error-500);">Holiday</small></td>
+              </tr>
+              <tr>
+                <td style="padding: 8px; text-align: right; color: var(--text-tertiary); font-size: 12px; border: 1px solid var(--border-light);">10:00</td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: #E0F7F7;"><div style="padding: 4px; border-radius: 6px; border: 2px solid var(--primary-500);"><strong>Dewi L.</strong><br><small style="color: var(--text-tertiary);">10:00-11:00</small></div></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: #E0F7F7;"><div style="padding: 4px; border-radius: 6px; border: 2px solid var(--primary-500);"><strong>Agus S.</strong><br><small style="color: var(--text-tertiary);">10:00-11:00</small></div></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"></td>
+              </tr>
+              <tr>
+                <td style="padding: 8px; text-align: right; color: var(--text-tertiary); font-size: 12px; border: 1px solid var(--border-light);">11:00</td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: #E0F7F7;"><div style="padding: 4px; border-radius: 6px; border: 2px solid var(--primary-500);"><strong>Rudi H.</strong><br><small style="color: var(--text-tertiary);">11:00-12:00</small></div></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script src="js/components.js"></script>
+  <script>
+    Auth.requireAuth();
+    ScheduleCalendar.init({
+      onRender: (weekDates) => console.log('Week:', weekDates)
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Performance - Klinik Management System</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h2>Klinik Dashboard</h2>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title">Main Menu</div>
+          <a href="dashboard.html" class="nav-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Reports</div>
+          <a href="revenue-report.html" class="nav-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>Revenue Report</span>
+          </a>
+          <a href="doctor-performance.html" class="nav-item active">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            <span>Doctor Performance</span>
+          </a>
+          <a href="business-statistics.html" class="nav-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            <span>Business Statistics</span>
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Management</div>
+          <a href="user-management.html" class="nav-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+            <span>User Management</span>
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Page Header -->
+      <header class="page-header">
+        <div class="page-title-section">
+          <h1 class="page-title">Doctor Performance</h1>
+          <p class="page-subtitle">Analyze individual doctor statistics and trends</p>
+        </div>
+        <div class="page-actions">
+          <div class="date-range-picker" style="margin: 0;">
+            <div class="picker-controls">
+              <button class="preset-button active" data-preset="this-month">This Month</button>
+              <button class="preset-button" data-preset="last-month">Last Month</button>
+              <button class="preset-button" data-preset="last-3-months">Last 3 Months</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content Area -->
+      <div class="content-area">
+        <!-- Doctor Overview Cards -->
+        <div class="grid grid-cols-3 mb-2xl">
+          <!-- Doctor Card 1 -->
+          <div class="card" style="cursor: pointer; border: 2px solid var(--color-primary-500);">
+            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+              <div style="width: 64px; height: 64px; border-radius: 9999px; background: linear-gradient(135deg, #00E5E8, #00CED1); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 24px;">
+                AS
+              </div>
+              <div>
+                <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 4px;">Dr. Ahmad Surya</h4>
+                <p class="caption">Dokter Umum</p>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-top: 12px; border-top: 1px solid var(--color-neutral-100);">
+              <div>
+                <p style="font-size: 24px; font-weight: 700; color: var(--color-neutral-900);">42</p>
+                <p class="caption">Bookings</p>
+              </div>
+              <div>
+                <p style="font-size: 16px; font-weight: 700; color: var(--color-success-500); font-family: var(--font-mono);">Rp 1.5M</p>
+                <p class="caption">Revenue</p>
+              </div>
+              <div>
+                <p style="font-size: 20px; font-weight: 700; color: var(--color-success-700);">9.5%</p>
+                <p class="caption">No-Show Rate</p>
+              </div>
+              <div>
+                <div style="display: flex; align-items: center; gap: 4px;">
+                  <svg fill="currentColor" viewBox="0 0 24 24" style="width: 20px; height: 20px; color: var(--color-warning-500);">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                  <p style="font-size: 20px; font-weight: 700;">4.7</p>
+                </div>
+                <p class="caption">Rating</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Doctor Card 2 -->
+          <div class="card" style="cursor: pointer;">
+            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+              <div style="width: 64px; height: 64px; border-radius: 9999px; background: linear-gradient(135deg, #A855F7, #7E22CE); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 24px;">
+                SN
+              </div>
+              <div>
+                <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 4px;">Dr. Siti Nurhaliza</h4>
+                <p class="caption">Dokter Umum</p>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-top: 12px; border-top: 1px solid var(--color-neutral-100);">
+              <div>
+                <p style="font-size: 24px; font-weight: 700; color: var(--color-neutral-900);">38</p>
+                <p class="caption">Bookings</p>
+              </div>
+              <div>
+                <p style="font-size: 16px; font-weight: 700; color: var(--color-success-500); font-family: var(--font-mono);">Rp 1.3M</p>
+                <p class="caption">Revenue</p>
+              </div>
+              <div>
+                <p style="font-size: 20px; font-weight: 700; color: var(--color-success-700);">7.8%</p>
+                <p class="caption">No-Show Rate</p>
+              </div>
+              <div>
+                <div style="display: flex; align-items: center; gap: 4px;">
+                  <svg fill="currentColor" viewBox="0 0 24 24" style="width: 20px; height: 20px; color: var(--color-warning-500);">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                  <p style="font-size: 20px; font-weight: 700;">4.8</p>
+                </div>
+                <p class="caption">Rating</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Doctor Card 3 -->
+          <div class="card" style="cursor: pointer;">
+            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+              <div style="width: 64px; height: 64px; border-radius: 9999px; background: linear-gradient(135deg, #10B981, #059669); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 24px;">
+                BS
+              </div>
+              <div>
+                <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 4px;">Dr. Budi Santoso</h4>
+                <p class="caption">Dokter Umum</p>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-top: 12px; border-top: 1px solid var(--color-neutral-100);">
+              <div>
+                <p style="font-size: 24px; font-weight: 700; color: var(--color-neutral-900);">35</p>
+                <p class="caption">Bookings</p>
+              </div>
+              <div>
+                <p style="font-size: 16px; font-weight: 700; color: var(--color-success-500); font-family: var(--font-mono);">Rp 1.2M</p>
+                <p class="caption">Revenue</p>
+              </div>
+              <div>
+                <p style="font-size: 20px; font-weight: 700; color: var(--color-warning-700);">11.4%</p>
+                <p class="caption">No-Show Rate</p>
+              </div>
+              <div>
+                <div style="display: flex; align-items: center; gap: 4px;">
+                  <svg fill="currentColor" viewBox="0 0 24 24" style="width: 20px; height: 20px; color: var(--color-warning-500);">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                  <p style="font-size: 20px; font-weight: 700;">4.5</p>
+                </div>
+                <p class="caption">Rating</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Selected Doctor Detail View -->
+        <div class="card mb-2xl" style="padding: 32px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--color-neutral-100);">
+            <div style="display: flex; align-items: center; gap: 20px;">
+              <div style="width: 80px; height: 80px; border-radius: 9999px; background: linear-gradient(135deg, #00E5E8, #00CED1); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 32px;">
+                AS
+              </div>
+              <div>
+                <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 4px;">Dr. Ahmad Surya</h3>
+                <p style="font-size: 16px; color: var(--color-neutral-500);">Dokter Umum</p>
+              </div>
+            </div>
+            <div class="export-dropdown">
+              <button class="export-trigger">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+                Export Report
+              </button>
+              <div class="export-menu">
+                <button class="export-option" data-format="pdf">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                  </svg>
+                  Export as PDF
+                </button>
+                <button class="export-option" data-format="excel">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                  </svg>
+                  Export as Excel
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Detail Stats -->
+          <div class="grid grid-cols-4 mb-2xl">
+            <div class="stat-card">
+              <div class="stat-value" data-value="42">42</div>
+              <div class="stat-label">Total Bookings</div>
+              <div class="stat-trend up">
+                <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                </svg>
+                +8%
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-value" data-value="1500000" data-format="currency">Rp 1,500,000</div>
+              <div class="stat-label">Revenue</div>
+              <div class="stat-trend up">
+                <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                </svg>
+                +12%
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-value" data-value="300000" data-format="currency">Rp 300,000</div>
+              <div class="stat-label">Commission</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-value" data-value="9.5" data-format="percent">9.5%</div>
+              <div class="stat-label">No-Show Rate</div>
+              <div class="stat-trend down">
+                <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                </svg>
+                -1.5%
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts Row -->
+          <div class="grid grid-cols-2">
+            <!-- Booking Trend Chart -->
+            <div class="chart-container">
+              <div class="chart-header">
+                <h3 class="chart-title">Booking Trend</h3>
+              </div>
+              <div class="chart-canvas">
+                <canvas id="doctorBookingTrendChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Booking Type Distribution -->
+            <div class="chart-container">
+              <div class="chart-header">
+                <h3 class="chart-title">Booking Type Distribution</h3>
+              </div>
+              <div style="height: 300px; display: flex; align-items: center; justify-content: center; position: relative;">
+                <canvas id="bookingTypesChart" style="max-width: 250px; max-height: 250px;"></canvas>
+                <div style="position: absolute; text-align: center;">
+                  <p style="font-size: 32px; font-weight: 700; color: var(--color-neutral-900);">42</p>
+                  <p class="caption">Total</p>
+                </div>
+              </div>
+              <div class="chart-legend" style="margin-top: 0;">
+                <div class="legend-item">
+                  <span class="legend-color" style="background: #00CED1; width: 12px; height: 12px; border-radius: 50%;"></span>
+                  <span class="legend-label">Fast-Track (30)</span>
+                </div>
+                <div class="legend-item">
+                  <span class="legend-color" style="background: #A855F7; width: 12px; height: 12px; border-radius: 50%;"></span>
+                  <span class="legend-label">Regular (12)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="script.js"></script>
+  <script>
+    // Additional chart for doctor detail view
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        const doctorTrendCanvas = document.getElementById('doctorBookingTrendChart');
+        if (doctorTrendCanvas && typeof Chart !== 'undefined') {
+          const ctx = doctorTrendCanvas.getContext('2d');
+          new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+              datasets: [{
+                label: 'Bookings',
+                data: [8, 12, 10, 12],
+                borderColor: '#00CED1',
+                backgroundColor: 'rgba(0, 206, 209, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  backgroundColor: '#FFFFFF',
+                  titleColor: '#0F172A',
+                  bodyColor: '#334155',
+                  borderColor: '#E2E8F0',
+                  borderWidth: 1,
+                  padding: 12
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  grid: { color: '#EDF2F7' },
+                  ticks: { color: '#94A3B8' }
+                },
+                x: {
+                  grid: { display: false },
+                  ticks: { color: '#94A3B8' }
+                }
+              }
+            }
+          });
+        }
+      }, 150);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,419 @@
+cat > bookings.html << 'BOOKINGSEOF'
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bookings - Klinik Admin</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar (same as dashboard) -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <svg class="logo" viewBox="0 0 64 64" fill="none">
+          <rect width="64" height="64" rx="16" fill="#00CED1"/>
+          <path d="M32 16v32M16 32h32" stroke="white" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="32" cy="32" r="12" stroke="white" stroke-width="3" fill="none"/>
+        </svg>
+        <h2 class="clinic-name">Klinik Sehat</h2>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="bookings.html" class="nav-item active">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          <span>Bookings</span>
+        </a>
+        <a href="doctors.html" class="nav-item">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          <span>Doctors</span>
+        </a>
+        <a href="schedule.html" class="nav-item">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span>Schedule</span>
+        </a>
+        <a href="clinic-profile.html" class="nav-item">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          <span>Clinic Profile</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="avatar" style="background: var(--primary-500); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">AU</div>
+          <div class="user-info">
+            <p class="name">Admin User</p>
+            <p class="role">Admin</p>
+          </div>
+        </div>
+        <button class="logout-button">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay"></div>
+    <button class="hamburger-menu">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+
+    <main class="main-content">
+      <div class="page-header-actions">
+        <div>
+          <h1 class="page-title">Bookings</h1>
+          <div class="breadcrumb">
+            <span class="current">All Bookings</span>
+          </div>
+        </div>
+        <div class="search-input-wrapper">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input type="search" id="searchBookings" class="text-input" placeholder="Search by booking number, name, or phone">
+        </div>
+      </div>
+
+      <!-- Filter Panel -->
+      <form id="filterForm" class="filter-panel">
+        <div class="filter-group">
+          <label>Date From</label>
+          <input type="date" name="dateFrom" class="filter-input" value="2025-10-03">
+        </div>
+        <div class="filter-group">
+          <label>Date To</label>
+          <input type="date" name="dateTo" class="filter-input" value="2025-10-03">
+        </div>
+        <div class="filter-group">
+          <label>Doctor</label>
+          <select name="doctor" class="filter-select">
+            <option value="">All Doctors</option>
+            <option>Dr. Ahmad Surya</option>
+            <option>Dr. Sarah Wijaya</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Status</label>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" name="status" value="pending">
+              <span>Pending</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="status" value="confirmed">
+              <span>Confirmed</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" name="status" value="paid">
+              <span>Paid</span>
+            </label>
+          </div>
+        </div>
+        <button type="button" class="filter-apply">Apply</button>
+        <button type="button" class="filter-reset">Reset</button>
+      </form>
+
+      <!-- Bookings Table -->
+      <div class="data-table-container">
+        <table class="data-table" id="bookingsTable">
+          <thead>
+            <tr>
+              <th class="sortable">Booking #</th>
+              <th class="sortable">Patient</th>
+              <th>Phone</th>
+              <th class="sortable">Doctor</th>
+              <th class="sortable">Date</th>
+              <th>Time</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="fast-track">
+              <td class="booking-number">BK20251003001</td>
+              <td>Budi Santoso</td>
+              <td>0812-3456-7890</td>
+              <td>Dr. Ahmad Surya</td>
+              <td>03 Oct 2025</td>
+              <td>10:00</td>
+              <td><span class="badge fast-track">Fast-Track</span></td>
+              <td><span class="badge paid">Paid</span></td>
+              <td class="actions">
+                <button class="icon-button" title="View"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></button>
+              </td>
+            </tr>
+            <!-- More rows would be generated dynamically -->
+          </tbody>
+        </table>
+        <div id="paginationContainer"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script src="js/components.js"></script>
+  <script>
+    Auth.requireAuth();
+    TableSort.init('bookingsTable');
+    SearchInput.init('searchBookings', (query) => console.log('Search:', query));
+    FilterPanel.init('filterForm', (filters) => console.log('Filters:', filters));
+    Pagination.init('paginationContainer', {
+      currentPage: 1,
+      totalPages: 10,
+      perPage: 20,
+      totalItems: 200,
+      onPageChange: (page) => console.log('Page:', page)
+    });
+  </script>
+</body>
+</html>
+BOOKINGSEOF
+
+cat > doctors.html << 'DOCTORSEOF'
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctors - Klinik Admin</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <svg class="logo" viewBox="0 0 64 64" fill="none"><rect width="64" height="64" rx="16" fill="#00CED1"/><path d="M32 16v32M16 32h32" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="32" r="12" stroke="white" stroke-width="3" fill="none"/></svg>
+        <h2 class="clinic-name">Klinik Sehat</h2>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg><span>Dashboard</span></a>
+        <a href="bookings.html" class="nav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span>Bookings</span></a>
+        <a href="doctors.html" class="nav-item active"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg><span>Doctors</span></a>
+        <a href="schedule.html" class="nav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span>Schedule</span></a>
+        <a href="clinic-profile.html" class="nav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span>Clinic Profile</span></a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="avatar" style="background: var(--primary-500); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">AU</div>
+          <div class="user-info"><p class="name">Admin User</p><p class="role">Admin</p></div>
+        </div>
+        <button class="logout-button"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg></button>
+      </div>
+    </aside>
+    <div class="sidebar-overlay"></div>
+    <button class="hamburger-menu"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+
+    <main class="main-content">
+      <div class="page-header-actions">
+        <div>
+          <h1 class="page-title">Doctors</h1>
+          <div class="breadcrumb"><span class="current">All Doctors</span></div>
+        </div>
+        <a href="doctor-form.html" class="button-primary">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          New Doctor
+        </a>
+      </div>
+
+      <div class="doctors-grid">
+        <div class="doctor-card">
+          <span class="doctor-status"><span class="badge active">Active</span></span>
+          <div class="doctor-avatar-placeholder">AS</div>
+          <h3 class="doctor-name">Dr. Ahmad Surya</h3>
+          <p class="doctor-specialization">Dokter Umum</p>
+          <p class="doctor-stats">24 bookings this month</p>
+          <div class="doctor-actions">
+            <a href="doctor-form.html?id=1" class="button-secondary" style="width: 100%;">Edit Profile</a>
+          </div>
+        </div>
+
+        <div class="doctor-card">
+          <span class="doctor-status"><span class="badge active">Active</span></span>
+          <div class="doctor-avatar-placeholder">SW</div>
+          <h3 class="doctor-name">Dr. Sarah Wijaya</h3>
+          <p class="doctor-specialization">Dokter Umum</p>
+          <p class="doctor-stats">18 bookings this month</p>
+          <div class="doctor-actions">
+            <a href="doctor-form.html?id=2" class="button-secondary" style="width: 100%;">Edit Profile</a>
+          </div>
+        </div>
+
+        <div class="doctor-card">
+          <span class="doctor-status"><span class="badge inactive">Inactive</span></span>
+          <div class="doctor-avatar-placeholder">BP</div>
+          <h3 class="doctor-name">Dr. Budi Prakoso</h3>
+          <p class="doctor-specialization">Spesialis Anak</p>
+          <p class="doctor-stats">0 bookings this month</p>
+          <div class="doctor-actions">
+            <a href="doctor-form.html?id=3" class="button-secondary" style="width: 100%;">Edit Profile</a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script src="js/components.js"></script>
+  <script>Auth.requireAuth();</script>
+</body>
+</html>
+DOCTORSEOF
+
+cat > doctor-form.html << 'DOCTORFORMEOF'
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Form - Klinik Admin</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <svg class="logo" viewBox="0 0 64 64" fill="none"><rect width="64" height="64" rx="16" fill="#00CED1"/><path d="M32 16v32M16 32h32" stroke="white" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="32" r="12" stroke="white" stroke-width="3" fill="none"/></svg>
+        <h2 class="clinic-name">Klinik Sehat</h2>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg><span>Dashboard</span></a>
+        <a href="bookings.html" class="nav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span>Bookings</span></a>
+        <a href="doctors.html" class="nav-item active"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg><span>Doctors</span></a>
+        <a href="schedule.html" class="nav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span>Schedule</span></a>
+        <a href="clinic-profile.html" class="nav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span>Clinic Profile</span></a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="avatar" style="background: var(--primary-500); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">AU</div>
+          <div class="user-info"><p class="name">Admin User</p><p class="role">Admin</p></div>
+        </div>
+        <button class="logout-button"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg></button>
+      </div>
+    </aside>
+    <div class="sidebar-overlay"></div>
+    <button class="hamburger-menu"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+
+    <main class="main-content">
+      <div class="page-header">
+        <h1 class="page-title">Add New Doctor</h1>
+        <div class="breadcrumb">
+          <a href="doctors.html">Doctors</a>
+          <span>/</span>
+          <span class="current">New Doctor</span>
+        </div>
+      </div>
+
+      <div class="form-container">
+        <form id="doctorForm" class="admin-form">
+          <div class="form-section">
+            <h3 class="section-title">Basic Information</h3>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Doctor Name <span class="required">*</span></label>
+                <input type="text" name="name" class="text-input" placeholder="Dr. Ahmad Surya" required>
+                <span class="field-hint">Full name as it appears on documents</span>
+              </div>
+              <div class="form-field">
+                <label>Specialization</label>
+                <input type="text" name="specialization" class="text-input" placeholder="Dokter Umum">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Photo</label>
+                <div class="file-upload">
+                  <div class="preview" id="photoPreview" style="background: var(--bg-tertiary); display: flex; align-items: center; justify-content: center; color: var(--text-tertiary);">
+                    <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                  </div>
+                  <div class="upload-actions">
+                    <label for="photoFile" class="button-secondary">Choose File</label>
+                    <input type="file" id="photoFile" accept="image/*" style="display:none;">
+                    <button type="button" class="button-ghost">Remove</button>
+                  </div>
+                </div>
+                <span class="field-hint">JPG or PNG, max 2MB, 400x400px recommended</span>
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Bio</label>
+              <textarea name="bio" class="text-area" rows="4" placeholder="Brief description about the doctor"></textarea>
+              <span class="field-hint">Max 500 characters</span>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3 class="section-title">Contact Information</h3>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Phone</label>
+                <input type="tel" name="phone" class="text-input" placeholder="0812-3456-7890">
+              </div>
+              <div class="form-field">
+                <label>Email</label>
+                <input type="email" name="email" class="text-input" placeholder="doctor@email.com">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3 class="section-title">Settings</h3>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Consultation Fee (Optional)</label>
+                <input type="number" name="fee" class="text-input" placeholder="0">
+                <span class="field-hint">Leave blank if not applicable</span>
+              </div>
+            </div>
+            <div class="form-field">
+              <label class="toggle-switch">
+                <input type="checkbox" name="active" checked>
+                <div class="toggle-slider-container">
+                  <div class="toggle-slider"></div>
+                </div>
+                <span class="toggle-label">Active (visible to patients)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <a href="doctors.html" class="button-secondary">Cancel</a>
+            <button type="submit" class="button-primary">Save Doctor</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script src="js/components.js"></script>
+  <script>
+    Auth.requireAuth();
+    FormValidator.init('doctorForm');
+    document.getElementById('photoFile').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('photoPreview').innerHTML = '<img src="' + e.target.result + '" style="width:100%;height:100%;object-fit:cover;">';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+    document.getElementById('doctorForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      Toast.success('Doctor saved successfully!');
+      setTimeout(() => window.location.href = 'doctors.html', 1500);
+    });
+  </script>
+</body>
+</html>
+DOCTORFORMEOF
+
+echo "Created bookings, doctors, and doctor-form pages"

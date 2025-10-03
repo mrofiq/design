@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create User - Klinik Management System</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h2>Klinik Dashboard</h2>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title">Main Menu</div>
+          <a href="dashboard.html" class="nav-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Reports</div>
+          <a href="revenue-report.html" class="nav-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>Revenue Report</span>
+          </a>
+          <a href="doctor-performance.html" class="nav-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            <span>Doctor Performance</span>
+          </a>
+          <a href="business-statistics.html" class="nav-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            <span>Business Statistics</span>
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Management</div>
+          <a href="user-management.html" class="nav-item active">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+            <span>User Management</span>
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Page Header -->
+      <header class="page-header">
+        <div class="page-title-section">
+          <h1 class="page-title">Add New User</h1>
+          <p class="page-subtitle">Create a new admin or owner account</p>
+        </div>
+      </header>
+
+      <!-- Content Area -->
+      <div class="content-area">
+        <div class="grid grid-cols-3">
+          <!-- Form Column -->
+          <div style="grid-column: span 2;">
+            <form data-validate>
+              <!-- Basic Information -->
+              <div class="card mb-xl">
+                <div class="card-header">
+                  <h3 class="card-title">Basic Information</h3>
+                </div>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label class="form-label" for="fullName">Full Name *</label>
+                    <input type="text" id="fullName" name="fullName" class="form-input" placeholder="Enter full name" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="username">Username *</label>
+                    <input type="text" id="username" name="username" class="form-input" placeholder="Enter username (alphanumeric only)" pattern="[a-zA-Z0-9_]+" required>
+                    <p class="caption" style="margin-top: 4px;">Username must be unique and contain only letters, numbers, and underscores</p>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" class="form-input" placeholder="user@clinic.com" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="password">Password *</label>
+                    <input type="password" id="password" name="password" class="form-input" placeholder="Enter password (min 8 characters)" required>
+
+                    <div class="password-strength">
+                      <div class="strength-bar">
+                        <div class="strength-fill weak"></div>
+                      </div>
+                      <p class="strength-label" style="color: var(--color-error-500);">Weak</p>
+                      <ul class="strength-requirements">
+                        <li id="req-length" class="unmet" data-label="At least 8 characters">
+                          <svg style="width:14px;height:14px;display:inline-block;margin-right:4px" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                          </svg>
+                          At least 8 characters
+                        </li>
+                        <li id="req-uppercase" class="unmet" data-label="Contains uppercase letter">
+                          <svg style="width:14px;height:14px;display:inline-block;margin-right:4px" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                          </svg>
+                          Contains uppercase letter
+                        </li>
+                        <li id="req-number" class="unmet" data-label="Contains number">
+                          <svg style="width:14px;height:14px;display:inline-block;margin-right:4px" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                          </svg>
+                          Contains number
+                        </li>
+                        <li id="req-special" class="unmet" data-label="Contains special character">
+                          <svg style="width:14px;height:14px;display:inline-block;margin-right:4px" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                          </svg>
+                          Contains special character
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="confirmPassword">Confirm Password *</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" placeholder="Re-enter password" required>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Role & Access -->
+              <div class="card mb-xl">
+                <div class="card-header">
+                  <h3 class="card-title">Role & Access</h3>
+                </div>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label class="form-label">Role *</label>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                      <label style="display: flex; align-items: start; gap: 12px; padding: 16px; border: 2px solid var(--color-neutral-200); border-radius: 12px; cursor: pointer; transition: all 200ms;">
+                        <input type="radio" name="role" value="admin" style="margin-top: 2px; width: 20px; height: 20px; cursor: pointer;" checked>
+                        <div>
+                          <p style="font-size: 16px; font-weight: 600; color: var(--color-neutral-900); margin-bottom: 4px;">Admin</p>
+                          <p style="font-size: 13px; color: var(--color-neutral-500);">Can manage clinic operations, doctors, schedules, and bookings</p>
+                        </div>
+                      </label>
+
+                      <label id="ownerRoleOption" style="display: flex; align-items: start; gap: 12px; padding: 16px; border: 2px solid var(--color-neutral-200); border-radius: 12px; cursor: pointer; transition: all 200ms;">
+                        <input type="radio" name="role" value="owner" style="margin-top: 2px; width: 20px; height: 20px; cursor: pointer;">
+                        <div>
+                          <p style="font-size: 16px; font-weight: 600; color: var(--color-neutral-900); margin-bottom: 4px;">Owner</p>
+                          <p style="font-size: 13px; color: var(--color-neutral-500);">Full access to all features including revenue reports and user management</p>
+                        </div>
+                      </label>
+                    </div>
+
+                    <!-- Owner Warning -->
+                    <div id="ownerWarning" style="display: none; margin-top: 12px; background: var(--color-warning-50); padding: 12px 16px; border-radius: 10px; border-left: 4px solid var(--color-warning-500);">
+                      <div style="display: flex; gap: 12px;">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 20px; height: 20px; flex-shrink: 0; color: var(--color-warning-600);">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                        <div>
+                          <p style="font-size: 14px; font-weight: 600; color: var(--color-warning-900); margin-bottom: 4px;">Owner Role Warning</p>
+                          <p style="font-size: 13px; color: var(--color-warning-800);">Owner role has full access to all features including revenue reports and user management. Use with caution and only assign to trusted individuals.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-0">
+                    <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                      <input type="checkbox" name="isActive" checked style="width: 20px; height: 20px; cursor: pointer;">
+                      <div>
+                        <p style="font-size: 14px; font-weight: 600; color: var(--color-neutral-900);">Active Status</p>
+                        <p style="font-size: 12px; color: var(--color-neutral-500);">User can log in and access the system</p>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Form Actions -->
+              <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <a href="user-management.html" class="btn-ghost" style="padding: 14px 28px;">Cancel</a>
+                <button type="submit" class="btn-primary">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  Create User
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Help Sidebar -->
+          <div>
+            <div class="card" style="position: sticky; top: 100px;">
+              <div class="card-header">
+                <h3 class="card-title">Need Help?</h3>
+              </div>
+              <div class="card-body">
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                  <div>
+                    <p style="font-size: 14px; font-weight: 600; color: var(--color-neutral-900); margin-bottom: 4px;">Password Requirements</p>
+                    <p style="font-size: 13px; color: var(--color-neutral-600); line-height: 1.5;">Passwords must be at least 8 characters and include uppercase, numbers, and special characters for security.</p>
+                  </div>
+
+                  <div style="border-top: 1px solid var(--color-neutral-100); padding-top: 16px;">
+                    <p style="font-size: 14px; font-weight: 600; color: var(--color-neutral-900); margin-bottom: 4px;">Admin vs Owner</p>
+                    <ul style="font-size: 13px; color: var(--color-neutral-600); line-height: 1.6; padding-left: 16px;">
+                      <li><strong>Admin:</strong> Manages day-to-day operations</li>
+                      <li><strong>Owner:</strong> Full access including financial reports</li>
+                    </ul>
+                  </div>
+
+                  <div style="border-top: 1px solid var(--color-neutral-100); padding-top: 16px;">
+                    <p style="font-size: 14px; font-weight: 600; color: var(--color-neutral-900); margin-bottom: 4px;">Account Security</p>
+                    <p style="font-size: 13px; color: var(--color-neutral-600); line-height: 1.5;">Always use unique passwords and enable two-factor authentication when available.</p>
+                  </div>
+
+                  <div style="border-top: 1px solid var(--color-neutral-100); padding-top: 16px;">
+                    <a href="#" style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--color-primary-600); text-decoration: none;">
+                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      View Full Documentation
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // Owner role warning toggle
+    document.querySelectorAll('input[name="role"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        const ownerWarning = document.getElementById('ownerWarning');
+        if (e.target.value === 'owner') {
+          ownerWarning.style.display = 'block';
+        } else {
+          ownerWarning.style.display = 'none';
+        }
+      });
+    });
+
+    // Radio button border styling
+    document.querySelectorAll('input[name="role"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        document.querySelectorAll('input[name="role"]').forEach(r => {
+          r.parentElement.style.borderColor = 'var(--color-neutral-200)';
+          r.parentElement.style.background = 'transparent';
+        });
+        if (this.checked) {
+          this.parentElement.style.borderColor = 'var(--color-primary-500)';
+          this.parentElement.style.background = 'var(--color-primary-50)';
+        }
+      });
+    });
+
+    // Initialize first radio
+    document.querySelector('input[name="role"]:checked').parentElement.style.borderColor = 'var(--color-primary-500)';
+    document.querySelector('input[name="role"]:checked').parentElement.style.background = 'var(--color-primary-50)';
+  </script>
+</body>
+</html>

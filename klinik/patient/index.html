@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Booking janji temu dengan dokter di Klinik Sehat Pratama. Mudah, cepat, tanpa login.">
+  <meta name="theme-color" content="#00CED1">
+
+  <title>Booking Janji Temu - Klinik Sehat Pratama</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%2300CED1' width='100' height='100' rx='20'/%3E%3Ctext x='50' y='70' text-anchor='middle' font-size='60' fill='white' font-weight='bold'%3EK%3C/text%3E%3C/svg%3E">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Preload -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div style="display: flex; align-items: center;">
+        <svg width="36" height="36" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect fill="#00CED1" width="100" height="100" rx="20"/>
+          <text x="50" y="70" text-anchor="middle" font-size="60" fill="white" font-weight="bold">K</text>
+        </svg>
+        <span class="clinic-name">Klinik Sehat Pratama</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Progress Stepper -->
+  <div class="container">
+    <div class="progress-stepper" id="progress-stepper">
+      <!-- Dynamically rendered by JS -->
+      <div class="step active">
+        <div class="step-indicator">1</div>
+        <span class="step-label">Pilih Dokter</span>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step">
+        <div class="step-indicator">2</div>
+        <span class="step-label">Pilih Tanggal</span>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step">
+        <div class="step-indicator">3</div>
+        <span class="step-label">Tipe Booking</span>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step">
+        <div class="step-indicator">4</div>
+        <span class="step-label">Isi Data</span>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step">
+        <div class="step-indicator">5</div>
+        <span class="step-label">Pembayaran</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+
+      <!-- Step 1: Doctor Selection -->
+      <section id="step-1" class="booking-section">
+        <div class="section-header">
+          <h2 class="section-title">Pilih Dokter</h2>
+        </div>
+        <p class="section-subtitle">Silakan pilih dokter yang Anda inginkan</p>
+
+        <div id="doctor-list" class="doctor-list">
+          <!-- Dynamically rendered by JS -->
+        </div>
+
+        <div class="btn-container">
+          <button id="btn-continue-step1" class="btn-primary" onclick="continueFromStep1()" disabled>
+            Lanjut
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- Step 2: Date Selection -->
+      <section id="step-2" class="booking-section hidden">
+        <div class="section-header">
+          <button class="btn-back" onclick="goBack(2)" aria-label="Kembali">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <h2 class="section-title">Pilih Tanggal</h2>
+        </div>
+        <p class="section-subtitle">Pilih tanggal kunjungan Anda</p>
+
+        <div id="calendar-container">
+          <!-- Calendar rendered by JS -->
+        </div>
+
+        <div id="selected-date-display"></div>
+
+        <div class="btn-container">
+          <button id="btn-continue-step2" class="btn-primary" onclick="continueFromStep2()" disabled>
+            Lanjut
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- Step 3: Booking Type & Time -->
+      <section id="step-3" class="booking-section hidden">
+        <div class="section-header">
+          <button class="btn-back" onclick="goBack(3)" aria-label="Kembali">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <h2 class="section-title">Pilih Tipe Booking</h2>
+        </div>
+        <p class="section-subtitle">Pilih Fast-Track dengan jam pasti atau Reservasi Biasa gratis</p>
+
+        <div id="booking-types-container" class="booking-types-container">
+          <!-- Booking type cards rendered by JS -->
+        </div>
+
+        <div id="time-slots-container" class="hidden">
+          <!-- Time slots or info box rendered by JS -->
+        </div>
+
+        <div class="btn-container">
+          <button id="btn-continue-step3" class="btn-primary" onclick="continueFromStep3()" disabled>
+            Lanjut
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- Step 4: Patient Information -->
+      <section id="step-4" class="booking-section hidden">
+        <div class="section-header">
+          <button class="btn-back" onclick="goBack(4)" aria-label="Kembali">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <h2 class="section-title">Informasi Pasien</h2>
+        </div>
+        <p class="section-subtitle">Isi data diri Anda untuk konfirmasi booking</p>
+
+        <form id="patient-form" class="patient-form">
+          <div class="form-field">
+            <label class="field-label" for="patient-name">
+              Nama Lengkap <span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="patient-name"
+              class="text-input"
+              placeholder="Masukkan nama lengkap"
+              required
+              aria-required="true"
+            />
+          </div>
+
+          <div class="form-field">
+            <label class="field-label" for="patient-phone">
+              Nomor WhatsApp <span class="required">*</span>
+            </label>
+            <input
+              type="tel"
+              id="patient-phone"
+              class="text-input"
+              placeholder="08xxxxxxxxxx"
+              required
+              aria-required="true"
+            />
+          </div>
+
+          <div class="form-field">
+            <label class="field-label" for="patient-email">
+              Email (opsional)
+            </label>
+            <input
+              type="email"
+              id="patient-email"
+              class="text-input"
+              placeholder="email@example.com"
+            />
+          </div>
+
+          <div class="form-field">
+            <label class="field-label" for="patient-complaint">
+              Keluhan (opsional)
+            </label>
+            <textarea
+              id="patient-complaint"
+              class="text-area"
+              placeholder="Jelaskan keluhan Anda (opsional)"
+              maxlength="500"
+            ></textarea>
+          </div>
+
+          <div class="btn-container">
+            <button type="submit" class="btn-primary">
+              Lanjut
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Step 5: Payment (Fast-Track Only) -->
+      <section id="step-5" class="booking-section hidden">
+        <div class="section-header">
+          <button class="btn-back" onclick="goBack(5)" aria-label="Kembali">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <h2 class="section-title">Pembayaran</h2>
+        </div>
+        <p class="section-subtitle">Pilih metode pembayaran Anda</p>
+
+        <div style="background: var(--neutral-50); padding: var(--spacing-lg); border-radius: var(--radius-md); margin-bottom: var(--spacing-xl);">
+          <p style="font-size: 14px; font-weight: 500; color: var(--neutral-500); margin-bottom: var(--spacing-xs);">Total Pembayaran</p>
+          <p style="font-size: 32px; font-weight: 700; color: var(--neutral-900);">Rp 50.000</p>
+        </div>
+
+        <h3 style="font-size: 16px; font-weight: 600; color: var(--neutral-700); margin-bottom: var(--spacing-base);">Pilih Metode Pembayaran:</h3>
+
+        <div id="payment-methods-container" class="payment-methods-container">
+          <!-- Payment method cards rendered by JS -->
+        </div>
+
+        <div id="payment-detail-area">
+          <!-- Payment details rendered by JS based on selected method -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer style="border-top: 1px solid var(--neutral-200); padding: var(--spacing-2xl) 0; margin-top: var(--spacing-4xl); background: white;">
+    <div class="container">
+      <div style="display: grid; gap: var(--spacing-xl); grid-template-columns: 1fr;">
+        <div>
+          <h3 style="font-size: 16px; font-weight: 600; color: var(--neutral-900); margin-bottom: var(--spacing-base);">Klinik Sehat Pratama</h3>
+          <p style="font-size: 14px; color: var(--neutral-600); line-height: 1.6;">
+            Jl. Merdeka No. 123, Jakarta Pusat<br>
+            Telepon: 021-12345678<br>
+            Email: info@kliniksehat.com<br>
+            Jam Operasional: 08:00 - 17:00 WIB
+          </p>
+        </div>
+      </div>
+      <div style="margin-top: var(--spacing-2xl); padding-top: var(--spacing-lg); border-top: 1px solid var(--neutral-200); text-align: center;">
+        <p style="font-size: 12px; color: var(--neutral-500);">
+          &copy; 2025 Klinik Sehat Pratama. All rights reserved.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
