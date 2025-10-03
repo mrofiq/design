@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Verifikasi email - Waiting List SaaS">
+  <title>Verifikasi Email - Waiting List SaaS</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: var(--spacing-md);
+      background-color: var(--color-neutral-50);
+    }
+
+    .verify-container {
+      width: 100%;
+      max-width: 560px;
+      text-align: center;
+    }
+
+    .verify-card {
+      background: white;
+      border: 1px solid var(--color-neutral-200);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      padding: var(--spacing-2xl) var(--spacing-xl);
+    }
+
+    .verify-icon {
+      font-size: 96px;
+      margin-bottom: var(--spacing-lg);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .verify-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-neutral-900);
+    }
+
+    .verify-message {
+      font-size: 16px;
+      color: var(--color-neutral-600);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .instructions-card {
+      background-color: var(--color-info-light);
+      border: 1px solid var(--color-primary-600);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      text-align: left;
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .instructions-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-info-dark);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .instructions-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .instructions-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--spacing-sm);
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-info-dark);
+      font-size: 15px;
+    }
+
+    .instructions-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-number {
+      background-color: var(--color-primary-600);
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .not-received {
+      margin-top: var(--spacing-lg);
+      padding-top: var(--spacing-lg);
+      border-top: 1px solid var(--color-neutral-200);
+    }
+
+    .not-received-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-neutral-700);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .not-received-list {
+      font-size: 14px;
+      color: var(--color-neutral-600);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .change-email {
+      margin-top: var(--spacing-lg);
+      font-size: 14px;
+    }
+
+    .success-icon {
+      font-size: 96px;
+      color: var(--color-success);
+      animation: scale-up 500ms ease-out;
+    }
+
+    .warning-icon {
+      font-size: 96px;
+      color: var(--color-warning);
+      animation: scale-up 500ms ease-out;
+    }
+
+    @media (max-width: 768px) {
+      .verify-card {
+        padding: var(--spacing-xl) var(--spacing-lg);
+      }
+
+      .verify-icon {
+        font-size: 72px;
+      }
+
+      .verify-title {
+        font-size: 28px;
+      }
+
+      .instructions-card {
+        padding: var(--spacing-md);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="verify-container">
+    <!-- Default State: Waiting for Verification -->
+    <div class="verify-card" id="waiting-state">
+      <div class="verify-icon">📧</div>
+
+      <h1 class="verify-title">Cek Email Anda</h1>
+
+      <p class="verify-message">
+        Kami telah mengirim link verifikasi ke<br>
+        <strong id="user-email">admin@restoran.com</strong>
+      </p>
+
+      <!-- Instructions -->
+      <div class="instructions-card">
+        <div class="instructions-title">Langkah selanjutnya:</div>
+        <ol class="instructions-list">
+          <li>
+            <span class="step-number">1</span>
+            <span>Buka email Anda</span>
+          </li>
+          <li>
+            <span class="step-number">2</span>
+            <span>Klik link verifikasi</span>
+          </li>
+          <li>
+            <span class="step-number">3</span>
+            <span>Anda akan diarahkan ke dashboard</span>
+          </li>
+        </ol>
+      </div>
+
+      <!-- Not Received Section -->
+      <div class="not-received">
+        <div class="not-received-title">Tidak menerima email?</div>
+        <ul class="not-received-list" style="text-align: left; padding-left: 20px; margin-bottom: var(--spacing-md);">
+          <li>Cek folder spam atau junk mail</li>
+          <li>Pastikan email sudah benar</li>
+        </ul>
+
+        <button id="resend-btn" class="btn btn-outline">
+          Kirim Ulang Email
+        </button>
+
+        <div id="resend-cooldown" class="hidden" style="font-size: 14px; color: var(--color-neutral-600); margin-top: var(--spacing-sm);">
+          Kirim ulang dalam <strong id="cooldown-timer">60</strong> detik
+        </div>
+      </div>
+
+      <!-- Change Email Link -->
+      <div class="change-email">
+        <a href="register.html">Ubah Email</a>
+      </div>
+    </div>
+
+    <!-- Success State (Hidden by default) -->
+    <div class="verify-card hidden" id="success-state">
+      <div class="success-icon">✓</div>
+
+      <h1 class="verify-title" style="color: var(--color-success);">Email Terverifikasi!</h1>
+
+      <p class="verify-message">
+        Anda akan diarahkan ke dashboard...
+      </p>
+
+      <div class="loading-spinner" style="margin: var(--spacing-xl) auto;"></div>
+    </div>
+
+    <!-- Error State: Expired Link (Hidden by default) -->
+    <div class="verify-card hidden" id="error-state">
+      <div class="warning-icon">⚠️</div>
+
+      <h1 class="verify-title" style="color: var(--color-warning);">Link Kedaluwarsa</h1>
+
+      <p class="verify-message">
+        Link verifikasi sudah tidak valid.<br>
+        Silakan kirim link baru untuk melanjutkan.
+      </p>
+
+      <button id="new-link-btn" class="btn btn-primary btn-lg">
+        Kirim Link Baru
+      </button>
+
+      <div class="change-email" style="margin-top: var(--spacing-xl);">
+        <a href="register.html">Kembali ke Pendaftaran</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/utils.js"></script>
+  <script>
+    // ============================================
+    // STATE MANAGEMENT
+    // ============================================
+
+    const states = {
+      waiting: document.getElementById('waiting-state'),
+      success: document.getElementById('success-state'),
+      error: document.getElementById('error-state')
+    };
+
+    const elements = {
+      userEmail: document.getElementById('user-email'),
+      resendBtn: document.getElementById('resend-btn'),
+      resendCooldown: document.getElementById('resend-cooldown'),
+      cooldownTimer: document.getElementById('cooldown-timer'),
+      newLinkBtn: document.getElementById('new-link-btn')
+    };
+
+    let cooldownInterval = null;
+
+    // ============================================
+    // LOAD REGISTRATION DATA
+    // ============================================
+
+    function loadRegistrationData() {
+      const data = getItem('registration-data');
+
+      if (data && data.email) {
+        elements.userEmail.textContent = data.email;
+      } else {
+        // Redirect to registration if no data
+        window.location.href = 'register.html';
+      }
+    }
+
+    // ============================================
+    // CHECK URL PARAMETERS
+    // ============================================
+
+    function checkURLParams() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const status = urlParams.get('status');
+
+      if (status === 'success') {
+        showSuccess();
+      } else if (status === 'expired') {
+        showError();
+      }
+    }
+
+    // ============================================
+    // RESEND EMAIL
+    // ============================================
+
+    elements.resendBtn.addEventListener('click', async () => {
+      // Disable button
+      elements.resendBtn.disabled = true;
+      elements.resendBtn.classList.add('btn-loading');
+      elements.resendBtn.textContent = '';
+
+      try {
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Show success toast
+        showToast('Email verifikasi telah dikirim ulang', 'success');
+
+        // Start cooldown
+        startCooldown(60);
+
+      } catch (error) {
+        showToast('Gagal mengirim email. Silakan coba lagi.', 'error');
+
+        // Re-enable button
+        elements.resendBtn.disabled = false;
+        elements.resendBtn.classList.remove('btn-loading');
+        elements.resendBtn.textContent = 'Kirim Ulang Email';
+      }
+    });
+
+    // ============================================
+    // COOLDOWN TIMER
+    // ============================================
+
+    function startCooldown(duration) {
+      let remaining = duration;
+
+      // Hide resend button, show cooldown
+      elements.resendBtn.classList.add('hidden');
+      elements.resendCooldown.classList.remove('hidden');
+
+      cooldownInterval = setInterval(() => {
+        remaining--;
+        elements.cooldownTimer.textContent = remaining;
+
+        if (remaining <= 0) {
+          clearInterval(cooldownInterval);
+
+          // Show resend button, hide cooldown
+          elements.resendBtn.classList.remove('hidden');
+          elements.resendBtn.classList.remove('btn-loading');
+          elements.resendBtn.textContent = 'Kirim Ulang Email';
+          elements.resendBtn.disabled = false;
+          elements.resendCooldown.classList.add('hidden');
+        }
+      }, 1000);
+    }
+
+    // ============================================
+    // NEW LINK (FROM ERROR STATE)
+    // ============================================
+
+    elements.newLinkBtn.addEventListener('click', async () => {
+      // Disable button
+      elements.newLinkBtn.disabled = true;
+      elements.newLinkBtn.classList.add('btn-loading');
+      elements.newLinkBtn.textContent = '';
+
+      try {
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Show success toast
+        showToast('Link verifikasi baru telah dikirim', 'success');
+
+        // Switch back to waiting state
+        showState('waiting');
+
+        // Start cooldown
+        startCooldown(60);
+
+      } catch (error) {
+        showToast('Gagal mengirim link. Silakan coba lagi.', 'error');
+
+        // Re-enable button
+        elements.newLinkBtn.disabled = false;
+        elements.newLinkBtn.classList.remove('btn-loading');
+        elements.newLinkBtn.textContent = 'Kirim Link Baru';
+      }
+    });
+
+    // ============================================
+    // STATE TRANSITIONS
+    // ============================================
+
+    function showState(stateName) {
+      // Hide all states
+      Object.values(states).forEach(state => {
+        state.classList.add('hidden');
+      });
+
+      // Show target state
+      states[stateName].classList.remove('hidden');
+    }
+
+    function showSuccess() {
+      showState('success');
+
+      // Redirect to dashboard after 1.5 seconds
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 1500);
+    }
+
+    function showError() {
+      showState('error');
+    }
+
+    // ============================================
+    // AUTO-CHECK VERIFICATION (DEMO)
+    // ============================================
+
+    // For demo purposes, we can simulate clicking the verification link
+    // In production, this would be handled by the backend
+    function simulateVerificationCheck() {
+      // Check every 5 seconds if user has verified (demo only)
+      setInterval(() => {
+        // Check if verification is complete (stored in localStorage for demo)
+        const isVerified = getItem('email-verified', false);
+
+        if (isVerified) {
+          showSuccess();
+        }
+      }, 5000);
+    }
+
+    // ============================================
+    // KEYBOARD SHORTCUT
+    // ============================================
+
+    // Press 'V' to simulate verification (demo only)
+    document.addEventListener('keydown', (e) => {
+      if (e.key.toLowerCase() === 'v' && e.ctrlKey) {
+        setItem('email-verified', true);
+        showSuccess();
+      }
+
+      // Press 'E' to simulate expired link
+      if (e.key.toLowerCase() === 'e' && e.ctrlKey) {
+        showError();
+      }
+    });
+
+    // ============================================
+    // INITIALIZATION
+    // ============================================
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadRegistrationData();
+      checkURLParams();
+      // simulateVerificationCheck(); // Uncomment for demo auto-verification
+    });
+
+    // ============================================
+    // DEMO HELPER
+    // ============================================
+
+    // Add demo instructions at the bottom
+    const demoHint = document.createElement('div');
+    demoHint.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--color-neutral-800);
+      color: white;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      box-shadow: var(--shadow-lg);
+      z-index: 9999;
+    `;
+    demoHint.innerHTML = `
+      <strong>Demo Mode:</strong><br>
+      Ctrl+V = Simulate Success<br>
+      Ctrl+E = Simulate Expired
+    `;
+    document.body.appendChild(demoHint);
+  </script>
+
+</body>
+</html>

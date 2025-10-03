@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Pengaturan - Waiting List SaaS">
+  <title>Pengaturan - Waiting List SaaS</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <style>
+    .page-container {
+      min-height: 100vh;
+      background-color: var(--color-neutral-50);
+    }
+
+    .main-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--spacing-xl) var(--spacing-md);
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--color-neutral-900);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .settings-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: var(--spacing-xl);
+    }
+
+    .color-picker-section {
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .color-preview-large {
+      width: 120px;
+      height: 120px;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: transform var(--transition-base);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .color-preview-large:hover {
+      transform: scale(1.05);
+    }
+
+    .preset-swatches {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-md);
+    }
+
+    .preset-swatch {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: all var(--transition-base);
+      border: 3px solid transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+    }
+
+    .preset-swatch:hover {
+      transform: scale(1.05);
+      box-shadow: var(--shadow-md);
+    }
+
+    .preset-swatch.selected {
+      border-color: var(--color-neutral-900);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-md);
+    }
+
+    .palette-shade {
+      aspect-ratio: 1;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: transform var(--transition-fast);
+      position: relative;
+    }
+
+    .palette-shade:hover {
+      transform: scale(1.1);
+      z-index: 10;
+    }
+
+    .palette-shade:hover::after {
+      content: attr(data-hex);
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--color-neutral-800);
+      color: white;
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      white-space: nowrap;
+      margin-bottom: 4px;
+      z-index: 100;
+    }
+
+    .palette-shade.primary {
+      border: 2px solid var(--color-neutral-900);
+    }
+
+    .accessibility-check {
+      background-color: var(--color-neutral-50);
+      border: 1px solid var(--color-neutral-200);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-md);
+      margin-top: var(--spacing-lg);
+    }
+
+    .check-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--spacing-sm) 0;
+      border-bottom: 1px solid var(--color-neutral-200);
+    }
+
+    .check-item:last-child {
+      border-bottom: none;
+    }
+
+    .check-label {
+      font-size: 14px;
+      color: var(--color-neutral-700);
+    }
+
+    .check-result {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .check-result.pass {
+      color: var(--color-success);
+    }
+
+    .check-result.warning {
+      color: var(--color-warning);
+    }
+
+    .check-result.fail {
+      color: var(--color-error);
+    }
+
+    .preview-card {
+      background: white;
+      border: 1px solid var(--color-neutral-200);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+    }
+
+    .preview-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: var(--spacing-md);
+      color: var(--color-neutral-900);
+    }
+
+    .preview-item {
+      margin-bottom: var(--spacing-md);
+    }
+
+    .preview-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .settings-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-xl);
+      padding-top: var(--spacing-xl);
+      border-top: 1px solid var(--color-neutral-200);
+    }
+
+    @media (max-width: 768px) {
+      .settings-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .preset-swatches {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .palette-grid {
+        grid-template-columns: repeat(5, 1fr);
+      }
+
+      .settings-actions {
+        flex-direction: column-reverse;
+      }
+
+      .settings-actions button {
+        width: 100%;
+      }
+
+      .mobile-menu {
+        display: block;
+      }
+
+      .navbar-menu {
+        display: none;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .mobile-menu {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-container">
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="navbar-container">
+        <a href="dashboard.html" class="navbar-logo">🎟️ WaitingList</a>
+
+        <!-- Desktop Menu -->
+        <ul class="navbar-menu">
+          <li><a href="dashboard.html" class="navbar-link">Dashboard</a></li>
+          <li><a href="dashboard-active.html" class="navbar-link">Daftar Antrian</a></li>
+          <li><a href="#" class="navbar-link">Statistik</a></li>
+          <li><a href="#" class="navbar-link">Riwayat</a></li>
+          <li><a href="#" class="navbar-link">🔒 Users <span class="badge badge-premium">Premium</span></a></li>
+          <li><a href="#" class="navbar-link">🔒 Restoran <span class="badge badge-premium">Premium</span></a></li>
+        </ul>
+
+        <!-- Right Actions -->
+        <div class="navbar-actions">
+          <div class="dropdown-wrapper" style="position: relative;">
+            <button class="btn btn-ghost" id="restaurant-dropdown">
+              Restoran Sedap ▾
+            </button>
+          </div>
+          <a href="settings.html" class="btn btn-icon btn-ghost" aria-label="Settings">⚙️</a>
+          <button class="btn btn-secondary btn-sm" onclick="confirmLogout()">Logout</button>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button class="mobile-menu btn btn-icon btn-ghost" onclick="toggleMobileMenu()">
+          ☰
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <h1 class="page-title">Pengaturan</h1>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <ul class="tabs-list">
+          <li><button class="tabs-trigger" data-tab="restaurant">Restoran</button></li>
+          <li><button class="tabs-trigger" data-tab="system">Sistem</button></li>
+          <li><button class="tabs-trigger active" data-tab="theme">Tema</button></li>
+          <li><button class="tabs-trigger" data-tab="account">Akun</button></li>
+        </ul>
+      </div>
+
+      <!-- Theme Tab Content -->
+      <div class="tabs-content active" id="theme-tab">
+        <div class="settings-layout">
+          <!-- Left Column: Color Picker -->
+          <div>
+            <div class="card">
+              <div class="card-content">
+                <!-- Color Picker Section -->
+                <div class="color-picker-section">
+                  <h3 style="margin-bottom: var(--spacing-md);">Pilih Warna Utama</h3>
+
+                  <!-- Large Color Preview -->
+                  <div
+                    id="color-preview-large"
+                    class="color-preview-large"
+                    style="background-color: #D97706; border: 2px solid #D97706;"
+                    onclick="openColorPicker()"
+                  ></div>
+
+                  <!-- HEX Input -->
+                  <div class="form-group">
+                    <label for="hex-input" class="form-label">Primary Color (HEX)</label>
+                    <input
+                      type="text"
+                      id="hex-input"
+                      class="form-input"
+                      placeholder="#D97706"
+                      maxlength="7"
+                      style="font-family: var(--font-mono);"
+                    >
+                  </div>
+
+                  <!-- Preset Color Swatches -->
+                  <h4 style="margin-bottom: var(--spacing-md);">Warna Preset</h4>
+                  <div class="preset-swatches" id="preset-swatches"></div>
+                </div>
+
+                <!-- Generated Palette -->
+                <div class="color-picker-section">
+                  <h4 style="margin-bottom: var(--spacing-md);">Palette Otomatis</h4>
+                  <p style="font-size: 14px; color: var(--color-neutral-600); margin-bottom: var(--spacing-md);">
+                    10 shade yang dihasilkan dari warna utama
+                  </p>
+                  <div class="palette-grid" id="palette-grid"></div>
+                </div>
+
+                <!-- Accessibility Check -->
+                <div class="color-picker-section">
+                  <h4 style="margin-bottom: var(--spacing-md);">Accessibility Check</h4>
+                  <div class="accessibility-check" id="accessibility-check">
+                    <div class="check-item">
+                      <span class="check-label">White text on Primary:</span>
+                      <span class="check-result pass" id="check-white">7.2:1 (AAA)</span>
+                    </div>
+                    <div class="check-item">
+                      <span class="check-label">Black text on Light BG:</span>
+                      <span class="check-result pass" id="check-black">12.5:1 (AAA)</span>
+                    </div>
+                    <div class="check-item">
+                      <span class="check-label">Primary text on White:</span>
+                      <span class="check-result warning" id="check-primary">4.1:1 (AA)</span>
+                    </div>
+                    <div class="check-item" style="padding-top: var(--spacing-md); margin-top: var(--spacing-sm); border-top: 1px solid var(--color-neutral-300);">
+                      <span class="check-label"><strong>Overall:</strong></span>
+                      <span class="check-result pass" id="check-overall">AA Compliant ✓</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="settings-actions">
+              <button class="btn btn-secondary" onclick="resetToDefault()">
+                ↺ Reset to Default
+              </button>
+              <button class="btn btn-primary" id="save-theme-btn" onclick="saveThemeChanges()">
+                ✓ Save Theme
+              </button>
+            </div>
+          </div>
+
+          <!-- Right Column: Live Preview -->
+          <div>
+            <div class="preview-card">
+              <h3 class="preview-title">Live Preview</h3>
+
+              <div class="preview-item">
+                <button class="btn btn-primary" id="preview-primary-btn" style="width: 100%;">
+                  Primary Button
+                </button>
+              </div>
+
+              <div class="preview-item">
+                <button class="btn btn-outline" id="preview-secondary-btn" style="width: 100%;">
+                  Secondary Button
+                </button>
+              </div>
+
+              <div class="preview-item" style="text-align: center; padding: var(--spacing-lg); background: var(--color-neutral-50); border-radius: var(--radius-md);">
+                <div id="preview-queue-number" style="font-size: 48px; font-weight: 700; color: var(--color-primary-600);">
+                  #042
+                </div>
+                <div style="margin-top: var(--spacing-sm);">
+                  <span class="badge badge-waiting" id="preview-status-badge">🟡 Menunggu</span>
+                </div>
+              </div>
+
+              <div class="preview-item">
+                <a href="#" id="preview-link" style="font-size: 16px;">Link Text Example</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Other Tabs (Placeholder) -->
+      <div class="tabs-content" id="restaurant-tab">
+        <div class="card">
+          <div class="card-content">
+            <p>Pengaturan restoran coming soon...</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabs-content" id="system-tab">
+        <div class="card">
+          <div class="card-content">
+            <p>Pengaturan sistem coming soon...</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabs-content" id="account-tab">
+        <div class="card">
+          <div class="card-content">
+            <p>Pengaturan akun coming soon...</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Warning Modal -->
+  <div class="modal-overlay hidden" id="warning-modal">
+    <div class="modal" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3 class="modal-title">⚠ Accessibility Warning</h3>
+      </div>
+      <div class="modal-content" id="warning-content"></div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeWarningModal()">
+          Keep Anyway
+        </button>
+        <button class="btn btn-primary" id="use-suggestion-btn">
+          Use Suggestion
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/utils.js"></script>
+  <script src="js/theme.js"></script>
+  <script>
+    // ============================================
+    // STATE
+    // ============================================
+
+    let currentColor = '#D97706';
+    let currentPalette = null;
+
+    // ============================================
+    // TABS
+    // ============================================
+
+    const tabTriggers = document.querySelectorAll('.tabs-trigger');
+    const tabContents = document.querySelectorAll('.tabs-content');
+
+    tabTriggers.forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        const targetTab = trigger.dataset.tab;
+
+        // Update active states
+        tabTriggers.forEach(t => t.classList.remove('active'));
+        trigger.classList.add('active');
+
+        tabContents.forEach(content => content.classList.remove('active'));
+        document.getElementById(`${targetTab}-tab`).classList.add('active');
+      });
+    });
+
+    // ============================================
+    // COLOR PICKER INITIALIZATION
+    // ============================================
+
+    const hexInput = document.getElementById('hex-input');
+    const colorPreviewLarge = document.getElementById('color-preview-large');
+
+    initColorPicker('hex-input', (color) => {
+      currentColor = color;
+      updateColorPreview(color);
+      updatePalette(color);
+      updateAccessibilityCheck(color);
+      updateLivePreview(color);
+    });
+
+    // ============================================
+    // PRESET SWATCHES
+    // ============================================
+
+    function renderPresetSwatches() {
+      const container = document.getElementById('preset-swatches');
+
+      container.innerHTML = PRESET_COLORS.map(preset => `
+        <div
+          class="preset-swatch ${preset.color === currentColor ? 'selected' : ''}"
+          style="background-color: ${preset.color};"
+          data-color="${preset.color}"
+          onclick="selectPresetColor('${preset.color}')"
+          title="${preset.name}"
+        >
+          ${preset.emoji}
+        </div>
+      `).join('');
+    }
+
+    function selectPresetColor(color) {
+      currentColor = color;
+      hexInput.value = color;
+      updateColorPreview(color);
+      updatePalette(color);
+      updateAccessibilityCheck(color);
+      updateLivePreview(color);
+      renderPresetSwatches();
+    }
+
+    // ============================================
+    // COLOR PREVIEW
+    // ============================================
+
+    function updateColorPreview(color) {
+      colorPreviewLarge.style.backgroundColor = color;
+      colorPreviewLarge.style.borderColor = color;
+    }
+
+    // ============================================
+    // PALETTE GENERATION
+    // ============================================
+
+    function updatePalette(color) {
+      currentPalette = generatePalette(color);
+      if (!currentPalette) return;
+
+      const container = document.getElementById('palette-grid');
+
+      container.innerHTML = Object.entries(currentPalette).map(([shade, hex]) => `
+        <div
+          class="palette-shade ${shade === '600' ? 'primary' : ''}"
+          style="background-color: ${hex};"
+          data-hex="${hex}"
+          onclick="copyShadeColor('${hex}')"
+          title="Shade ${shade}: ${hex}"
+        ></div>
+      `).join('');
+    }
+
+    function copyShadeColor(hex) {
+      copyToClipboard(hex);
+    }
+
+    // ============================================
+    // ACCESSIBILITY CHECK
+    // ============================================
+
+    function updateAccessibilityCheck(color) {
+      const validation = validateThemeAccessibility(color);
+
+      // White on Primary
+      const whiteCheck = validation.checks.whiteOnPrimary;
+      const whiteEl = document.getElementById('check-white');
+      whiteEl.textContent = `${whiteCheck.ratio}:1 (${whiteCheck.level})`;
+      whiteEl.className = 'check-result ' + (whiteCheck.pass ? 'pass' : 'fail');
+
+      // Black on Light
+      const blackCheck = validation.checks.blackOnLight;
+      const blackEl = document.getElementById('check-black');
+      blackEl.textContent = `${blackCheck.ratio}:1 (${blackCheck.level})`;
+      blackEl.className = 'check-result ' + (blackCheck.pass ? 'pass' : 'fail');
+
+      // Primary on White
+      const primaryCheck = validation.checks.primaryOnWhite;
+      const primaryEl = document.getElementById('check-primary');
+      primaryEl.textContent = `${primaryCheck.ratio}:1 (${primaryCheck.level})`;
+      primaryEl.className = 'check-result ' + (primaryCheck.pass ? (primaryCheck.level === 'AAA' ? 'pass' : 'warning') : 'fail');
+
+      // Overall
+      const overallEl = document.getElementById('check-overall');
+      overallEl.textContent = validation.overall.pass
+        ? `${validation.overall.level} Compliant ✓`
+        : 'Failed ✗';
+      overallEl.className = 'check-result ' + (validation.overall.pass ? 'pass' : 'fail');
+    }
+
+    // ============================================
+    // LIVE PREVIEW
+    // ============================================
+
+    function updateLivePreview(color) {
+      updatePreview(color);
+    }
+
+    // ============================================
+    // COLOR PICKER MODAL
+    // ============================================
+
+    function openColorPicker() {
+      // In production, this would open a color picker component
+      // For now, just focus the HEX input
+      hexInput.focus();
+      hexInput.select();
+    }
+
+    // ============================================
+    // SAVE THEME
+    // ============================================
+
+    async function saveThemeChanges() {
+      const validation = validateThemeAccessibility(currentColor);
+
+      // Show warning if failed
+      if (!validation.overall.pass) {
+        showAccessibilityWarning(currentColor);
+        return;
+      }
+
+      // Save theme
+      const btn = document.getElementById('save-theme-btn');
+      btn.disabled = true;
+      btn.classList.add('btn-loading');
+      btn.textContent = '';
+
+      try {
+        // Apply theme
+        applyTheme(currentColor);
+
+        // Save to localStorage
+        saveTheme({ primaryColor: currentColor });
+
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        showToast('Tema berhasil disimpan', 'success');
+
+        // Reset button
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.classList.remove('btn-loading');
+          btn.textContent = '✓ Save Theme';
+        }, 1000);
+
+      } catch (error) {
+        showToast('Gagal menyimpan tema', 'error');
+
+        btn.disabled = false;
+        btn.classList.remove('btn-loading');
+        btn.textContent = '✓ Save Theme';
+      }
+    }
+
+    // ============================================
+    // RESET TO DEFAULT
+    // ============================================
+
+    function resetToDefault() {
+      if (confirm('Reset tema ke default (Orange)?')) {
+        selectPresetColor('#D97706');
+        resetTheme();
+        showToast('Tema direset ke default', 'info');
+      }
+    }
+
+    // ============================================
+    // WARNING MODAL
+    // ============================================
+
+    function showAccessibilityWarning(color) {
+      const suggested = getSuggestedAlternative(color);
+
+      const warningContent = document.getElementById('warning-content');
+      warningContent.innerHTML = `
+        <p>Your color (<strong>${color}</strong>) has low contrast for button text.</p>
+        <p style="margin-top: var(--spacing-md);">Suggested alternatives:</p>
+        <ul style="padding-left: 20px; margin-top: var(--spacing-sm);">
+          <li>Darker: <strong>${suggested}</strong> (AA compliant)</li>
+        </ul>
+      `;
+
+      const modal = document.getElementById('warning-modal');
+      modal.classList.remove('hidden');
+
+      // Set up suggestion button
+      const useSuggestionBtn = document.getElementById('use-suggestion-btn');
+      useSuggestionBtn.onclick = () => {
+        selectPresetColor(suggested);
+        closeWarningModal();
+      };
+    }
+
+    function closeWarningModal() {
+      const modal = document.getElementById('warning-modal');
+      modal.classList.add('hidden');
+    }
+
+    // ============================================
+    // MOBILE MENU
+    // ============================================
+
+    function toggleMobileMenu() {
+      showToast('Mobile menu coming soon', 'info');
+    }
+
+    // ============================================
+    // LOGOUT
+    // ============================================
+
+    function confirmLogout() {
+      if (confirm('Apakah Anda yakin ingin logout?')) {
+        localStorage.clear();
+        window.location.href = 'index.html';
+      }
+    }
+
+    // ============================================
+    // LOAD RESTAURANT DATA
+    // ============================================
+
+    function loadRestaurantData() {
+      const registrationData = getItem('registration-data');
+      if (registrationData && registrationData.restaurantName) {
+        document.getElementById('restaurant-dropdown').textContent =
+          registrationData.restaurantName + ' ▾';
+      }
+    }
+
+    // ============================================
+    // INITIALIZATION
+    // ============================================
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadRestaurantData();
+
+      // Load saved theme
+      const savedTheme = loadTheme();
+      if (savedTheme && savedTheme.primaryColor) {
+        currentColor = savedTheme.primaryColor;
+        hexInput.value = currentColor;
+      }
+
+      // Initialize UI
+      updateColorPreview(currentColor);
+      updatePalette(currentColor);
+      updateAccessibilityCheck(currentColor);
+      updateLivePreview(currentColor);
+      renderPresetSwatches();
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Verifikasi nomor HP - Waiting List SaaS">
+  <title>Verifikasi Nomor HP - Waiting List SaaS</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: var(--spacing-md);
+    }
+
+    .verify-container {
+      width: 100%;
+      max-width: 480px;
+      text-align: center;
+    }
+
+    .verify-card {
+      background: white;
+      border: 1px solid var(--color-neutral-200);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      padding: var(--spacing-2xl) var(--spacing-xl);
+    }
+
+    .verify-icon {
+      font-size: 96px;
+      margin-bottom: var(--spacing-lg);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .verify-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-neutral-900);
+    }
+
+    .verify-message {
+      font-size: 16px;
+      color: var(--color-neutral-600);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .otp-container {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .resend-container {
+      margin-top: var(--spacing-lg);
+      padding-top: var(--spacing-lg);
+      border-top: 1px solid var(--color-neutral-200);
+    }
+
+    .timer-text {
+      font-size: 14px;
+      color: var(--color-neutral-600);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .change-number {
+      font-size: 14px;
+      margin-top: var(--spacing-md);
+    }
+
+    .success-icon {
+      font-size: 96px;
+      color: var(--color-success);
+      animation: scale-up 500ms ease-out;
+    }
+
+    @media (max-width: 768px) {
+      .verify-card {
+        padding: var(--spacing-xl) var(--spacing-lg);
+      }
+
+      .verify-icon {
+        font-size: 72px;
+      }
+
+      .verify-title {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="verify-container">
+    <!-- Verify Card -->
+    <div class="verify-card" id="verify-card">
+      <div class="verify-icon">📱</div>
+
+      <h1 class="verify-title">Verifikasi Nomor HP</h1>
+
+      <p class="verify-message">
+        Masukkan kode yang dikirim ke<br>
+        <strong id="masked-phone">0812****5678</strong>
+      </p>
+
+      <!-- OTP Input Container -->
+      <div class="otp-container" id="otp-container"></div>
+
+      <!-- Error Message -->
+      <div id="error-message" class="hidden" style="margin-bottom: var(--spacing-lg);">
+        <div class="alert alert-error" style="display: inline-block; text-align: left;">
+          <span>✗</span>
+          <span id="error-text"></span>
+        </div>
+      </div>
+
+      <!-- Verify Button -->
+      <button id="verify-btn" class="btn btn-primary btn-lg hidden" style="width: 100%;">
+        Verifikasi
+      </button>
+
+      <!-- Resend Section -->
+      <div class="resend-container">
+        <div class="timer-text" id="timer-text">
+          Kirim ulang dalam <strong id="countdown">01:00</strong>
+        </div>
+
+        <button id="resend-btn" class="btn btn-secondary" disabled>
+          Kirim Ulang Kode
+        </button>
+      </div>
+
+      <!-- Change Number Link -->
+      <div class="change-number">
+        <a href="register.html">Ubah Nomor HP</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/utils.js"></script>
+  <script src="js/otp-input.js"></script>
+  <script>
+    // ============================================
+    // INITIALIZATION
+    // ============================================
+
+    let otpInput;
+    let timer;
+    let attemptCount = 0;
+    const MAX_ATTEMPTS = 3;
+
+    const elements = {
+      verifyCard: document.getElementById('verify-card'),
+      maskedPhone: document.getElementById('masked-phone'),
+      otpContainer: document.getElementById('otp-container'),
+      errorMessage: document.getElementById('error-message'),
+      errorText: document.getElementById('error-text'),
+      verifyBtn: document.getElementById('verify-btn'),
+      timerText: document.getElementById('timer-text'),
+      countdown: document.getElementById('countdown'),
+      resendBtn: document.getElementById('resend-btn')
+    };
+
+    // ============================================
+    // LOAD REGISTRATION DATA
+    // ============================================
+
+    function loadRegistrationData() {
+      const data = getItem('registration-data');
+
+      if (data && data.phone) {
+        // Mask phone number
+        const phone = data.phone;
+        elements.maskedPhone.textContent = maskPhoneNumber('0' + phone);
+      } else {
+        // Redirect to registration if no data
+        window.location.href = 'register.html';
+      }
+    }
+
+    // ============================================
+    // OTP INPUT INITIALIZATION
+    // ============================================
+
+    function initOTPInput() {
+      otpInput = new OTPInput(elements.otpContainer, {
+        length: 6,
+        onComplete: handleOTPComplete,
+        onChange: handleOTPChange
+      });
+    }
+
+    function handleOTPChange(value) {
+      // Hide error when user types
+      if (value.length > 0) {
+        hideError();
+      }
+    }
+
+    async function handleOTPComplete(value) {
+      // Show loading state
+      elements.verifyBtn.disabled = true;
+      elements.verifyBtn.classList.add('btn-loading');
+      elements.verifyBtn.textContent = '';
+
+      // Disable OTP input
+      otpInput.disable();
+
+      // Verify OTP
+      try {
+        const result = await verifyOTP(value);
+
+        if (result.success) {
+          // Show success
+          showSuccess();
+        } else {
+          // Show error
+          attemptCount++;
+
+          if (attemptCount >= MAX_ATTEMPTS) {
+            showError('Terlalu banyak percobaan gagal. Silakan kirim ulang kode.');
+            otpInput.disable();
+            elements.resendBtn.disabled = false;
+            elements.resendBtn.classList.remove('btn-secondary');
+            elements.resendBtn.classList.add('btn-primary');
+          } else {
+            showError(result.message);
+            otpInput.showError();
+          }
+
+          // Re-enable OTP input
+          otpInput.enable();
+
+          // Hide loading state
+          elements.verifyBtn.disabled = false;
+          elements.verifyBtn.classList.remove('btn-loading');
+          elements.verifyBtn.textContent = 'Verifikasi';
+        }
+      } catch (error) {
+        showError('Terjadi kesalahan. Silakan coba lagi.');
+        otpInput.showError();
+        otpInput.enable();
+
+        elements.verifyBtn.disabled = false;
+        elements.verifyBtn.classList.remove('btn-loading');
+        elements.verifyBtn.textContent = 'Verifikasi';
+      }
+    }
+
+    // ============================================
+    // TIMER COUNTDOWN
+    // ============================================
+
+    function startCountdown(duration = 60) {
+      // Disable resend button
+      elements.resendBtn.disabled = true;
+      elements.resendBtn.classList.remove('btn-primary');
+      elements.resendBtn.classList.add('btn-secondary');
+
+      timer = startTimer(
+        duration,
+        (remaining) => {
+          elements.countdown.textContent = formatTimerDisplay(remaining);
+        },
+        () => {
+          // Enable resend button
+          elements.resendBtn.disabled = false;
+          elements.resendBtn.classList.remove('btn-secondary');
+          elements.resendBtn.classList.add('btn-primary');
+
+          elements.timerText.innerHTML = 'Tidak menerima kode?';
+        }
+      );
+    }
+
+    // ============================================
+    // RESEND OTP
+    // ============================================
+
+    elements.resendBtn.addEventListener('click', async () => {
+      // Show loading state
+      elements.resendBtn.disabled = true;
+      elements.resendBtn.classList.add('btn-loading');
+      elements.resendBtn.textContent = '';
+
+      try {
+        const result = await resendOTP();
+
+        if (result.success) {
+          showToast('Kode OTP baru telah dikirim', 'success');
+
+          // Reset attempts
+          attemptCount = 0;
+
+          // Clear OTP input
+          otpInput.clear();
+          otpInput.enable();
+
+          // Restart countdown
+          startCountdown(60);
+
+          // Hide error
+          hideError();
+        } else {
+          showToast('Gagal mengirim ulang kode', 'error');
+        }
+      } catch (error) {
+        showToast('Terjadi kesalahan', 'error');
+      } finally {
+        // Reset button
+        elements.resendBtn.classList.remove('btn-loading');
+        elements.resendBtn.textContent = 'Kirim Ulang Kode';
+      }
+    });
+
+    // ============================================
+    // ERROR HANDLING
+    // ============================================
+
+    function showError(message) {
+      elements.errorText.textContent = message;
+      elements.errorMessage.classList.remove('hidden');
+      fadeIn(elements.errorMessage);
+    }
+
+    function hideError() {
+      elements.errorMessage.classList.add('hidden');
+    }
+
+    // ============================================
+    // SUCCESS FLOW
+    // ============================================
+
+    function showSuccess() {
+      // Clear existing content
+      elements.verifyCard.innerHTML = `
+        <div class="success-icon">✓</div>
+        <h1 class="verify-title" style="color: var(--color-success);">Email Terverifikasi!</h1>
+        <p class="verify-message">Anda akan diarahkan ke dashboard...</p>
+        <div class="loading-spinner" style="margin: var(--spacing-xl) auto;"></div>
+      `;
+
+      // Redirect to dashboard after 1 second
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 1500);
+    }
+
+    // ============================================
+    // INITIALIZATION
+    // ============================================
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadRegistrationData();
+      initOTPInput();
+      startCountdown(60);
+    });
+
+    // ============================================
+    // KEYBOARD SHORTCUT
+    // ============================================
+
+    // Press Enter to verify when OTP is complete
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && otpInput.getValue().length === 6) {
+        handleOTPComplete(otpInput.getValue());
+      }
+    });
+  </script>
+
+</body>
+</html>

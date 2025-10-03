@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#D97706">
+  <title>Dashboard Antrian - Staff</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Header Navigation -->
+  <header class="header">
+    <div class="header-container">
+      <!-- Left Section -->
+      <div class="header-left">
+        <a href="dashboard.html" class="logo">🍽️ WaitList</a>
+        <span class="nav-title">Dashboard Antrian</span>
+      </div>
+
+      <!-- Right Section -->
+      <div class="header-right">
+        <!-- Connection Status Indicator -->
+        <div class="connection-status">
+          <span class="status-dot connected"></span>
+          <span>Real-time connected</span>
+        </div>
+
+        <!-- User Menu Dropdown -->
+        <div class="dropdown user-menu">
+          <div class="user-info">
+            <div>
+              <div class="user-name">Budi Santoso</div>
+              <div class="user-role">Staff</div>
+            </div>
+            <span style="font-size: 0.75rem;">▼</span>
+          </div>
+          <div class="dropdown-content">
+            <button class="dropdown-item">⚙️ Pengaturan</button>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item destructive" onclick="handleLogout()">🚪 Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-container">
+
+    <!-- Action Bar -->
+    <div class="action-bar">
+      <div class="action-bar-left">
+        <!-- Call Next Button (Primary CTA) -->
+        <button class="btn btn-primary btn-xl btn-call-next" onclick="handleCallNext()">
+          🔔 Panggil Berikutnya
+        </button>
+
+        <!-- Search Input -->
+        <input
+          type="text"
+          class="input input-search"
+          placeholder="Cari nama atau nomor HP..."
+          id="searchInput"
+          oninput="handleSearch()"
+          style="width: 300px;"
+        >
+      </div>
+
+      <div class="action-bar-right">
+        <!-- Refresh Button -->
+        <button class="btn btn-secondary btn-icon" onclick="handleRefresh()" title="Refresh data">
+          ⟳
+        </button>
+
+        <!-- Filter Dropdown -->
+        <div class="dropdown">
+          <button class="btn btn-secondary">
+            Filter
+            <span style="font-size: 0.75rem; margin-left: 0.25rem;">▼</span>
+          </button>
+          <div class="dropdown-content">
+            <button class="dropdown-item" onclick="filterQueues('all')">Semua</button>
+            <button class="dropdown-item" onclick="filterQueues('waiting')">Menunggu</button>
+            <button class="dropdown-item" onclick="filterQueues('called')">Dipanggil</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <span class="stat-icon">🟡</span>
+        <span class="stat-label">Menunggu:</span>
+        <span class="stat-value warning" id="waitingCount">12</span>
+      </div>
+
+      <div class="stat-item">
+        <span class="stat-icon">🟢</span>
+        <span class="stat-label">Dipanggil:</span>
+        <span class="stat-value success" id="calledCount">2</span>
+      </div>
+
+      <div class="stat-item">
+        <span class="stat-icon">⏱️</span>
+        <span class="stat-label">Rata-rata:</span>
+        <span class="stat-value" id="avgWaitTime">15 min</span>
+      </div>
+    </div>
+
+    <!-- Queue Table (Desktop) -->
+    <div class="table-container">
+      <table class="table">
+        <thead class="table-header">
+          <tr>
+            <th style="width: 80px;">#</th>
+            <th style="width: 200px;">Nama</th>
+            <th style="width: 180px;">Info</th>
+            <th style="width: 100px;" class="align-right">Waktu</th>
+            <th style="width: 140px;" class="align-center">Status</th>
+            <th style="width: 120px;" class="align-right">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="queueTableBody">
+          <!-- Queue Row 1 - Waiting (First) -->
+          <tr class="table-row first-waiting">
+            <td class="table-cell">
+              <div class="queue-number">#001</div>
+            </td>
+            <td class="table-cell">
+              <div class="customer-name">John Doe</div>
+              <div class="customer-phone">0812-3456-7890</div>
+              <div class="party-size">👥 4 orang</div>
+            </td>
+            <td class="table-cell">
+              <div class="time-display">10:30 WIB</div>
+              <div class="time-relative">15 menit yang lalu</div>
+            </td>
+            <td class="table-cell align-right">
+              <div class="time-display">10:30</div>
+            </td>
+            <td class="table-cell align-center">
+              <span class="badge badge-waiting">🟡 Menunggu</span>
+            </td>
+            <td class="table-cell">
+              <div class="action-buttons">
+                <button class="btn btn-primary btn-sm" onclick="handleCall(1)">
+                  🔔 Panggil
+                </button>
+                <div class="dropdown">
+                  <button class="btn btn-ghost btn-icon">⋮</button>
+                  <div class="dropdown-content">
+                    <button class="dropdown-item" onclick="showQueueDetail(1)">📄 Lihat Detail</button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item destructive" onclick="showCancelModal(1)">❌ Batalkan</button>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Queue Row 2 - Waiting -->
+          <tr class="table-row">
+            <td class="table-cell">
+              <div class="queue-number">#002</div>
+            </td>
+            <td class="table-cell">
+              <div class="customer-name">Jane Smith</div>
+              <div class="customer-phone">0821-9876-5432</div>
+              <div class="party-size">👥 2 orang</div>
+            </td>
+            <td class="table-cell">
+              <div class="time-display">10:32 WIB</div>
+              <div class="time-relative">13 menit yang lalu</div>
+            </td>
+            <td class="table-cell align-right">
+              <div class="time-display">10:32</div>
+            </td>
+            <td class="table-cell align-center">
+              <span class="badge badge-waiting">🟡 Menunggu</span>
+            </td>
+            <td class="table-cell">
+              <div class="action-buttons">
+                <button class="btn btn-primary btn-sm" onclick="handleCall(2)">
+                  🔔 Panggil
+                </button>
+                <div class="dropdown">
+                  <button class="btn btn-ghost btn-icon">⋮</button>
+                  <div class="dropdown-content">
+                    <button class="dropdown-item" onclick="showQueueDetail(2)">📄 Lihat Detail</button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item destructive" onclick="showCancelModal(2)">❌ Batalkan</button>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Queue Row 3 - Called -->
+          <tr class="table-row called">
+            <td class="table-cell">
+              <div class="queue-number">#003</div>
+            </td>
+            <td class="table-cell">
+              <div class="customer-name">Bob Wilson</div>
+              <div class="customer-phone">0856-1234-5678</div>
+              <div class="party-size">👥 6 orang</div>
+            </td>
+            <td class="table-cell">
+              <div class="time-display">10:35 WIB</div>
+              <div class="time-relative">10 menit yang lalu</div>
+            </td>
+            <td class="table-cell align-right">
+              <div class="time-display">10:35</div>
+            </td>
+            <td class="table-cell align-center">
+              <span class="badge badge-called">🟢 Dipanggil</span>
+              <div class="time-relative">2 min ago</div>
+            </td>
+            <td class="table-cell">
+              <div class="action-buttons">
+                <button class="btn btn-success btn-sm" onclick="showCompleteModal(3)">
+                  ✓ Selesai
+                </button>
+                <button class="btn btn-outline btn-sm" onclick="showNoShowModal(3)">
+                  ⏱️ Tidak Hadir
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Queue Row 4 - Waiting -->
+          <tr class="table-row">
+            <td class="table-cell">
+              <div class="queue-number">#004</div>
+            </td>
+            <td class="table-cell">
+              <div class="customer-name">Alice Johnson</div>
+              <div class="customer-phone">0813-5555-6666</div>
+              <div class="party-size">👥 3 orang</div>
+            </td>
+            <td class="table-cell">
+              <div class="time-display">10:40 WIB</div>
+              <div class="time-relative">5 menit yang lalu</div>
+            </td>
+            <td class="table-cell align-right">
+              <div class="time-display">10:40</div>
+            </td>
+            <td class="table-cell align-center">
+              <span class="badge badge-waiting">🟡 Menunggu</span>
+            </td>
+            <td class="table-cell">
+              <div class="action-buttons">
+                <button class="btn btn-primary btn-sm" onclick="handleCall(4)">
+                  🔔 Panggil
+                </button>
+                <div class="dropdown">
+                  <button class="btn btn-ghost btn-icon">⋮</button>
+                  <div class="dropdown-content">
+                    <button class="dropdown-item" onclick="showQueueDetail(4)">📄 Lihat Detail</button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item destructive" onclick="showCancelModal(4)">❌ Batalkan</button>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Queue Cards (Mobile View) -->
+    <div class="queue-cards">
+      <!-- Card 1 - First Waiting -->
+      <div class="queue-card first-waiting">
+        <div class="queue-card-header">
+          <div class="queue-number">#001</div>
+          <span class="badge badge-waiting">🟡 Menunggu</span>
+        </div>
+        <div class="queue-card-body">
+          <div class="customer-name">John Doe</div>
+          <div class="queue-info-row">
+            <span>📞</span>
+            <span>0812-3456-7890</span>
+          </div>
+          <div class="queue-info-row">
+            <span>👥</span>
+            <span>4 orang</span>
+          </div>
+          <div class="queue-info-row">
+            <span>🕒</span>
+            <span>10:30 WIB</span>
+          </div>
+          <div class="queue-info-row">
+            <span>⏱️</span>
+            <span>15 menit yang lalu</span>
+          </div>
+        </div>
+        <div class="queue-card-footer">
+          <button class="btn btn-primary" onclick="handleCall(1)">
+            🔔 Panggil
+          </button>
+          <button class="btn btn-ghost btn-icon">⋮</button>
+        </div>
+      </div>
+
+      <!-- Card 2 - Waiting -->
+      <div class="queue-card">
+        <div class="queue-card-header">
+          <div class="queue-number">#002</div>
+          <span class="badge badge-waiting">🟡 Menunggu</span>
+        </div>
+        <div class="queue-card-body">
+          <div class="customer-name">Jane Smith</div>
+          <div class="queue-info-row">
+            <span>📞</span>
+            <span>0821-9876-5432</span>
+          </div>
+          <div class="queue-info-row">
+            <span>👥</span>
+            <span>2 orang</span>
+          </div>
+          <div class="queue-info-row">
+            <span>🕒</span>
+            <span>10:32 WIB</span>
+          </div>
+          <div class="queue-info-row">
+            <span>⏱️</span>
+            <span>13 menit yang lalu</span>
+          </div>
+        </div>
+        <div class="queue-card-footer">
+          <button class="btn btn-primary" onclick="handleCall(2)">
+            🔔 Panggil
+          </button>
+          <button class="btn btn-ghost btn-icon">⋮</button>
+        </div>
+      </div>
+
+      <!-- Card 3 - Called -->
+      <div class="queue-card called">
+        <div class="queue-card-header">
+          <div class="queue-number">#003</div>
+          <span class="badge badge-called">🟢 Dipanggil</span>
+        </div>
+        <div class="queue-card-body">
+          <div class="customer-name">Bob Wilson</div>
+          <div class="queue-info-row">
+            <span>📞</span>
+            <span>0856-1234-5678</span>
+          </div>
+          <div class="queue-info-row">
+            <span>👥</span>
+            <span>6 orang</span>
+          </div>
+          <div class="queue-info-row">
+            <span>🕒</span>
+            <span>10:35 WIB (Dipanggil 2 min ago)</span>
+          </div>
+        </div>
+        <div class="queue-card-footer">
+          <button class="btn btn-success" onclick="showCompleteModal(3)">
+            ✓ Selesai
+          </button>
+          <button class="btn btn-outline" onclick="showNoShowModal(3)">
+            Tidak Hadir
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Complete Queue Modal -->
+  <div class="modal-overlay" id="completeModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">✓ Selesaikan Antrian?</h3>
+        <button class="modal-close" onclick="closeModal('completeModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="customer-name" id="completeQueueInfo">John Doe (#001)</div>
+        <p class="text-muted" style="margin-top: 0.5rem;">4 orang</p>
+        <p style="margin-top: 1rem;">
+          Konfirmasi bahwa pelanggan telah ditangani dan meja telah siap.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('completeModal')">Batal</button>
+        <button class="btn btn-success" onclick="confirmComplete()">Ya, Selesai</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cancel Queue Modal -->
+  <div class="modal-overlay" id="cancelModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">⚠️ Batalkan Antrian?</h3>
+        <button class="modal-close" onclick="closeModal('cancelModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="customer-name" id="cancelQueueInfo">Jane Smith (#002)</div>
+        <p class="text-muted" style="margin-top: 0.5rem;">2 orang</p>
+
+        <div class="form-group" style="margin-top: 1.5rem;">
+          <label class="label" for="cancelReason">Alasan:</label>
+          <select id="cancelReason" class="input">
+            <option value="no-show">Tidak hadir setelah dipanggil</option>
+            <option value="customer-cancelled">Pelanggan membatalkan</option>
+            <option value="other">Lainnya</option>
+          </select>
+        </div>
+
+        <p class="text-muted" style="margin-top: 1rem; font-size: 0.875rem;">
+          Tindakan ini tidak dapat dibatalkan.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('cancelModal')">Batal</button>
+        <button class="btn btn-destructive" onclick="confirmCancel()">Ya, Batalkan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- No-Show Modal -->
+  <div class="modal-overlay" id="noShowModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">⏱️ Tandai Tidak Hadir?</h3>
+        <button class="modal-close" onclick="closeModal('noShowModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="customer-name" id="noShowQueueInfo">Bob Wilson (#003)</div>
+        <p class="text-muted" style="margin-top: 0.5rem;">6 orang</p>
+
+        <p style="margin-top: 1rem;">
+          Pelanggan tidak hadir setelah dipanggil. Antrian akan dibatalkan.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('noShowModal')">Batal</button>
+        <button class="btn btn-destructive" onclick="confirmNoShow()">Ya, Tidak Hadir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer">
+    <!-- Toasts will be dynamically inserted here -->
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    /**
+     * Real-time WebSocket connection simulation
+     * In production: Use Socket.io client
+     */
+    let socket = null;
+    let queues = [];
+    let currentFilter = 'all';
+
+    // Initialize connection status
+    function initConnection() {
+      // Simulate WebSocket connection
+      console.log('WebSocket connected (simulated)');
+      // In production:
+      // socket = io('wss://api.example.com', {
+      //   auth: { token: localStorage.getItem('authToken') }
+      // });
+      //
+      // socket.on('queue:new', handleNewQueue);
+      // socket.on('queue:updated', handleQueueUpdate);
+      // socket.on('queue:completed', handleQueueComplete);
+    }
+
+    /**
+     * Handle "Call Next" action
+     */
+    function handleCallNext() {
+      // Get first waiting queue
+      const firstWaiting = document.querySelector('.table-row.first-waiting') ||
+                          document.querySelector('.badge-waiting');
+
+      if (!firstWaiting) {
+        showToast('warning', '⚠️ Tidak ada antrian yang menunggu');
+        return;
+      }
+
+      // Simulate API call
+      showToast('success', '✓ Antrian #001 dipanggil');
+
+      // In production:
+      // await api.put('/queue/1/call');
+      // Socket will handle real-time update
+    }
+
+    /**
+     * Handle individual queue call
+     */
+    function handleCall(queueId) {
+      showToast('success', `✓ Antrian #${String(queueId).padStart(3, '0')} dipanggil`);
+
+      // In production:
+      // await api.put(`/queue/${queueId}/call`);
+    }
+
+    /**
+     * Show queue detail modal
+     */
+    function showQueueDetail(queueId) {
+      alert(`Detail antrian #${String(queueId).padStart(3, '0')}\n\nFitur ini akan menampilkan informasi lengkap pelanggan.`);
+    }
+
+    /**
+     * Show complete modal
+     */
+    function showCompleteModal(queueId) {
+      document.getElementById('completeModal').classList.add('active');
+    }
+
+    /**
+     * Show cancel modal
+     */
+    function showCancelModal(queueId) {
+      document.getElementById('cancelModal').classList.add('active');
+    }
+
+    /**
+     * Show no-show modal
+     */
+    function showNoShowModal(queueId) {
+      document.getElementById('noShowModal').classList.add('active');
+    }
+
+    /**
+     * Close modal
+     */
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('active');
+    }
+
+    /**
+     * Confirm complete queue
+     */
+    function confirmComplete() {
+      closeModal('completeModal');
+      showToast('success', '✓ Antrian selesai');
+
+      // In production:
+      // await api.put(`/queue/${queueId}/complete`);
+    }
+
+    /**
+     * Confirm cancel queue
+     */
+    function confirmCancel() {
+      const reason = document.getElementById('cancelReason').value;
+      closeModal('cancelModal');
+      showToast('info', 'ℹ️ Antrian dibatalkan');
+
+      // In production:
+      // await api.put(`/queue/${queueId}/cancel`, { reason });
+    }
+
+    /**
+     * Confirm no-show
+     */
+    function confirmNoShow() {
+      closeModal('noShowModal');
+      showToast('warning', '⚠️ Antrian ditandai tidak hadir');
+
+      // In production:
+      // await api.put(`/queue/${queueId}/cancel`, { reason: 'no-show' });
+    }
+
+    /**
+     * Handle search
+     */
+    function handleSearch() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+
+      // In production: Filter queues array and re-render
+      console.log('Search query:', query);
+    }
+
+    /**
+     * Handle refresh
+     */
+    function handleRefresh() {
+      showToast('info', 'ℹ️ Data diperbarui');
+
+      // Rotate refresh button
+      const btn = event.target;
+      btn.style.animation = 'spin 600ms linear';
+      setTimeout(() => {
+        btn.style.animation = '';
+      }, 600);
+
+      // In production:
+      // await queryClient.invalidateQueries('queues');
+    }
+
+    /**
+     * Filter queues
+     */
+    function filterQueues(filter) {
+      currentFilter = filter;
+      console.log('Filter:', filter);
+
+      // In production: Filter and re-render queue list
+    }
+
+    /**
+     * Handle logout
+     */
+    function handleLogout() {
+      if (confirm('Yakin ingin logout?')) {
+        window.location.href = 'login.html';
+      }
+    }
+
+    /**
+     * Show toast notification
+     * Component: Toast (shadcn-style)
+     */
+    function showToast(type, message) {
+      const container = document.getElementById('toastContainer');
+
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+
+      const iconMap = {
+        success: '✓',
+        error: '✗',
+        warning: '⚠️',
+        info: 'ℹ️'
+      };
+
+      toast.innerHTML = `
+        <span class="toast-icon">${iconMap[type] || 'ℹ️'}</span>
+        <div class="toast-content">${message}</div>
+        <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
+      `;
+
+      container.appendChild(toast);
+
+      // Auto-dismiss after 3 seconds
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    /**
+     * Close modal on overlay click
+     */
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+          overlay.classList.remove('active');
+        }
+      });
+    });
+
+    /**
+     * Keyboard shortcuts
+     */
+    document.addEventListener('keydown', (e) => {
+      // Spacebar: Call next queue
+      if (e.code === 'Space' && !e.target.matches('input, textarea, select')) {
+        e.preventDefault();
+        handleCallNext();
+      }
+
+      // Ctrl/Cmd + F: Focus search
+      if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+        e.preventDefault();
+        document.getElementById('searchInput').focus();
+      }
+
+      // Ctrl/Cmd + R: Refresh
+      if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+        e.preventDefault();
+        handleRefresh();
+      }
+
+      // ESC: Close modals
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+          modal.classList.remove('active');
+        });
+      }
+    });
+
+    /**
+     * Initialize on page load
+     */
+    window.addEventListener('DOMContentLoaded', () => {
+      initConnection();
+
+      // Show welcome toast
+      setTimeout(() => {
+        showToast('success', '✓ Selamat datang kembali, Budi!');
+      }, 500);
+    });
+
+    /**
+     * Simulate real-time queue update
+     * In production: Handle via WebSocket events
+     */
+    // Example:
+    // function handleNewQueue(queue) {
+    //   // Insert new row with slide-in animation
+    //   // Update waiting count
+    //   // Show toast notification
+    //   showToast('info', `ℹ️ Antrian baru: #${queue.number} - ${queue.customerName}`);
+    // }
+  </script>
+
+</body>
+</html>

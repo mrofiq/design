@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kelola antrian restoran dengan mudah menggunakan sistem digital waiting list">
+  <title>Waiting List SaaS - Kelola Antrian Restoran dengan Mudah</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <style>
+    /* Landing Page Specific Styles */
+    .hero {
+      background: linear-gradient(135deg, #FFF7ED 0%, #FFFBEB 100%);
+      padding: 80px 0;
+      min-height: 600px;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-content {
+      flex: 1;
+      padding-right: 40px;
+    }
+
+    .hero-illustration {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+    }
+
+    .hero-illustration-placeholder {
+      width: 100%;
+      max-width: 500px;
+      height: 400px;
+      background: linear-gradient(135deg, #FED7AA 0%, #FEF3C7 100%);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      box-shadow: 0 20px 40px rgba(217, 119, 6, 0.2);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .feature-icon {
+      width: 64px;
+      height: 64px;
+      background-color: var(--color-primary-100);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .step-number {
+      width: 48px;
+      height: 48px;
+      background-color: var(--color-primary-600);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .cta-section {
+      background: linear-gradient(135deg, var(--color-primary-600) 0%, var(--color-primary-700) 100%);
+      padding: 80px 0;
+      color: white;
+      text-align: center;
+    }
+
+    .footer {
+      background-color: var(--color-neutral-900);
+      color: var(--color-neutral-400);
+      padding: 40px 0;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .hero {
+        padding: 40px 0;
+        min-height: auto;
+      }
+
+      .hero-content {
+        padding-right: 0;
+      }
+
+      .hero-illustration {
+        margin-top: var(--spacing-xl);
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="navbar-container container">
+      <a href="/" class="navbar-logo">🎟️ WaitingList</a>
+      <div class="navbar-actions">
+        <a href="register.html" class="btn btn-primary">Daftar Gratis</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="flex" style="flex-wrap: wrap;">
+        <div class="hero-content animate-fade-in">
+          <div class="mb-md">
+            <span class="badge badge-primary">Gratis • Mudah • Cepat</span>
+          </div>
+          <h1>Kelola Antrian Restoran dengan Mudah</h1>
+          <p style="font-size: 20px; color: var(--color-neutral-600); margin-bottom: var(--spacing-xl);">
+            Sistem digital waiting list untuk restoran Anda. Tingkatkan pengalaman pelanggan dan efisiensi operasional.
+          </p>
+          <div class="flex gap-md" style="flex-wrap: wrap;">
+            <a href="register.html" class="btn btn-primary btn-lg">
+              Daftar Gratis Sekarang →
+            </a>
+            <a href="#features" class="btn btn-outline btn-lg">
+              Lihat Fitur
+            </a>
+          </div>
+          <p style="font-size: 14px; color: var(--color-neutral-500); margin-top: var(--spacing-md);">
+            ✓ Tanpa kartu kredit • ✓ Setup &lt;5 menit • ✓ Gratis selamanya
+          </p>
+        </div>
+
+        <div class="hero-illustration animate-scale-up" style="animation-delay: 200ms;">
+          <div class="hero-illustration-placeholder">
+            📱 + 🍽️
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" style="padding: 80px 0; background-color: white;">
+    <div class="container">
+      <div class="text-center mb-2xl">
+        <h2>Fitur Unggulan</h2>
+        <p style="font-size: 18px; color: var(--color-neutral-600); max-width: 600px; margin: 0 auto;">
+          Semua yang Anda butuhkan untuk mengelola antrian restoran secara digital
+        </p>
+      </div>
+
+      <div class="grid grid-cols-3">
+        <div class="card card-interactive text-center">
+          <div class="card-content">
+            <div class="feature-icon" style="margin-left: auto; margin-right: auto;">
+              📱
+            </div>
+            <h4>QR Code Check-in</h4>
+            <p style="color: var(--color-neutral-600);">
+              Pengunjung cukup scan QR code untuk daftar antrian. Tidak perlu aplikasi tambahan.
+            </p>
+          </div>
+        </div>
+
+        <div class="card card-interactive text-center">
+          <div class="card-content">
+            <div class="feature-icon" style="margin-left: auto; margin-right: auto;">
+              ⚡
+            </div>
+            <h4>Update Real-time</h4>
+            <p style="color: var(--color-neutral-600);">
+              Notifikasi otomatis ke pelanggan saat giliran mereka tiba. Real-time sync di semua perangkat.
+            </p>
+          </div>
+        </div>
+
+        <div class="card card-interactive text-center">
+          <div class="card-content">
+            <div class="feature-icon" style="margin-left: auto; margin-right: auto;">
+              📊
+            </div>
+            <h4>Dashboard Lengkap</h4>
+            <p style="color: var(--color-neutral-600);">
+              Kelola antrian, lihat statistik, dan monitor performa restoran dari satu dashboard.
+            </p>
+          </div>
+        </div>
+
+        <div class="card card-interactive text-center">
+          <div class="card-content">
+            <div class="feature-icon" style="margin-left: auto; margin-right: auto;">
+              👥
+            </div>
+            <h4>Multi-Staff</h4>
+            <p style="color: var(--color-neutral-600);">
+              Kelola tim dengan akses berbeda. Koordinasi yang lebih baik antar staff.
+            </p>
+          </div>
+        </div>
+
+        <div class="card card-interactive text-center">
+          <div class="card-content">
+            <div class="feature-icon" style="margin-left: auto; margin-right: auto;">
+              🎨
+            </div>
+            <h4>Kustomisasi Brand</h4>
+            <p style="color: var(--color-neutral-600);">
+              Sesuaikan warna dengan brand restoran Anda. Tampilan profesional dan konsisten.
+            </p>
+          </div>
+        </div>
+
+        <div class="card card-interactive text-center">
+          <div class="card-content">
+            <div class="feature-icon" style="margin-left: auto; margin-right: auto;">
+              📈
+            </div>
+            <h4>Analitik & Laporan</h4>
+            <p style="color: var(--color-neutral-600);">
+              Insights mendalam tentang pola antrian dan performa layanan restoran.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section style="padding: 80px 0; background-color: var(--color-neutral-50);">
+    <div class="container">
+      <div class="text-center mb-2xl">
+        <h2>Cara Kerja</h2>
+        <p style="font-size: 18px; color: var(--color-neutral-600);">
+          Mulai dalam 3 langkah mudah
+        </p>
+      </div>
+
+      <div class="grid grid-cols-3">
+        <div class="text-center">
+          <div class="step-number" style="margin-left: auto; margin-right: auto;">1</div>
+          <h4 class="mb-sm">Daftar Gratis</h4>
+          <p style="color: var(--color-neutral-600);">
+            Daftar dengan nomor HP atau email. Setup akun hanya butuh 2 menit.
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div class="step-number" style="margin-left: auto; margin-right: auto;">2</div>
+          <h4 class="mb-sm">Tampilkan QR Code</h4>
+          <p style="color: var(--color-neutral-600);">
+            Buka link QR display di tablet atau TV. Letakkan di area yang mudah dilihat.
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div class="step-number" style="margin-left: auto; margin-right: auto;">3</div>
+          <h4 class="mb-sm">Kelola Antrian</h4>
+          <p style="color: var(--color-neutral-600);">
+            Panggil pelanggan dari dashboard. Sistem akan notifikasi mereka otomatis.
+          </p>
+        </div>
+      </div>
+
+      <div class="text-center mt-2xl">
+        <a href="register.html" class="btn btn-primary btn-lg">
+          Mulai Sekarang - Gratis
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefits Section -->
+  <section style="padding: 80px 0; background-color: white;">
+    <div class="container">
+      <div class="flex" style="gap: 60px; align-items: center; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 300px;">
+          <h2 class="mb-lg">Mengapa Restoran Memilih Kami?</h2>
+
+          <div class="mb-lg">
+            <h5>✓ Hemat Waktu & Biaya</h5>
+            <p style="color: var(--color-neutral-600);">
+              Tidak perlu pager mahal atau sistem kompleks. Semua serba digital dan otomatis.
+            </p>
+          </div>
+
+          <div class="mb-lg">
+            <h5>✓ Tingkatkan Pengalaman Pelanggan</h5>
+            <p style="color: var(--color-neutral-600);">
+              Pelanggan bisa tunggu dengan nyaman tanpa khawatir kehilangan giliran.
+            </p>
+          </div>
+
+          <div class="mb-lg">
+            <h5>✓ Data & Insights</h5>
+            <p style="color: var(--color-neutral-600);">
+              Pahami pola kunjungan dan optimalkan operasional restoran Anda.
+            </p>
+          </div>
+
+          <div>
+            <h5>✓ Support Lokal Indonesia</h5>
+            <p style="color: var(--color-neutral-600);">
+              Bahasa Indonesia, zona waktu WIB, dan support tim yang responsif.
+            </p>
+          </div>
+        </div>
+
+        <div style="flex: 1; min-width: 300px;">
+          <div class="card" style="padding: var(--spacing-xl);">
+            <div class="stats-card-icon" style="font-size: 64px; text-align: center;">
+              📊
+            </div>
+            <div class="text-center">
+              <div class="stats-card-value">500+</div>
+              <div class="stats-card-label">Restoran Bergabung</div>
+            </div>
+
+            <div class="mt-xl text-center">
+              <div class="stats-card-value">10K+</div>
+              <div class="stats-card-label">Antrian Dikelola/Hari</div>
+            </div>
+
+            <div class="mt-xl text-center">
+              <div class="stats-card-value">98%</div>
+              <div class="stats-card-label">Kepuasan Pengguna</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <h2 style="color: white; margin-bottom: var(--spacing-md);">
+        Siap Tingkatkan Layanan Restoran Anda?
+      </h2>
+      <p style="font-size: 20px; margin-bottom: var(--spacing-xl); opacity: 0.9;">
+        Bergabung dengan ratusan restoran yang sudah menggunakan sistem kami
+      </p>
+      <a href="register.html" class="btn btn-lg" style="background-color: white; color: var(--color-primary-600);">
+        Daftar Gratis Sekarang
+      </a>
+      <p style="font-size: 14px; margin-top: var(--spacing-md); opacity: 0.8;">
+        Tidak perlu kartu kredit • Setup kurang dari 5 menit
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="flex justify-between" style="flex-wrap: wrap; gap: var(--spacing-xl); margin-bottom: var(--spacing-xl);">
+        <div style="flex: 1; min-width: 250px;">
+          <div style="font-size: 24px; font-weight: 700; color: var(--color-primary-600); margin-bottom: var(--spacing-md);">
+            🎟️ WaitingList
+          </div>
+          <p style="margin: 0;">
+            Sistem digital waiting list untuk restoran modern di Indonesia
+          </p>
+        </div>
+
+        <div style="flex: 1; min-width: 200px;">
+          <h6 style="color: white; margin-bottom: var(--spacing-md);">Produk</h6>
+          <div style="display: flex; flex-direction: column; gap: var(--spacing-sm);">
+            <a href="#features" style="color: var(--color-neutral-400);">Fitur</a>
+            <a href="register.html" style="color: var(--color-neutral-400);">Harga</a>
+            <a href="#" style="color: var(--color-neutral-400);">FAQ</a>
+          </div>
+        </div>
+
+        <div style="flex: 1; min-width: 200px;">
+          <h6 style="color: white; margin-bottom: var(--spacing-md);">Perusahaan</h6>
+          <div style="display: flex; flex-direction: column; gap: var(--spacing-sm);">
+            <a href="#" style="color: var(--color-neutral-400);">Tentang Kami</a>
+            <a href="#" style="color: var(--color-neutral-400);">Blog</a>
+            <a href="#" style="color: var(--color-neutral-400);">Kontak</a>
+          </div>
+        </div>
+
+        <div style="flex: 1; min-width: 200px;">
+          <h6 style="color: white; margin-bottom: var(--spacing-md);">Legal</h6>
+          <div style="display: flex; flex-direction: column; gap: var(--spacing-sm);">
+            <a href="#" style="color: var(--color-neutral-400);">Syarat & Ketentuan</a>
+            <a href="#" style="color: var(--color-neutral-400);">Kebijakan Privasi</a>
+          </div>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid var(--color-neutral-700); padding-top: var(--spacing-lg);">
+        <p style="margin: 0; text-align: center;">
+          © 2025 WaitingList SaaS. All rights reserved.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Smooth Scroll Script -->
+  <script>
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

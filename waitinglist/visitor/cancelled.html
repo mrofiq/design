@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#D97706">
+    <title>Antrian Dibatalkan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-secondary">
+    <div class="container">
+        <div class="card confirmation-card">
+            <div class="success-icon">✓</div>
+            <h2 class="confirmation-title">Antrian Dibatalkan</h2>
+            <p class="confirmation-message">
+                Antrian <strong>#042</strong> telah berhasil dibatalkan.
+            </p>
+            <p class="confirmation-thanks">
+                Terima kasih!
+            </p>
+            <button class="btn btn-primary" onclick="handleClose()">
+                Tutup
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        function handleClose() {
+            // Clear session
+            sessionStorage.clear();
+            // Close window or redirect
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.close();
+            }
+        }
+    </script>
+</body>
+</html>

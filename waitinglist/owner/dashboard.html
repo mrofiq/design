@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dashboard Antrian - Waiting List SaaS">
+  <title>Dashboard - Waiting List SaaS</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <style>
+    .page-container {
+      min-height: 100vh;
+      background-color: var(--color-neutral-50);
+    }
+
+    .main-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--spacing-xl) var(--spacing-md);
+    }
+
+    .welcome-banner {
+      background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
+      border: 1px solid var(--color-primary-600);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+      position: relative;
+      animation: slide-in-top 500ms ease-out;
+    }
+
+    .welcome-banner-icon {
+      font-size: 32px;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .welcome-banner-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #B45309;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .welcome-banner-message {
+      color: #1E40AF;
+      margin: 0;
+    }
+
+    .banner-close {
+      position: absolute;
+      top: var(--spacing-md);
+      right: var(--spacing-md);
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #1E40AF;
+      opacity: 0.6;
+      transition: opacity var(--transition-fast);
+    }
+
+    .banner-close:hover {
+      opacity: 1;
+    }
+
+    .qr-display-card {
+      background: white;
+      border: 2px solid var(--color-primary-600);
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-xl);
+      margin-bottom: var(--spacing-xl);
+      box-shadow: 0 0 20px rgba(217, 119, 6, 0.2);
+      animation: pulse-glow 3s ease-in-out infinite;
+      position: relative;
+    }
+
+    .qr-card-sparkle {
+      font-size: 32px;
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      animation: float 2s ease-in-out infinite;
+    }
+
+    .qr-card-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: var(--spacing-sm);
+      color: var(--color-neutral-900);
+    }
+
+    .qr-card-message {
+      color: var(--color-neutral-600);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .qr-link-display {
+      background-color: var(--color-neutral-50);
+      border: 1px solid var(--color-neutral-200);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-md);
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--color-neutral-800);
+      word-break: break-all;
+      margin-bottom: var(--spacing-md);
+      user-select: all;
+    }
+
+    .qr-actions {
+      display: flex;
+      gap: var(--spacing-sm);
+      flex-wrap: wrap;
+    }
+
+    .onboarding-tooltip {
+      position: absolute;
+      bottom: 100%;
+      left: 0;
+      margin-bottom: 12px;
+      background-color: var(--color-neutral-800);
+      color: white;
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      white-space: nowrap;
+      box-shadow: var(--shadow-lg);
+      animation: bounce 1s ease-in-out infinite;
+      z-index: 100;
+    }
+
+    .onboarding-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 20px;
+      border: 6px solid transparent;
+      border-top-color: var(--color-neutral-800);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .qr-actions {
+        flex-direction: column;
+      }
+
+      .qr-actions .btn {
+        width: 100%;
+      }
+
+      .onboarding-tooltip {
+        white-space: normal;
+        max-width: 200px;
+      }
+
+      .mobile-menu {
+        display: block;
+      }
+
+      .navbar-menu {
+        display: none;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .mobile-menu {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-container">
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="navbar-container">
+        <a href="dashboard.html" class="navbar-logo">🎟️ WaitingList</a>
+
+        <!-- Desktop Menu -->
+        <ul class="navbar-menu">
+          <li><a href="dashboard.html" class="navbar-link active">Dashboard</a></li>
+          <li><a href="dashboard-active.html" class="navbar-link">Daftar Antrian</a></li>
+          <li><a href="#" class="navbar-link">Statistik</a></li>
+          <li><a href="#" class="navbar-link">Riwayat</a></li>
+          <li><a href="#" class="navbar-link">🔒 Users <span class="badge badge-premium">Premium</span></a></li>
+          <li><a href="#" class="navbar-link">🔒 Restoran <span class="badge badge-premium">Premium</span></a></li>
+        </ul>
+
+        <!-- Right Actions -->
+        <div class="navbar-actions">
+          <div class="dropdown-wrapper" style="position: relative;">
+            <button class="btn btn-ghost" id="restaurant-dropdown">
+              Restoran Sedap ▾
+            </button>
+          </div>
+          <a href="settings.html" class="btn btn-icon btn-ghost" aria-label="Settings">⚙️</a>
+          <button class="btn btn-secondary btn-sm" onclick="confirmLogout()">Logout</button>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button class="mobile-menu btn btn-icon btn-ghost" onclick="toggleMobileMenu()">
+          ☰
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Welcome Banner (Dismissible) -->
+      <div class="welcome-banner" id="welcome-banner">
+        <button class="banner-close" onclick="dismissBanner()" aria-label="Close">×</button>
+        <div class="welcome-banner-icon">👋</div>
+        <h2 class="welcome-banner-title">Selamat datang di Dashboard Anda!</h2>
+        <p class="welcome-banner-message">
+          Ikuti langkah berikut untuk mulai mengelola antrian restoran Anda dengan mudah.
+        </p>
+      </div>
+
+      <!-- QR Display Link Card (Highlighted) -->
+      <div class="qr-display-card">
+        <div class="qr-card-sparkle">✨</div>
+
+        <h3 class="qr-card-title">🔗 Link QR Display Anda</h3>
+        <p class="qr-card-message">
+          Buka link ini di tablet atau TV untuk menampilkan QR code antrian
+        </p>
+
+        <div class="qr-link-display" id="qr-link">
+          https://app.waitinglist.com/qr-display/abc123xyz
+        </div>
+
+        <div class="qr-actions" style="position: relative;">
+          <button class="btn btn-primary" id="copy-link-btn" onclick="copyQRLink()">
+            📋 Copy Link
+          </button>
+          <button class="btn btn-outline" onclick="previewQR()">
+            👁️ Preview
+          </button>
+          <button class="btn btn-outline" onclick="downloadQR()">
+            💾 Download QR
+          </button>
+
+          <!-- Onboarding Tooltip -->
+          <div class="onboarding-tooltip" id="onboarding-tooltip">
+            Klik untuk copy link, lalu buka di tablet/TV
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stats-card orange">
+          <div class="stats-card-icon">📋</div>
+          <div class="stats-card-value" id="stat-active">0</div>
+          <div class="stats-card-label">Antrian Aktif</div>
+        </div>
+
+        <div class="stats-card green">
+          <div class="stats-card-icon">✓</div>
+          <div class="stats-card-value" id="stat-completed">0</div>
+          <div class="stats-card-label">Selesai Hari Ini</div>
+        </div>
+
+        <div class="stats-card blue">
+          <div class="stats-card-icon">⏱️</div>
+          <div class="stats-card-value" id="stat-avg">-</div>
+          <div class="stats-card-label">Rata-rata Tunggu</div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div class="card">
+        <div class="empty-state">
+          <div class="empty-state-icon">📋</div>
+          <h3 class="empty-state-title">Belum Ada Antrian</h3>
+          <p class="empty-state-description">
+            Pengunjung bisa scan QR code untuk daftar antrian.<br>
+            Antrian baru akan muncul di sini secara otomatis.
+          </p>
+          <button class="btn btn-primary" onclick="previewQR()">
+            Lihat QR Code
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/utils.js"></script>
+  <script src="js/theme.js"></script>
+  <script>
+    // ============================================
+    // BANNER DISMISS
+    // ============================================
+
+    function dismissBanner() {
+      const banner = document.getElementById('welcome-banner');
+
+      fadeOut(banner);
+
+      // Save to localStorage
+      setItem('welcome-banner-dismissed', true);
+    }
+
+    // Check if banner should be shown
+    const bannerDismissed = getItem('welcome-banner-dismissed', false);
+    if (bannerDismissed) {
+      document.getElementById('welcome-banner').classList.add('hidden');
+    }
+
+    // ============================================
+    // COPY QR LINK
+    // ============================================
+
+    async function copyQRLink() {
+      const link = document.getElementById('qr-link').textContent;
+      const btn = document.getElementById('copy-link-btn');
+      const originalText = btn.innerHTML;
+
+      const success = await copyToClipboard(link);
+
+      if (success) {
+        // Change button to checkmark
+        btn.innerHTML = '✓ Tersalin!';
+        btn.classList.remove('btn-primary');
+        btn.classList.add('btn-success');
+
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.classList.remove('btn-success');
+          btn.classList.add('btn-primary');
+        }, 2000);
+      }
+    }
+
+    // ============================================
+    // PREVIEW QR
+    // ============================================
+
+    function previewQR() {
+      // Create modal
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay';
+      modal.innerHTML = `
+        <div class="modal" style="max-width: 400px;">
+          <div class="modal-header">
+            <h3 class="modal-title">Preview QR Code</h3>
+          </div>
+          <div class="modal-content text-center">
+            <div style="padding: var(--spacing-lg); background: var(--color-neutral-50); border-radius: var(--radius-md);">
+              <div style="width: 200px; height: 200px; margin: 0 auto; background: white; border: 2px solid var(--color-neutral-200); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 96px;">
+                📱
+              </div>
+              <p style="margin-top: var(--spacing-md); color: var(--color-neutral-600);">
+                QR Code untuk<br>
+                <strong>Restoran Sedap</strong>
+              </p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">
+              Tutup
+            </button>
+            <button class="btn btn-primary" onclick="downloadQR()">
+              Download
+            </button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+
+      // Close on overlay click
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.remove();
+        }
+      });
+    }
+
+    // ============================================
+    // DOWNLOAD QR
+    // ============================================
+
+    function downloadQR() {
+      showToast('QR Code akan didownload', 'info');
+
+      // In production, this would trigger actual QR code generation and download
+      setTimeout(() => {
+        showToast('QR Code berhasil didownload', 'success');
+      }, 1000);
+    }
+
+    // ============================================
+    // ONBOARDING TOOLTIP
+    // ============================================
+
+    // Auto-dismiss tooltip after 10 seconds
+    setTimeout(() => {
+      const tooltip = document.getElementById('onboarding-tooltip');
+      if (tooltip) {
+        fadeOut(tooltip);
+      }
+    }, 10000);
+
+    // Dismiss on copy button click
+    document.getElementById('copy-link-btn').addEventListener('click', () => {
+      const tooltip = document.getElementById('onboarding-tooltip');
+      if (tooltip) {
+        fadeOut(tooltip);
+      }
+    });
+
+    // ============================================
+    // MOBILE MENU
+    // ============================================
+
+    function toggleMobileMenu() {
+      showToast('Mobile menu coming soon', 'info');
+    }
+
+    // ============================================
+    // LOGOUT
+    // ============================================
+
+    function confirmLogout() {
+      if (confirm('Apakah Anda yakin ingin logout?')) {
+        // Clear session data
+        localStorage.clear();
+
+        // Redirect to landing page
+        window.location.href = 'index.html';
+      }
+    }
+
+    // ============================================
+    // LOAD RESTAURANT DATA
+    // ============================================
+
+    function loadRestaurantData() {
+      const registrationData = getItem('registration-data');
+
+      if (registrationData && registrationData.restaurantName) {
+        // Update restaurant name in dropdown
+        document.getElementById('restaurant-dropdown').textContent =
+          registrationData.restaurantName + ' ▾';
+      }
+    }
+
+    // ============================================
+    // INITIALIZATION
+    // ============================================
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadRestaurantData();
+
+      // Animate stats on load
+      setTimeout(() => {
+        document.querySelectorAll('.stats-card').forEach((card, index) => {
+          card.style.animation = `scale-up 300ms ease-out ${index * 100}ms`;
+        });
+      }, 500);
+    });
+
+    // ============================================
+    // KEYBOARD SHORTCUTS
+    // ============================================
+
+    document.addEventListener('keydown', (e) => {
+      // Ctrl+C to copy link
+      if (e.ctrlKey && e.key === 'c' && !window.getSelection().toString()) {
+        e.preventDefault();
+        copyQRLink();
+      }
+
+      // Ctrl+P to preview
+      if (e.ctrlKey && e.key === 'p') {
+        e.preventDefault();
+        previewQR();
+      }
+    });
+  </script>
+
+</body>
+</html>

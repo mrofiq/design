@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Daftar akun Waiting List SaaS - Sistem antrian digital untuk restoran">
+  <title>Daftar - Waiting List SaaS</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: var(--spacing-md);
+    }
+
+    .register-container {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .register-card {
+      background: white;
+      border: 1px solid var(--color-neutral-200);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      padding: var(--spacing-xl);
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .logo-text {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--color-primary-600);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--color-neutral-200);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .tab-button {
+      flex: 1;
+      padding: var(--spacing-md);
+      border: none;
+      background: none;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--color-neutral-600);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all var(--transition-fast);
+      position: relative;
+      bottom: -1px;
+    }
+
+    .tab-button:hover {
+      color: var(--color-primary-600);
+    }
+
+    .tab-button.active {
+      color: var(--color-primary-600);
+      border-bottom-color: var(--color-primary-600);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fade-in 200ms ease-out;
+    }
+
+    .char-counter {
+      font-size: 12px;
+      color: var(--color-neutral-500);
+      text-align: right;
+      margin-top: 4px;
+    }
+
+    .input-prefix {
+      position: relative;
+    }
+
+    .input-prefix input {
+      padding-left: 50px;
+    }
+
+    .input-prefix::before {
+      content: '+62';
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-neutral-600);
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .register-card {
+        padding: var(--spacing-lg);
+      }
+
+      .logo-text {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="register-container">
+    <!-- Logo -->
+    <div class="logo">
+      <div class="logo-text">🎟️ WaitingList</div>
+      <p style="color: var(--color-neutral-600); margin: 0;">Daftar akun untuk memulai</p>
+    </div>
+
+    <!-- Register Card -->
+    <div class="register-card">
+      <form id="register-form">
+        <!-- Restaurant Name -->
+        <div class="form-group">
+          <label for="restaurant-name" class="form-label">
+            Nama Restoran <span class="required">*</span>
+          </label>
+          <input
+            type="text"
+            id="restaurant-name"
+            name="restaurant-name"
+            class="form-input"
+            placeholder="Contoh: Restoran Sedap"
+            maxlength="100"
+            required
+            autocomplete="organization"
+          >
+          <div class="char-counter" id="name-counter">0/100</div>
+        </div>
+
+        <!-- Verification Method Tabs -->
+        <div class="form-group">
+          <label class="form-label">
+            Metode Verifikasi <span class="required">*</span>
+          </label>
+
+          <div class="tabs">
+            <button type="button" class="tab-button active" data-tab="phone">
+              Nomor HP
+            </button>
+            <button type="button" class="tab-button" data-tab="email">
+              Email
+            </button>
+          </div>
+
+          <!-- Phone Tab -->
+          <div class="tab-content active" id="phone-tab">
+            <div class="input-prefix">
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                class="form-input"
+                placeholder="812-3456-7890"
+                maxlength="14"
+                inputmode="numeric"
+                autocomplete="tel"
+              >
+            </div>
+            <p class="form-helper">Format: 812-3456-7890 (tanpa +62)</p>
+          </div>
+
+          <!-- Email Tab -->
+          <div class="tab-content" id="email-tab">
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-input"
+              placeholder="admin@restoran.com"
+              autocomplete="email"
+            >
+            <p class="form-helper">Email akan digunakan untuk login</p>
+          </div>
+        </div>
+
+        <!-- Terms & Conditions -->
+        <div class="form-group">
+          <div class="checkbox-wrapper">
+            <input
+              type="checkbox"
+              id="terms"
+              name="terms"
+              class="form-checkbox"
+              required
+            >
+            <label for="terms">
+              Saya menyetujui <a href="#" target="_blank">Syarat & Ketentuan</a> dan <a href="#" target="_blank">Kebijakan Privasi</a>
+            </label>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary btn-lg" id="submit-btn" style="width: 100%;" disabled>
+          Daftar Sekarang
+        </button>
+
+        <!-- Login Link -->
+        <p class="text-center" style="margin-top: var(--spacing-lg); margin-bottom: 0; font-size: 14px;">
+          Sudah punya akun? <a href="dashboard.html">Login</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/utils.js"></script>
+  <script>
+    // ============================================
+    // FORM STATE
+    // ============================================
+
+    const formState = {
+      restaurantName: '',
+      phone: '',
+      email: '',
+      activeTab: 'phone',
+      termsAccepted: false
+    };
+
+    const formElements = {
+      form: document.getElementById('register-form'),
+      restaurantName: document.getElementById('restaurant-name'),
+      phone: document.getElementById('phone'),
+      email: document.getElementById('email'),
+      terms: document.getElementById('terms'),
+      submitBtn: document.getElementById('submit-btn'),
+      nameCounter: document.getElementById('name-counter')
+    };
+
+    // ============================================
+    // TAB SWITCHING
+    // ============================================
+
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const targetTab = button.dataset.tab;
+
+        // Update active states
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+
+        tabContents.forEach(content => content.classList.remove('active'));
+        document.getElementById(`${targetTab}-tab`).classList.add('active');
+
+        // Update form state
+        formState.activeTab = targetTab;
+
+        // Clear inactive field errors
+        if (targetTab === 'phone') {
+          clearFieldError('email');
+        } else {
+          clearFieldError('phone');
+        }
+
+        // Validate form
+        validateFormState();
+      });
+    });
+
+    // ============================================
+    // FORM VALIDATION
+    // ============================================
+
+    const validationRules = {
+      restaurantName: {
+        required: true,
+        minLength: 3,
+        maxLength: 100,
+        message: 'Nama restoran minimal 3 karakter'
+      },
+      phone: {
+        required: true,
+        pattern: /^[0-9]{10,13}$/,
+        message: 'Format nomor tidak valid (10-13 digit)'
+      },
+      email: {
+        required: true,
+        pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        message: 'Format email tidak valid'
+      },
+      terms: {
+        required: true,
+        message: 'Anda harus menyetujui syarat & ketentuan'
+      }
+    };
+
+    function validateFormState() {
+      const restaurantName = formElements.restaurantName.value.trim();
+      const phone = unformatPhoneNumber(formElements.phone.value);
+      const email = formElements.email.value.trim();
+      const termsAccepted = formElements.terms.checked;
+
+      // Check restaurant name
+      const nameValid = restaurantName.length >= 3 && restaurantName.length <= 100;
+
+      // Check verification method
+      let verificationValid = false;
+      if (formState.activeTab === 'phone') {
+        verificationValid = /^[0-9]{10,13}$/.test(phone);
+      } else {
+        verificationValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
+
+      // Enable/disable submit button
+      if (nameValid && verificationValid && termsAccepted) {
+        formElements.submitBtn.disabled = false;
+        formElements.submitBtn.classList.remove('btn-secondary');
+        formElements.submitBtn.classList.add('btn-primary');
+      } else {
+        formElements.submitBtn.disabled = true;
+        formElements.submitBtn.classList.remove('btn-primary');
+        formElements.submitBtn.classList.add('btn-secondary');
+      }
+    }
+
+    // ============================================
+    // FIELD VALIDATION
+    // ============================================
+
+    // Restaurant name validation
+    formElements.restaurantName.addEventListener('input', (e) => {
+      const value = e.target.value;
+      formState.restaurantName = value;
+
+      // Update character counter
+      formElements.nameCounter.textContent = `${value.length}/100`;
+      formElements.nameCounter.style.color = value.length > 100
+        ? 'var(--color-error)'
+        : 'var(--color-neutral-500)';
+
+      validateFormState();
+    });
+
+    formElements.restaurantName.addEventListener('blur', (e) => {
+      const value = e.target.value.trim();
+
+      if (value === '') {
+        showFieldError('restaurant-name', 'Nama restoran wajib diisi');
+      } else if (value.length < 3) {
+        showFieldError('restaurant-name', 'Nama minimal 3 karakter');
+      } else if (value.length > 100) {
+        showFieldError('restaurant-name', 'Nama maksimal 100 karakter');
+      } else {
+        clearFieldError('restaurant-name');
+        showFieldSuccess('restaurant-name');
+      }
+    });
+
+    // Phone validation and formatting
+    formElements.phone.addEventListener('input', (e) => {
+      let value = e.target.value;
+
+      // Format phone number
+      value = formatPhoneNumber(value);
+      e.target.value = value;
+
+      formState.phone = unformatPhoneNumber(value);
+
+      validateFormState();
+    });
+
+    formElements.phone.addEventListener('blur', (e) => {
+      if (formState.activeTab !== 'phone') return;
+
+      const value = unformatPhoneNumber(e.target.value);
+
+      if (value === '') {
+        showFieldError('phone', 'Nomor HP wajib diisi');
+      } else if (value.length < 10) {
+        showFieldError('phone', 'Nomor HP minimal 10 digit');
+      } else if (value.length > 13) {
+        showFieldError('phone', 'Nomor HP maksimal 13 digit');
+      } else if (!/^[0-9]+$/.test(value)) {
+        showFieldError('phone', 'Nomor HP hanya boleh berisi angka');
+      } else {
+        clearFieldError('phone');
+        showFieldSuccess('phone');
+      }
+    });
+
+    // Email validation
+    formElements.email.addEventListener('input', (e) => {
+      formState.email = e.target.value.trim();
+      validateFormState();
+    });
+
+    formElements.email.addEventListener('blur', (e) => {
+      if (formState.activeTab !== 'email') return;
+
+      const value = e.target.value.trim();
+
+      if (value === '') {
+        showFieldError('email', 'Email wajib diisi');
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+        showFieldError('email', 'Format email tidak valid');
+      } else {
+        clearFieldError('email');
+        showFieldSuccess('email');
+      }
+    });
+
+    // Terms checkbox
+    formElements.terms.addEventListener('change', (e) => {
+      formState.termsAccepted = e.target.checked;
+      validateFormState();
+    });
+
+    // ============================================
+    // FORM SUBMISSION
+    // ============================================
+
+    formElements.form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Disable submit button
+      formElements.submitBtn.disabled = true;
+      formElements.submitBtn.classList.add('btn-loading');
+      formElements.submitBtn.textContent = '';
+
+      try {
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        // Save to localStorage for demo
+        const registrationData = {
+          restaurantName: formState.restaurantName,
+          verificationType: formState.activeTab,
+          phone: formState.activeTab === 'phone' ? formState.phone : null,
+          email: formState.activeTab === 'email' ? formState.email : null,
+          timestamp: new Date().toISOString()
+        };
+
+        setItem('registration-data', registrationData);
+
+        // Show success
+        showToast('Pendaftaran berhasil!', 'success');
+
+        // Redirect based on verification method
+        setTimeout(() => {
+          if (formState.activeTab === 'phone') {
+            window.location.href = 'verify.html';
+          } else {
+            window.location.href = 'verify-email.html';
+          }
+        }, 500);
+
+      } catch (error) {
+        // Show error
+        showToast('Pendaftaran gagal. Silakan coba lagi.', 'error');
+
+        // Re-enable button
+        formElements.submitBtn.disabled = false;
+        formElements.submitBtn.classList.remove('btn-loading');
+        formElements.submitBtn.textContent = 'Daftar Sekarang';
+
+        // Shake form
+        shakeElement(document.querySelector('.register-card'));
+      }
+    });
+
+    // ============================================
+    // INITIALIZATION
+    // ============================================
+
+    // Focus first input
+    formElements.restaurantName.focus();
+  </script>
+
+</body>
+</html>

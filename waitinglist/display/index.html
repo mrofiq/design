@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#D97706">
+    <title>Scan QR - Daftar Antrian | Restoran Bahagia</title>
+
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Design Tokens CSS -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+    <!-- Loading State (Initial) -->
+    <div id="loading-state" class="loading-state">
+        <div class="loading-container">
+            <div class="logo-placeholder">
+                <div class="logo-initial">R</div>
+            </div>
+            <h1 class="restaurant-name">Restoran Bahagia</h1>
+            <div class="qr-placeholder">
+                <div class="spinner"></div>
+                <p class="loading-text">Memuat QR code...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Display -->
+    <main id="main-display" class="main-display" style="display: none;">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="header-content">
+                <div class="branding">
+                    <div class="logo-container">
+                        <div class="logo-placeholder">
+                            <div class="logo-initial">R</div>
+                        </div>
+                    </div>
+                    <div class="restaurant-info">
+                        <h1 class="restaurant-name">Restoran Bahagia</h1>
+                        <p class="restaurant-tagline">Fine Dining Restaurant</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- QR Code Section -->
+        <section class="qr-section">
+            <div class="qr-container" id="qr-container">
+                <div id="qr-code"></div>
+            </div>
+
+            <h2 class="scan-heading">Scan untuk Daftar Antrian</h2>
+
+            <div class="refresh-indicator" id="refresh-indicator">
+                <svg class="refresh-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+                </svg>
+                <span class="refresh-text">Auto-refresh setiap 30 detik</span>
+            </div>
+        </section>
+
+        <!-- Instructions Section -->
+        <section class="instructions-section">
+            <div class="instruction-step">
+                <div class="step-number">1</div>
+                <p class="step-text">Scan QR code dengan kamera HP Anda</p>
+            </div>
+            <div class="instruction-step">
+                <div class="step-number">2</div>
+                <p class="step-text">Isi data diri Anda</p>
+            </div>
+            <div class="instruction-step">
+                <div class="step-number">3</div>
+                <p class="step-text">Tunggu giliran dipanggil</p>
+            </div>
+        </section>
+
+        <!-- Footer Section -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <span class="footer-text">Powered by Waiting List System</span>
+                </div>
+                <div class="footer-right">
+                    <div class="status-indicators">
+                        <div class="auto-refresh-badge" id="auto-refresh-badge">
+                            <svg class="refresh-icon-small" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+                            </svg>
+                            <span>Auto</span>
+                        </div>
+                        <div class="connection-status" id="connection-status" title="Terhubung">
+                            <span class="status-dot online"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Error State (Hidden by default) -->
+    <div id="error-state" class="error-state" style="display: none;">
+        <div class="error-container">
+            <div class="logo-placeholder">
+                <div class="logo-initial">R</div>
+            </div>
+            <h1 class="restaurant-name">Restoran Bahagia</h1>
+            <div class="error-content">
+                <div class="error-icon">⚠️</div>
+                <p class="error-message">QR code gagal dimuat</p>
+                <button class="refresh-button" onclick="retryLoadQR()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+                    </svg>
+                    Coba Lagi
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

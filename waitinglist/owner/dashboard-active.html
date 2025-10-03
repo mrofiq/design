@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dashboard Antrian Aktif - Waiting List SaaS">
+  <title>Dashboard Antrian - Waiting List SaaS</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <style>
+    .page-container {
+      min-height: 100vh;
+      background-color: var(--color-neutral-50);
+    }
+
+    .main-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: var(--spacing-xl) var(--spacing-md);
+    }
+
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-xl);
+      flex-wrap: wrap;
+      gap: var(--spacing-md);
+    }
+
+    .page-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--color-neutral-900);
+      margin: 0;
+    }
+
+    .search-box {
+      position: relative;
+      width: 300px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding-left: 40px;
+    }
+
+    .search-box::before {
+      content: '🔍';
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+    }
+
+    .result-count {
+      font-size: 14px;
+      color: var(--color-neutral-600);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .quick-action-btn {
+      position: fixed;
+      bottom: var(--spacing-xl);
+      right: var(--spacing-xl);
+      z-index: 100;
+      box-shadow: var(--shadow-xl);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .header-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .search-box {
+        width: 100%;
+      }
+
+      .page-title {
+        font-size: 24px;
+      }
+
+      .quick-action-btn {
+        bottom: var(--spacing-lg);
+        right: var(--spacing-lg);
+        width: calc(100% - 32px);
+        left: var(--spacing-md);
+      }
+
+      .mobile-menu {
+        display: block;
+      }
+
+      .navbar-menu {
+        display: none;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .mobile-menu {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-container">
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="navbar-container">
+        <a href="dashboard.html" class="navbar-logo">🎟️ WaitingList</a>
+
+        <!-- Desktop Menu -->
+        <ul class="navbar-menu">
+          <li><a href="dashboard.html" class="navbar-link">Dashboard</a></li>
+          <li><a href="dashboard-active.html" class="navbar-link active">Daftar Antrian</a></li>
+          <li><a href="#" class="navbar-link">Statistik</a></li>
+          <li><a href="#" class="navbar-link">Riwayat</a></li>
+          <li><a href="#" class="navbar-link">🔒 Users <span class="badge badge-premium">Premium</span></a></li>
+          <li><a href="#" class="navbar-link">🔒 Restoran <span class="badge badge-premium">Premium</span></a></li>
+        </ul>
+
+        <!-- Right Actions -->
+        <div class="navbar-actions">
+          <div class="dropdown-wrapper" style="position: relative;">
+            <button class="btn btn-ghost" id="restaurant-dropdown">
+              Restoran Sedap ▾
+            </button>
+          </div>
+          <a href="settings.html" class="btn btn-icon btn-ghost" aria-label="Settings">⚙️</a>
+          <button class="btn btn-secondary btn-sm" onclick="confirmLogout()">Logout</button>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button class="mobile-menu btn btn-icon btn-ghost" onclick="toggleMobileMenu()">
+          ☰
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Header Bar -->
+      <div class="header-bar">
+        <h1 class="page-title">Dashboard Antrian</h1>
+
+        <!-- Search Box -->
+        <div class="search-box">
+          <input
+            type="text"
+            id="search-input"
+            class="form-input"
+            placeholder="Cari nama pengunjung..."
+            autocomplete="off"
+          >
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stats-card orange">
+          <div class="stats-card-icon">📋</div>
+          <div class="stats-card-value" id="stat-active">15</div>
+          <div class="stats-card-label">Antrian Aktif</div>
+        </div>
+
+        <div class="stats-card blue">
+          <div class="stats-card-icon">⏱️</div>
+          <div class="stats-card-value" id="stat-avg">18min</div>
+          <div class="stats-card-label">Rata-rata Tunggu</div>
+        </div>
+
+        <div class="stats-card green">
+          <div class="stats-card-icon">✓</div>
+          <div class="stats-card-value" id="stat-completed">45</div>
+          <div class="stats-card-label">Selesai Hari Ini</div>
+        </div>
+      </div>
+
+      <!-- Result Count -->
+      <div class="result-count" id="result-count">
+        Menampilkan 15 antrian
+      </div>
+
+      <!-- Queue Table/Cards Container -->
+      <div id="queue-container"></div>
+
+      <!-- Quick Action Button (for first waiting queue) -->
+      <button class="btn btn-primary btn-lg quick-action-btn" id="quick-action-btn" style="display: none;">
+        🔔 Panggil Berikutnya
+      </button>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/utils.js"></script>
+  <script src="js/queue.js"></script>
+  <script src="js/theme.js"></script>
+  <script>
+    // ============================================
+    // SEARCH FUNCTIONALITY
+    // ============================================
+
+    const searchInput = document.getElementById('search-input');
+    const resultCount = document.getElementById('result-count');
+
+    // Debounce search
+    const debouncedSearch = debounce((query) => {
+      const filtered = searchQueues(query);
+      renderQueueTable(filtered, document.getElementById('queue-container'));
+
+      // Update result count
+      if (query) {
+        resultCount.textContent = `Menampilkan ${filtered.length} dari ${queueData.length} antrian`;
+      } else {
+        resultCount.textContent = `Menampilkan ${queueData.length} antrian`;
+      }
+
+      // Update quick action button
+      updateQuickActionButton(filtered);
+    }, 300);
+
+    searchInput.addEventListener('input', (e) => {
+      debouncedSearch(e.target.value);
+    });
+
+    // ============================================
+    // QUICK ACTION BUTTON
+    // ============================================
+
+    const quickActionBtn = document.getElementById('quick-action-btn');
+
+    function updateQuickActionButton(queues = queueData) {
+      const firstWaiting = queues.find(q => q.status === 'waiting');
+
+      if (firstWaiting) {
+        quickActionBtn.style.display = 'block';
+        quickActionBtn.textContent = `🔔 Panggil #${String(firstWaiting.no).padStart(3, '0')} - ${firstWaiting.nama}`;
+        quickActionBtn.onclick = () => callQueue(firstWaiting.id);
+      } else {
+        quickActionBtn.style.display = 'none';
+      }
+    }
+
+    // Keyboard shortcut: Spacebar to call next
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        quickActionBtn.click();
+      }
+    });
+
+    // ============================================
+    // MOBILE MENU
+    // ============================================
+
+    function toggleMobileMenu() {
+      showToast('Mobile menu coming soon', 'info');
+    }
+
+    // ============================================
+    // LOGOUT
+    // ============================================
+
+    function confirmLogout() {
+      if (confirm('Apakah Anda yakin ingin logout?')) {
+        // Stop simulation
+        stopSimulation();
+
+        // Clear session data
+        localStorage.clear();
+
+        // Redirect to landing page
+        window.location.href = 'index.html';
+      }
+    }
+
+    // ============================================
+    // LOAD RESTAURANT DATA
+    // ============================================
+
+    function loadRestaurantData() {
+      const registrationData = getItem('registration-data');
+
+      if (registrationData && registrationData.restaurantName) {
+        // Update restaurant name in dropdown
+        document.getElementById('restaurant-dropdown').textContent =
+          registrationData.restaurantName + ' ▾';
+      }
+    }
+
+    // ============================================
+    // WINDOW RESIZE HANDLER
+    // ============================================
+
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        refreshQueueDisplay();
+      }, 250);
+    });
+
+    // ============================================
+    // NOTIFICATION SOUND TOGGLE
+    // ============================================
+
+    // Add notification sound toggle in navbar (future enhancement)
+    // For now, sound is enabled by default
+
+    // ============================================
+    // VISIBILITY CHANGE (PAUSE SIMULATION WHEN TAB INACTIVE)
+    // ============================================
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        stopSimulation();
+      } else {
+        startSimulation();
+      }
+    });
+
+    // ============================================
+    // INITIALIZATION
+    // ============================================
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadRestaurantData();
+
+      // Initial render
+      refreshQueueDisplay();
+
+      // Update quick action button
+      updateQuickActionButton();
+
+      // Start real-time simulation
+      startSimulation();
+
+      // Animate stats on load
+      setTimeout(() => {
+        document.querySelectorAll('.stats-card').forEach((card, index) => {
+          card.style.animation = `scale-up 300ms ease-out ${index * 100}ms`;
+        });
+      }, 100);
+
+      // Show welcome toast
+      setTimeout(() => {
+        showToast('Dashboard siap! Antrian baru akan muncul otomatis', 'info');
+      }, 500);
+    });
+
+    // ============================================
+    // CLEANUP ON PAGE UNLOAD
+    // ============================================
+
+    window.addEventListener('beforeunload', () => {
+      stopSimulation();
+    });
+
+    // ============================================
+    // KEYBOARD SHORTCUTS HELP
+    // ============================================
+
+    // Show keyboard shortcuts on Ctrl+/
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key === '/') {
+        e.preventDefault();
+
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+          <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+              <h3 class="modal-title">Keyboard Shortcuts</h3>
+            </div>
+            <div class="modal-content">
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr style="border-bottom: 1px solid var(--color-neutral-200);">
+                  <td style="padding: 12px 0; font-weight: 600;">Space</td>
+                  <td style="padding: 12px 0;">Panggil antrian berikutnya</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--color-neutral-200);">
+                  <td style="padding: 12px 0; font-weight: 600;">Ctrl+/</td>
+                  <td style="padding: 12px 0;">Tampilkan shortcuts</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--color-neutral-200);">
+                  <td style="padding: 12px 0; font-weight: 600;">Ctrl+S</td>
+                  <td style="padding: 12px 0;">Focus search</td>
+                </tr>
+              </table>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-primary" onclick="this.closest('.modal-overlay').remove()">
+                Tutup
+              </button>
+            </div>
+          </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            modal.remove();
+          }
+        });
+      }
+
+      // Ctrl+S to focus search
+      if (e.ctrlKey && e.key === 's') {
+        e.preventDefault();
+        searchInput.focus();
+      }
+    });
+  </script>
+
+</body>
+</html>

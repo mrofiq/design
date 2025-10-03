@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#D97706">
+    <title>Daftar Antrian - Restoran Bahagia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body class="bg-secondary">
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="restaurant-logo">🍽️</div>
+            <h1 class="restaurant-name">Restoran Bahagia</h1>
+            <p class="header-subtitle">Daftar Antrian</p>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="card form-card">
+            <form id="registrationForm" novalidate>
+                <!-- Name Field -->
+                <div class="form-group">
+                    <label for="name" class="form-label">Nama Lengkap *</label>
+                    <input
+                        type="text"
+                        id="name"
+                        class="form-input"
+                        placeholder="Contoh: John Doe"
+                        required
+                        minlength="2"
+                        maxlength="100"
+                        autocomplete="name"
+                        autofocus
+                    >
+                    <div class="error-message hidden" id="nameError"></div>
+                </div>
+
+                <!-- Phone Field -->
+                <div class="form-group">
+                    <label for="phone" class="form-label">Nomor HP *</label>
+                    <input
+                        type="tel"
+                        id="phone"
+                        class="form-input"
+                        placeholder="081234567890"
+                        required
+                        pattern="^08[0-9]{8,11}$"
+                        inputmode="numeric"
+                        autocomplete="tel"
+                    >
+                    <div class="helper-text">Format: 08xxxxxxxxxx</div>
+                    <div class="error-message hidden" id="phoneError"></div>
+                </div>
+
+                <!-- Party Size -->
+                <div class="form-group">
+                    <label class="form-label">Jumlah Orang *</label>
+                    <div class="party-size-selector">
+                        <button type="button" class="party-btn" data-size="1">1</button>
+                        <button type="button" class="party-btn" data-size="2">2</button>
+                        <button type="button" class="party-btn" data-size="3">3</button>
+                        <button type="button" class="party-btn" data-size="4">4</button>
+                        <button type="button" class="party-btn" data-size="5">5</button>
+                        <button type="button" class="party-btn" data-size="6+" onclick="openPartySizeModal()">6+</button>
+                    </div>
+                    <input type="hidden" id="partySize" required>
+                    <div class="error-message hidden" id="partySizeError"></div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary btn-submit" id="submitBtn">
+                    Daftar Antrian
+                </button>
+            </form>
+
+            <!-- Queue Info -->
+            <div class="queue-info">
+                <div class="info-item">
+                    <span class="info-icon">📋</span>
+                    <span class="info-text">Antrian saat ini: <strong>12 orang</strong></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon">⏱️</span>
+                    <span class="info-text">Estimasi tunggu: <strong>~20 menit</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Party Size Modal -->
+    <div id="partySizeModal" class="modal hidden">
+        <div class="modal-overlay" onclick="closePartySizeModal()"></div>
+        <div class="modal-content">
+            <h3 class="modal-title">Jumlah Orang</h3>
+            <div class="stepper">
+                <button type="button" class="stepper-btn" onclick="decrementPartySize()">-</button>
+                <input type="number" id="customPartySize" class="stepper-input" value="6" min="6" max="20" readonly>
+                <button type="button" class="stepper-btn" onclick="incrementPartySize()">+</button>
+            </div>
+            <div class="helper-text">Maksimal 20 orang</div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closePartySizeModal()">Batal</button>
+                <button type="button" class="btn btn-primary" onclick="confirmPartySize()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="register.js"></script>
+</body>
+</html>

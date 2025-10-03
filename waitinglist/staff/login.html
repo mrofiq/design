@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#D97706">
+  <title>Login - Dashboard Antrian</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body style="background: var(--bg-secondary);">
+
+  <!-- Login Container -->
+  <div class="login-card">
+    <!-- Card Component (shadcn naming convention) -->
+    <div class="card">
+      <!-- Card Header -->
+      <div class="card-header text-center">
+        <div class="logo" style="font-size: 2rem; margin-bottom: 0.5rem;">🍽️</div>
+        <h2 class="card-title">Login ke Dashboard</h2>
+        <p class="text-muted" style="font-size: 0.875rem; margin-top: 0.5rem;">
+          Kelola antrian restoran Anda
+        </p>
+      </div>
+
+      <!-- Card Body -->
+      <div class="card-body">
+        <!-- Login Form -->
+        <form id="loginForm" onsubmit="handleLogin(event)">
+
+          <!-- Email/Phone Input -->
+          <div class="form-group">
+            <label class="label" for="email">Email atau Nomor HP</label>
+            <input
+              type="text"
+              id="email"
+              class="input"
+              placeholder="admin@restoran.com atau 081234567890"
+              required
+              autocomplete="username"
+              autofocus
+            >
+            <p class="text-error" id="emailError" style="font-size: 0.875rem; margin-top: 0.5rem; display: none;"></p>
+          </div>
+
+          <!-- Password Input with Toggle -->
+          <div class="form-group">
+            <label class="label" for="password">Password</label>
+            <div class="input-wrapper">
+              <input
+                type="password"
+                id="password"
+                class="input"
+                placeholder="Masukkan password"
+                required
+                autocomplete="current-password"
+                minlength="6"
+              >
+              <button
+                type="button"
+                class="input-toggle"
+                onclick="togglePassword()"
+                aria-label="Tampilkan password"
+              >
+                <span id="toggleIcon">👁️</span>
+              </button>
+            </div>
+            <p class="text-error" id="passwordError" style="font-size: 0.875rem; margin-top: 0.5rem; display: none;"></p>
+          </div>
+
+          <!-- Remember Me Checkbox -->
+          <div class="form-group">
+            <div class="checkbox-wrapper">
+              <input
+                type="checkbox"
+                id="remember"
+                class="checkbox"
+                name="remember"
+              >
+              <label class="checkbox-label" for="remember">
+                Ingat saya selama 30 hari
+              </label>
+            </div>
+          </div>
+
+          <!-- Error Alert (Hidden by default) -->
+          <div id="errorAlert" class="card" style="border-color: var(--error); background: rgba(239, 68, 68, 0.05); padding: 1rem; margin-bottom: 1rem; display: none;">
+            <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+              <span style="color: var(--error); font-size: 1.25rem;">⚠️</span>
+              <div style="flex: 1;">
+                <p id="errorMessage" class="text-error" style="font-size: 0.875rem; font-weight: 500;"></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Login Button (shadcn Button component) -->
+          <button
+            type="submit"
+            class="btn btn-primary"
+            id="loginButton"
+            style="width: 100%;"
+          >
+            <span id="loginButtonText">Login</span>
+            <span id="loginSpinner" class="spinner" style="display: none;"></span>
+          </button>
+
+          <!-- Forgot Password Link -->
+          <div class="text-center" style="margin-top: 1rem;">
+            <a href="#" class="link" style="font-size: 0.875rem;">Lupa password?</a>
+          </div>
+        </form>
+      </div>
+
+      <!-- Card Footer -->
+      <div class="card-footer" style="justify-content: center; background: var(--bg-secondary);">
+        <p class="text-muted" style="font-size: 0.875rem;">
+          Belum punya akun?
+          <a href="#" class="link">Hubungi Owner</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    /**
+     * Toggle password visibility
+     * Component: Input with toggle button (shadcn-style)
+     */
+    function togglePassword() {
+      const passwordInput = document.getElementById('password');
+      const toggleIcon = document.getElementById('toggleIcon');
+
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.textContent = '👁️‍🗨️';
+      } else {
+        passwordInput.type = 'password';
+        toggleIcon.textContent = '👁️';
+      }
+    }
+
+    /**
+     * Handle login form submission
+     * Component: Form validation and submission
+     */
+    function handleLogin(event) {
+      event.preventDefault();
+
+      // Get form values
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const remember = document.getElementById('remember').checked;
+
+      // Clear previous errors
+      clearErrors();
+
+      // Validate email/phone format
+      if (!validateEmailOrPhone(email)) {
+        showFieldError('email', 'Format email atau nomor HP tidak valid');
+        return;
+      }
+
+      // Validate password length
+      if (password.length < 6) {
+        showFieldError('password', 'Password minimal 6 karakter');
+        return;
+      }
+
+      // Show loading state
+      setLoginLoading(true);
+
+      // Simulate API call
+      // In production, this would be: await api.post('/auth/login', { email, password, remember })
+      setTimeout(() => {
+        // Simulate success - redirect to dashboard
+        // For demo: Show error for specific credentials
+        if (email === 'demo@error.com') {
+          setLoginLoading(false);
+          showError('Email/HP atau password salah');
+          document.getElementById('password').value = '';
+          document.getElementById('email').focus();
+        } else {
+          // Success - redirect to dashboard
+          window.location.href = 'dashboard.html';
+        }
+      }, 1500);
+    }
+
+    /**
+     * Validate email or phone number format
+     */
+    function validateEmailOrPhone(value) {
+      // Email regex
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      // Indonesian phone regex (08xx or +628xx)
+      const phoneRegex = /^(\+62|62|0)8[0-9]{8,11}$/;
+
+      return emailRegex.test(value) || phoneRegex.test(value);
+    }
+
+    /**
+     * Show field-specific error
+     */
+    function showFieldError(fieldId, message) {
+      const input = document.getElementById(fieldId);
+      const errorElement = document.getElementById(fieldId + 'Error');
+
+      input.classList.add('input-error');
+      errorElement.textContent = message;
+      errorElement.style.display = 'block';
+      input.focus();
+    }
+
+    /**
+     * Show general error alert
+     * Component: Alert (shadcn-style)
+     */
+    function showError(message) {
+      const errorAlert = document.getElementById('errorAlert');
+      const errorMessage = document.getElementById('errorMessage');
+
+      errorMessage.textContent = message;
+      errorAlert.style.display = 'block';
+
+      // Shake animation
+      errorAlert.style.animation = 'shake 0.3s ease-in-out';
+      setTimeout(() => {
+        errorAlert.style.animation = '';
+      }, 300);
+    }
+
+    /**
+     * Clear all error messages
+     */
+    function clearErrors() {
+      // Clear field errors
+      document.querySelectorAll('.input-error').forEach(input => {
+        input.classList.remove('input-error');
+      });
+
+      document.querySelectorAll('[id$="Error"]').forEach(error => {
+        error.style.display = 'none';
+        error.textContent = '';
+      });
+
+      // Clear general error
+      document.getElementById('errorAlert').style.display = 'none';
+    }
+
+    /**
+     * Set login button loading state
+     * Component: Button with loading spinner
+     */
+    function setLoginLoading(isLoading) {
+      const button = document.getElementById('loginButton');
+      const buttonText = document.getElementById('loginButtonText');
+      const spinner = document.getElementById('loginSpinner');
+
+      if (isLoading) {
+        button.disabled = true;
+        buttonText.textContent = 'Logging in...';
+        spinner.style.display = 'inline-block';
+      } else {
+        button.disabled = false;
+        buttonText.textContent = 'Login';
+        spinner.style.display = 'none';
+      }
+    }
+
+    /**
+     * Add shake animation keyframe
+     */
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    /**
+     * Auto-clear error when user starts typing
+     */
+    document.getElementById('email').addEventListener('input', () => {
+      document.getElementById('email').classList.remove('input-error');
+      document.getElementById('emailError').style.display = 'none';
+      document.getElementById('errorAlert').style.display = 'none';
+    });
+
+    document.getElementById('password').addEventListener('input', () => {
+      document.getElementById('password').classList.remove('input-error');
+      document.getElementById('passwordError').style.display = 'none';
+      document.getElementById('errorAlert').style.display = 'none';
+    });
+
+    /**
+     * Keyboard shortcut: Enter to submit
+     * Already handled by form's default behavior
+     */
+  </script>
+
+</body>
+</html>
