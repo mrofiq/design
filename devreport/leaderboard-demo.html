@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard Component Demo - Developer Report Dashboard</title>
+
+  <!-- Design Tokens & Base Styles -->
+  <link rel="stylesheet" href="css/design-tokens.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/utilities.css">
+
+  <!-- Component Styles -->
+  <link rel="stylesheet" href="css/components/cards.css">
+  <link rel="stylesheet" href="css/components/leaderboard.css">
+  <link rel="stylesheet" href="css/components/badges.css">
+  <link rel="stylesheet" href="css/components/buttons.css">
+
+  <style>
+    body {
+      background-color: var(--color-gray-50);
+      padding: var(--spacing-8);
+    }
+
+    .demo-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .demo-header {
+      background-color: var(--color-white);
+      padding: var(--spacing-6);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--spacing-8);
+      box-shadow: var(--shadow-md);
+    }
+
+    .demo-header h1 {
+      font-size: var(--font-size-3xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-gray-900);
+      margin-bottom: var(--spacing-2);
+    }
+
+    .demo-header p {
+      font-size: var(--font-size-base);
+      color: var(--color-gray-600);
+    }
+
+    .demo-section {
+      margin-bottom: var(--spacing-8);
+    }
+
+    .demo-section__title {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-gray-900);
+      margin-bottom: var(--spacing-4);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-2);
+    }
+
+    .demo-section__badge {
+      display: inline-flex;
+      padding: var(--spacing-1) var(--spacing-3);
+      background-color: var(--color-primary-100);
+      color: var(--color-primary-700);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+      gap: var(--spacing-6);
+    }
+
+    .demo-card {
+      background-color: var(--color-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+
+    .demo-card__header {
+      padding: var(--spacing-4);
+      background-color: var(--color-gray-50);
+      border-bottom: var(--border-default);
+    }
+
+    .demo-card__title {
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-gray-900);
+    }
+
+    .demo-card__body {
+      padding: var(--spacing-4);
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+      margin: var(--spacing-4) 0;
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-2);
+      padding: var(--spacing-2) 0;
+      font-size: var(--font-size-sm);
+      color: var(--color-gray-700);
+    }
+
+    .feature-list li::before {
+      content: '✓';
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      background-color: var(--color-success-100);
+      color: var(--color-success-700);
+      border-radius: var(--radius-full);
+      font-weight: var(--font-weight-bold);
+      font-size: var(--font-size-sm);
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: var(--spacing-4);
+      }
+
+      .demo-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-container">
+    <!-- Demo Header -->
+    <div class="demo-header">
+      <h1>🏆 Leaderboard Component Demo</h1>
+      <p>Comprehensive leaderboard system with real-time updates, filtering, and animations</p>
+      <ul class="feature-list">
+        <li>Top 3 podium display with gold/silver/bronze styling</li>
+        <li>Multiple view types (Individual, Team, Department)</li>
+        <li>Time period filtering (Weekly, Monthly, Quarterly)</li>
+        <li>Real-time rank updates and animations</li>
+        <li>Search functionality and pagination</li>
+        <li>Current user highlighting</li>
+        <li>Trend indicators with up/down arrows</li>
+        <li>Fully responsive and accessible</li>
+      </ul>
+    </div>
+
+    <!-- Full Leaderboard Demo -->
+    <div class="demo-section">
+      <h2 class="demo-section__title">
+        Full Leaderboard View
+        <span class="demo-section__badge">With Podium</span>
+      </h2>
+      <div class="demo-card">
+        <div id="leaderboard-full"></div>
+      </div>
+    </div>
+
+    <!-- Compact Widget Demo -->
+    <div class="demo-section">
+      <h2 class="demo-section__title">
+        Compact Widget View
+        <span class="demo-section__badge">Dashboard Widget</span>
+      </h2>
+      <div class="demo-grid">
+        <div class="demo-card">
+          <div class="demo-card__header">
+            <h3 class="demo-card__title">Individual Leaderboard (Top 5)</h3>
+          </div>
+          <div class="demo-card__body">
+            <div id="leaderboard-compact-individual"></div>
+          </div>
+        </div>
+
+        <div class="demo-card">
+          <div class="demo-card__header">
+            <h3 class="demo-card__title">Team Leaderboard (Top 5)</h3>
+          </div>
+          <div class="demo-card__body">
+            <div id="leaderboard-compact-team"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Component Scripts -->
+  <script src="js/components/Leaderboard.js"></script>
+
+  <script>
+    // Mock data for demo
+    const mockData = {
+      individual: {
+        weekly: [
+          { id: '1', name: 'Sarah Chen', team: 'Frontend Team', department: 'Engineering', avatar: 'https://i.pravatar.cc/150?img=1', points: 3890, trend: 5 },
+          { id: '2', name: 'Michael Rodriguez', team: 'Backend Team', department: 'Engineering', avatar: 'https://i.pravatar.cc/150?img=12', points: 3654, trend: 3 },
+          { id: '3', name: 'Emily Watson', team: 'DevOps Team', department: 'Engineering', avatar: 'https://i.pravatar.cc/150?img=5', points: 3421, trend: -2 },
+          { id: '4', name: 'David Kim', team: 'Frontend Team', department: 'Engineering', avatar: 'https://i.pravatar.cc/150?img=14', points: 3198, trend: 1 },
+          { id: '5', name: 'Jessica Taylor', team: 'QA Team', department: 'Quality', avatar: 'https://i.pravatar.cc/150?img=9', points: 2987, trend: 4 },
+          { id: '6', name: 'Robert Johnson', team: 'Backend Team', department: 'Engineering', avatar: 'https://i.pravatar.cc/150?img=13', points: 2876, trend: -1 },
+          { id: '7', name: 'Amanda Lee', team: 'Design Team', department: 'Product', avatar: 'https://i.pravatar.cc/150?img=45', points: 2754, trend: 2 },
+          { id: '8', name: 'James Brown', team: 'Frontend Team', department: 'Engineering', avatar: 'https://i.pravatar.cc/150?img=33', points: 2643, trend: 0 },
+          { id: '9', name: 'Lisa Anderson', team: 'Backend Team', department: 'Engineering', avatar: 'https://i.pravatar.cc/150?img=20', points: 2532, trend: 3 },
+          { id: '10', name: 'Christopher Martin', team: 'DevOps Team', department: 'Engineering', avatar: 'https://i.pravatar.cc/150?img=15', points: 2421, trend: -2 },
+          { id: '11', name: 'Jennifer White', team: 'QA Team', department: 'Quality', avatar: 'https://i.pravatar.cc/150?img=32', points: 2310, trend: 1 },
+          { id: '12', name: 'Daniel Garcia', team: 'Frontend Team', department: 'Engineering', avatar: 'https://i.pravatar.cc/150?img=68', points: 2198, trend: 4 },
+          { id: '13', name: 'Michelle Davis', team: 'Backend Team', department: 'Engineering', avatar: 'https://i.pravatar.cc/150?img=44', points: 2087, trend: -1 },
+          { id: '14', name: 'Matthew Wilson', team: 'DevOps Team', department: 'Engineering', avatar: 'https://i.pravatar.cc/150?img=59', points: 1976, trend: 2 },
+          { id: '15', name: 'Ashley Moore', team: 'Design Team', department: 'Product', avatar: 'https://i.pravatar.cc/150?img=47', points: 1865, trend: 0 }
+        ],
+        monthly: [
+          { id: '1', name: 'Sarah Chen', team: 'Frontend Team', department: 'Engineering', avatar: 'https://i.pravatar.cc/150?img=1', points: 15890, trend: 8 },
+          { id: '2', name: 'Michael Rodriguez', team: 'Backend Team', department: 'Engineering', avatar: 'https://i.pravatar.cc/150?img=12', points: 14654, trend: 5 },
+          { id: '3', name: 'Emily Watson', team: 'DevOps Team', department: 'Engineering', avatar: 'https://i.pravatar.cc/150?img=5', points: 13421, trend: -1 }
+        ],
+        quarterly: [
+          { id: '1', name: 'Michael Rodriguez', team: 'Backend Team', department: 'Engineering', avatar: 'https://i.pravatar.cc/150?img=12', points: 45654, trend: 12 },
+          { id: '2', name: 'Sarah Chen', team: 'Frontend Team', department: 'Engineering', avatar: 'https://i.pravatar.cc/150?img=1', points: 43890, trend: -3 },
+          { id: '3', name: 'David Kim', team: 'Frontend Team', department: 'Engineering', avatar: 'https://i.pravatar.cc/150?img=14', points: 41198, trend: 5 }
+        ]
+      },
+      team: {
+        weekly: [
+          { id: 't1', name: 'Frontend Team', department: 'Engineering', avatar: 'https://ui-avatars.com/api/?name=Frontend+Team&background=3b82f6&color=fff', points: 12890, trend: 7 },
+          { id: 't2', name: 'Backend Team', department: 'Engineering', avatar: 'https://ui-avatars.com/api/?name=Backend+Team&background=10b981&color=fff', points: 11654, trend: 4 },
+          { id: 't3', name: 'DevOps Team', department: 'Engineering', avatar: 'https://ui-avatars.com/api/?name=DevOps+Team&background=f59e0b&color=fff', points: 10421, trend: -1 },
+          { id: 't4', name: 'QA Team', department: 'Quality', avatar: 'https://ui-avatars.com/api/?name=QA+Team&background=8b5cf6&color=fff', points: 9876, trend: 2 },
+          { id: 't5', name: 'Design Team', department: 'Product', avatar: 'https://ui-avatars.com/api/?name=Design+Team&background=ec4899&color=fff', points: 8754, trend: 3 }
+        ],
+        monthly: [
+          { id: 't1', name: 'Backend Team', department: 'Engineering', avatar: 'https://ui-avatars.com/api/?name=Backend+Team&background=10b981&color=fff', points: 45654, trend: 8 },
+          { id: 't2', name: 'Frontend Team', department: 'Engineering', avatar: 'https://ui-avatars.com/api/?name=Frontend+Team&background=3b82f6&color=fff', points: 42890, trend: -2 },
+          { id: 't3', name: 'DevOps Team', department: 'Engineering', avatar: 'https://ui-avatars.com/api/?name=DevOps+Team&background=f59e0b&color=fff', points: 39421, trend: 5 }
+        ],
+        quarterly: []
+      },
+      department: {
+        weekly: [
+          { id: 'd1', name: 'Engineering', avatar: 'https://ui-avatars.com/api/?name=Engineering&background=0ea5e9&color=fff', points: 45890, trend: 12 },
+          { id: 'd2', name: 'Product', avatar: 'https://ui-avatars.com/api/?name=Product&background=6366f1&color=fff', points: 32654, trend: 8 },
+          { id: 'd3', name: 'Quality', avatar: 'https://ui-avatars.com/api/?name=Quality&background=a855f7&color=fff', points: 28421, trend: 5 }
+        ],
+        monthly: [],
+        quarterly: []
+      }
+    };
+
+    // Mock fetch
+    window.fetch = function(url) {
+      return new Promise((resolve) => {
+        const params = new URLSearchParams(url.split('?')[1]);
+        const type = params.get('type') || 'individual';
+        const period = params.get('period') || 'weekly';
+
+        setTimeout(() => {
+          resolve({
+            ok: true,
+            json: () => Promise.resolve(mockData[type][period] || [])
+          });
+        }, 300);
+      });
+    };
+
+    // Initialize full leaderboard
+    const leaderboardFull = new LeaderboardComponent('leaderboard-full', {
+      viewType: 'individual',
+      period: 'weekly',
+      compact: false,
+      showPodium: true,
+      pageSize: 10,
+      autoRefresh: false,
+      currentUserId: '4', // David Kim
+      enableWebSocket: false,
+      showSearch: true
+    });
+
+    // Initialize compact individual
+    const leaderboardCompactIndividual = new LeaderboardComponent('leaderboard-compact-individual', {
+      viewType: 'individual',
+      period: 'weekly',
+      compact: true,
+      showPodium: false,
+      pageSize: 5,
+      autoRefresh: false,
+      currentUserId: '2', // Michael Rodriguez
+      enableWebSocket: false,
+      showSearch: false
+    });
+
+    // Initialize compact team
+    const leaderboardCompactTeam = new LeaderboardComponent('leaderboard-compact-team', {
+      viewType: 'team',
+      period: 'weekly',
+      compact: true,
+      showPodium: false,
+      pageSize: 5,
+      autoRefresh: false,
+      enableWebSocket: false,
+      showSearch: false
+    });
+
+    // Event listeners for demos
+    document.addEventListener('leaderboard:select', (e) => {
+      console.log('Leaderboard member selected:', e.detail);
+      alert(`Selected: ${e.detail.name}\nPoints: ${e.detail.points}\nTeam: ${e.detail.team || 'N/A'}`);
+    });
+
+    console.log('%c🏆 Leaderboard Component Demo Loaded', 'color: #10b981; font-size: 16px; font-weight: bold;');
+    console.log('%cFeatures:', 'color: #3b82f6; font-weight: bold;');
+    console.log('- Full leaderboard with podium display');
+    console.log('- Compact widgets for dashboard');
+    console.log('- Multiple view types and periods');
+    console.log('- Search and pagination');
+    console.log('- Current user highlighting');
+    console.log('- Trend indicators');
+    console.log('- Responsive design');
+  </script>
+</body>
+</html>

@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-time Features Demo - Developer Report Dashboard</title>
+
+  <!-- Design Tokens & Base Styles -->
+  <link rel="stylesheet" href="css/design-tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/utilities.css">
+  <link rel="stylesheet" href="css/layout.css">
+
+  <!-- Component Styles -->
+  <link rel="stylesheet" href="css/components/buttons.css">
+  <link rel="stylesheet" href="css/components/cards.css">
+  <link rel="stylesheet" href="css/components/badges.css">
+  <link rel="stylesheet" href="css/components/toasts.css">
+  <link rel="stylesheet" href="css/components/timeline.css">
+  <link rel="stylesheet" href="css/components/connection-status.css">
+  <link rel="stylesheet" href="css/components/achievements.css">
+
+  <style>
+    body {
+      padding: var(--spacing-6);
+      background: var(--color-background);
+    }
+
+    .demo-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .demo-header {
+      margin-bottom: var(--spacing-6);
+    }
+
+    .demo-header h1 {
+      font-size: var(--font-size-3xl);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-2);
+      color: var(--color-text-primary);
+    }
+
+    .demo-header p {
+      font-size: var(--font-size-lg);
+      color: var(--color-text-secondary);
+    }
+
+    .demo-controls {
+      display: flex;
+      gap: var(--spacing-3);
+      margin-bottom: var(--spacing-6);
+      padding: var(--spacing-4);
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: var(--spacing-6);
+    }
+
+    .demo-section {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-4);
+      border: 1px solid var(--color-border);
+    }
+
+    .demo-section h2 {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: var(--spacing-4);
+      color: var(--color-text-primary);
+    }
+
+    .event-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-2);
+    }
+
+    .points-display {
+      position: relative;
+      text-align: center;
+      padding: var(--spacing-6);
+      background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
+      border-radius: var(--radius-lg);
+      color: white;
+      margin-bottom: var(--spacing-4);
+    }
+
+    .points-display__label {
+      font-size: var(--font-size-sm);
+      opacity: 0.9;
+      margin-bottom: var(--spacing-1);
+    }
+
+    .points-display__value {
+      font-size: var(--font-size-4xl);
+      font-weight: var(--font-weight-bold);
+    }
+
+    .points-animation {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-bold);
+      animation: float-up 2s ease-out forwards;
+      pointer-events: none;
+    }
+
+    .points-animation--positive {
+      color: var(--color-success);
+    }
+
+    .points-animation--negative {
+      color: var(--color-error);
+    }
+
+    @keyframes float-up {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -150%);
+      }
+    }
+
+    .timeline {
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .timeline-item--entering {
+      animation: slide-in 0.3s ease-out;
+    }
+
+    @keyframes slide-in {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .leaderboard {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .leaderboard th {
+      text-align: left;
+      padding: var(--spacing-2);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .leaderboard td {
+      padding: var(--spacing-2);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .leaderboard-row--current-user {
+      background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-2);
+    }
+
+    .connection-info {
+      padding: var(--spacing-3);
+      background: var(--color-surface-elevated);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-sm);
+      margin-top: var(--spacing-3);
+    }
+
+    .connection-info__row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: var(--spacing-1);
+    }
+
+    .connection-info__label {
+      color: var(--color-text-secondary);
+    }
+
+    .connection-info__value {
+      font-family: var(--font-family-mono);
+      font-weight: var(--font-weight-medium);
+    }
+
+    .achievement-modal {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      animation: fade-in 0.3s ease-out;
+    }
+
+    .achievement-modal__overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+    }
+
+    .achievement-modal__content {
+      position: relative;
+      background: var(--color-surface);
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-6);
+      max-width: 400px;
+      text-align: center;
+      animation: scale-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .achievement-icon {
+      font-size: 64px;
+      margin-bottom: var(--spacing-3);
+      animation: bounce 0.6s ease-in-out;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes scale-in {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .achievement-title {
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-primary);
+      margin-bottom: var(--spacing-2);
+    }
+
+    .achievement-name {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: var(--spacing-2);
+    }
+
+    .achievement-description {
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-4);
+    }
+  </style>
+</head>
+<body>
+  <!-- Connection Status Indicator -->
+  <div class="connection-status connection-status--disconnected" role="status" aria-live="polite">
+    <div class="connection-status__indicator"></div>
+    <span class="connection-status__label">Disconnected</span>
+  </div>
+
+  <div class="demo-container">
+    <div class="demo-header">
+      <h1>Real-time Features Demo</h1>
+      <p>Simulate WebSocket events and see real-time updates in action</p>
+    </div>
+
+    <!-- Demo Controls -->
+    <div class="demo-controls">
+      <button class="btn-primary" id="connectBtn">Connect WebSocket</button>
+      <button class="btn-secondary" id="disconnectBtn" disabled>Disconnect</button>
+      <button class="btn-secondary" id="reconnectBtn" disabled>Force Reconnect</button>
+      <button class="btn-ghost" id="clearQueueBtn">Clear Queue</button>
+    </div>
+
+    <div class="demo-grid">
+      <!-- Points Display -->
+      <div class="demo-section">
+        <h2>Points Display</h2>
+        <div class="points-display">
+          <div class="points-display__label">Total Points</div>
+          <div class="points-display__value">0</div>
+        </div>
+        <div class="event-buttons">
+          <button class="btn-success" onclick="simulatePointsUpdate(10)">+10 Points</button>
+          <button class="btn-success" onclick="simulatePointsUpdate(25)">+25 Points</button>
+          <button class="btn-error" onclick="simulatePointsUpdate(-5)">-5 Points</button>
+          <button class="btn-error" onclick="simulatePointsUpdate(-15)">-15 Points</button>
+        </div>
+      </div>
+
+      <!-- Events Timeline -->
+      <div class="demo-section">
+        <h2>Activity Timeline</h2>
+        <div class="timeline" id="timeline">
+          <!-- Timeline items will be added here -->
+        </div>
+        <div class="event-buttons" style="margin-top: var(--spacing-3);">
+          <button class="btn-primary" onclick="simulateEvent('commit')">Simulate Commit</button>
+          <button class="btn-primary" onclick="simulateEvent('merge')">Simulate Merge</button>
+          <button class="btn-primary" onclick="simulateEvent('review')">Simulate Review</button>
+        </div>
+      </div>
+
+      <!-- Notifications -->
+      <div class="demo-section">
+        <h2>Notifications</h2>
+        <div class="event-buttons">
+          <button class="btn-primary" onclick="simulateNotification('info')">Info Notification</button>
+          <button class="btn-success" onclick="simulateNotification('success')">Success Notification</button>
+          <button class="btn-warning" onclick="simulateNotification('warning')">Warning Notification</button>
+          <button class="btn-error" onclick="simulateNotification('error')">Error Notification</button>
+          <button class="btn-primary" onclick="simulateReportApproved()">Report Approved</button>
+          <button class="btn-warning" onclick="simulateChangesRequested()">Changes Requested</button>
+        </div>
+      </div>
+
+      <!-- Achievements -->
+      <div class="demo-section">
+        <h2>Achievements</h2>
+        <div class="event-buttons">
+          <button class="btn-primary" onclick="simulateAchievement('early-bird')">Early Bird</button>
+          <button class="btn-primary" onclick="simulateAchievement('team-player')">Team Player</button>
+          <button class="btn-primary" onclick="simulateAchievement('quality-champion')">Quality Champion</button>
+        </div>
+      </div>
+
+      <!-- Leaderboard -->
+      <div class="demo-section">
+        <h2>Leaderboard</h2>
+        <table class="leaderboard" data-type="individual">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>User</th>
+              <th>Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="leaderboard-row">
+              <td class="leaderboard-rank">#1</td>
+              <td class="leaderboard-user">
+                <div class="user-info">
+                  <span class="avatar avatar--sm">A</span>
+                  <span class="user-name">Alice Johnson</span>
+                </div>
+              </td>
+              <td class="leaderboard-points">1250</td>
+            </tr>
+            <tr class="leaderboard-row leaderboard-row--current-user">
+              <td class="leaderboard-rank">#2</td>
+              <td class="leaderboard-user">
+                <div class="user-info">
+                  <span class="avatar avatar--sm">Y</span>
+                  <span class="user-name">You</span>
+                </div>
+              </td>
+              <td class="leaderboard-points">980</td>
+            </tr>
+            <tr class="leaderboard-row">
+              <td class="leaderboard-rank">#3</td>
+              <td class="leaderboard-user">
+                <div class="user-info">
+                  <span class="avatar avatar--sm">B</span>
+                  <span class="user-name">Bob Smith</span>
+                </div>
+              </td>
+              <td class="leaderboard-points">875</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="margin-top: var(--spacing-3);">
+          <button class="btn-primary btn--sm" onclick="simulateLeaderboardUpdate()">Update Leaderboard</button>
+        </div>
+      </div>
+
+      <!-- Connection Info -->
+      <div class="demo-section">
+        <h2>Connection Info</h2>
+        <div class="connection-info">
+          <div class="connection-info__row">
+            <span class="connection-info__label">State:</span>
+            <span class="connection-info__value" id="connState">disconnected</span>
+          </div>
+          <div class="connection-info__row">
+            <span class="connection-info__label">Ready State:</span>
+            <span class="connection-info__value" id="connReady">3 (CLOSED)</span>
+          </div>
+          <div class="connection-info__row">
+            <span class="connection-info__label">Reconnect Attempts:</span>
+            <span class="connection-info__value" id="connAttempts">0</span>
+          </div>
+          <div class="connection-info__row">
+            <span class="connection-info__label">Queue Size:</span>
+            <span class="connection-info__value" id="connQueue">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/components/Toast.js"></script>
+  <script src="js/websocket.js"></script>
+  <script src="js/realtime.js"></script>
+
+  <script>
+    // Initialize WebSocket Manager (mock URL for demo)
+    let wsManager = null;
+    let rtManager = null;
+    let currentPoints = 0;
+
+    // Mock WebSocket for demo purposes
+    class MockWebSocket {
+      constructor(url) {
+        this.url = url;
+        this.readyState = 0; // CONNECTING
+        setTimeout(() => {
+          this.readyState = 1; // OPEN
+          if (this.onopen) this.onopen({});
+        }, 500);
+      }
+
+      send(data) {
+        console.log('MockWebSocket send:', data);
+      }
+
+      close() {
+        this.readyState = 3; // CLOSED
+        if (this.onclose) this.onclose({ code: 1000, reason: 'Normal closure' });
+      }
+    }
+
+    // Override WebSocket for demo
+    window.WebSocket = MockWebSocket;
+
+    // Connect button
+    document.getElementById('connectBtn').addEventListener('click', () => {
+      wsManager = new WebSocketManager({
+        url: 'wss://demo.example.com/ws',
+        debug: true,
+        autoConnect: false
+      });
+
+      rtManager = new RealTimeManager({
+        wsManager,
+        debug: true,
+        userId: 'user-123'
+      });
+
+      wsManager.connect();
+
+      // Update UI
+      document.getElementById('connectBtn').disabled = true;
+      document.getElementById('disconnectBtn').disabled = false;
+      document.getElementById('reconnectBtn').disabled = false;
+
+      // Update connection info
+      updateConnectionInfo();
+
+      // Listen to state changes
+      wsManager.on('stateChange', updateConnectionInfo);
+
+      window.showSuccess('Connected to WebSocket server', { duration: 3000 });
+    });
+
+    // Disconnect button
+    document.getElementById('disconnectBtn').addEventListener('click', () => {
+      if (wsManager) {
+        wsManager.disconnect();
+        document.getElementById('connectBtn').disabled = false;
+        document.getElementById('disconnectBtn').disabled = true;
+        document.getElementById('reconnectBtn').disabled = true;
+      }
+    });
+
+    // Reconnect button
+    document.getElementById('reconnectBtn').addEventListener('click', () => {
+      if (wsManager) {
+        wsManager.disconnect();
+        setTimeout(() => wsManager.connect(), 100);
+      }
+    });
+
+    // Clear queue button
+    document.getElementById('clearQueueBtn').addEventListener('click', () => {
+      if (wsManager) {
+        wsManager.clearQueue();
+        updateConnectionInfo();
+        window.showInfo('Message queue cleared', { duration: 2000 });
+      }
+    });
+
+    // Update connection info display
+    function updateConnectionInfo() {
+      if (!wsManager) return;
+
+      const stateMap = {
+        0: 'CONNECTING',
+        1: 'OPEN',
+        2: 'CLOSING',
+        3: 'CLOSED'
+      };
+
+      document.getElementById('connState').textContent = wsManager.getConnectionState();
+      document.getElementById('connReady').textContent = `${wsManager.getReadyState()} (${stateMap[wsManager.getReadyState()]})`;
+      document.getElementById('connAttempts').textContent = wsManager.reconnectAttempts;
+      document.getElementById('connQueue').textContent = wsManager.getQueueSize();
+    }
+
+    // Simulate points update
+    function simulatePointsUpdate(change) {
+      if (!rtManager) {
+        window.showWarning('Please connect WebSocket first');
+        return;
+      }
+
+      currentPoints += change;
+
+      rtManager.handleEvent('points.updated', {
+        userId: 'user-123',
+        points: change,
+        change,
+        reason: change > 0 ? 'Activity completed' : 'Penalty applied',
+        balance: currentPoints
+      });
+    }
+
+    // Simulate event
+    function simulateEvent(type) {
+      if (!rtManager) {
+        window.showWarning('Please connect WebSocket first');
+        return;
+      }
+
+      const events = {
+        commit: { type: 'commit', title: 'Code committed', points: 2, icon: '💻' },
+        merge: { type: 'merge', title: 'Pull request merged', points: 10, icon: '🔀' },
+        review: { type: 'review', title: 'Code review completed', points: 3, icon: '👁️' }
+      };
+
+      const event = events[type];
+      rtManager.handleEvent('event.created', {
+        event: {
+          ...event,
+          timestamp: new Date().toISOString()
+        },
+        user: { id: 'user-123', name: 'You' }
+      });
+
+      // Also update points
+      simulatePointsUpdate(event.points);
+    }
+
+    // Simulate notification
+    function simulateNotification(type) {
+      if (!rtManager) {
+        window.showWarning('Please connect WebSocket first');
+        return;
+      }
+
+      const messages = {
+        info: { title: 'Info', message: 'This is an informational message' },
+        success: { title: 'Success', message: 'Operation completed successfully!' },
+        warning: { title: 'Warning', message: 'Please review this warning' },
+        error: { title: 'Error', message: 'An error occurred' }
+      };
+
+      rtManager.handleEvent('notification', {
+        type,
+        ...messages[type],
+        priority: type === 'error' ? 'high' : 'normal'
+      });
+    }
+
+    // Simulate report approved
+    function simulateReportApproved() {
+      if (!rtManager) {
+        window.showWarning('Please connect WebSocket first');
+        return;
+      }
+
+      rtManager.handleEvent('report.approved', {
+        reportId: 'report-123',
+        report: { userId: 'user-123' },
+        approvedBy: { name: 'Team Lead' }
+      });
+    }
+
+    // Simulate changes requested
+    function simulateChangesRequested() {
+      if (!rtManager) {
+        window.showWarning('Please connect WebSocket first');
+        return;
+      }
+
+      rtManager.handleEvent('report.changes_requested', {
+        reportId: 'report-123',
+        report: { userId: 'user-123' },
+        feedback: 'Please add more details about the implementation',
+        requestedBy: { name: 'Team Lead' }
+      });
+    }
+
+    // Simulate achievement
+    function simulateAchievement(type) {
+      if (!rtManager) {
+        window.showWarning('Please connect WebSocket first');
+        return;
+      }
+
+      const achievements = {
+        'early-bird': {
+          id: 'early-bird',
+          name: 'Early Bird',
+          description: 'Submit report before 5 PM for 5 consecutive days',
+          icon: '🌅'
+        },
+        'team-player': {
+          id: 'team-player',
+          name: 'Team Player',
+          description: 'Receive 10+ recognition mentions',
+          icon: '🤝'
+        },
+        'quality-champion': {
+          id: 'quality-champion',
+          name: 'Quality Champion',
+          description: '0 quality gate failures for 30 days',
+          icon: '⭐'
+        }
+      };
+
+      rtManager.handleEvent('achievement.unlocked', {
+        achievement: achievements[type],
+        user: { id: 'user-123', name: 'You' }
+      });
+    }
+
+    // Simulate leaderboard update
+    function simulateLeaderboardUpdate() {
+      if (!rtManager) {
+        window.showWarning('Please connect WebSocket first');
+        return;
+      }
+
+      const newLeaderboard = [
+        { userId: 'user-123', name: 'You', points: currentPoints, rank: 1, trend: 1 },
+        { userId: 'user-456', name: 'Alice Johnson', points: 1250, rank: 2, trend: -1 },
+        { userId: 'user-789', name: 'Bob Smith', points: 875, rank: 3, trend: 0 }
+      ];
+
+      rtManager.handleEvent('leaderboard.updated', {
+        leaderboard: newLeaderboard,
+        type: 'individual'
+      });
+    }
+  </script>
+</body>
+</html>

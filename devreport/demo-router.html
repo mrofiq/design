@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Router Demo - Developer Report Dashboard</title>
+
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="/css/design-tokens.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/utilities.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/auth.css">
+
+  <style>
+    .demo-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--spacing-8);
+    }
+
+    .demo-section {
+      margin-bottom: var(--spacing-8);
+    }
+
+    .demo-section h2 {
+      margin-bottom: var(--spacing-4);
+      padding-bottom: var(--spacing-3);
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    .demo-buttons {
+      display: flex;
+      gap: var(--spacing-3);
+      flex-wrap: wrap;
+      margin-bottom: var(--spacing-4);
+    }
+
+    .demo-info {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-4);
+      margin-top: var(--spacing-4);
+    }
+
+    .demo-info h3 {
+      font-size: var(--text-sm);
+      font-weight: var(--font-semibold);
+      color: var(--color-text-secondary);
+      margin: 0 0 var(--spacing-2) 0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .demo-info pre {
+      background: var(--color-background);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-3);
+      font-size: var(--text-sm);
+      overflow-x: auto;
+      margin: 0;
+    }
+
+    .auth-status {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-2);
+      padding: var(--spacing-2) var(--spacing-4);
+      border-radius: var(--radius-full);
+      font-size: var(--text-sm);
+      font-weight: var(--font-medium);
+    }
+
+    .auth-status.authenticated {
+      background: var(--color-success-50);
+      color: var(--color-success-700);
+    }
+
+    .auth-status.unauthenticated {
+      background: var(--color-error-50);
+      color: var(--color-error-700);
+    }
+
+    .route-info {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: var(--spacing-3);
+      font-size: var(--text-sm);
+    }
+
+    .route-info dt {
+      font-weight: var(--font-semibold);
+      color: var(--color-text-secondary);
+    }
+
+    .route-info dd {
+      margin: 0;
+      color: var(--color-text-primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-container">
+    <header style="margin-bottom: var(--spacing-8);">
+      <h1 style="margin-bottom: var(--spacing-2);">Router & Authentication Demo</h1>
+      <p class="text-body-lg text-muted">Test the routing system and authentication flow</p>
+    </header>
+
+    <!-- Current State -->
+    <section class="demo-section">
+      <h2>Current State</h2>
+      <div class="demo-info">
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--spacing-4);">
+          <div>
+            <h3>Authentication Status</h3>
+            <div id="authStatus" class="auth-status unauthenticated">Not Authenticated</div>
+          </div>
+          <div id="userInfo" style="text-align: right; display: none;">
+            <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-secondary);">Logged in as</p>
+            <p style="margin: 0; font-weight: var(--font-semibold);"><span id="userName"></span></p>
+            <p style="margin: 0; font-size: var(--text-xs);"><span class="badge badge-primary" id="userRole"></span></p>
+          </div>
+        </div>
+
+        <h3>Current Route</h3>
+        <dl class="route-info">
+          <dt>Path:</dt>
+          <dd id="currentPath">/</dd>
+          <dt>Name:</dt>
+          <dd id="currentName">-</dd>
+          <dt>Query:</dt>
+          <dd id="currentQuery">{}</dd>
+        </dl>
+      </div>
+    </section>
+
+    <!-- Authentication -->
+    <section class="demo-section">
+      <h2>Authentication</h2>
+      <div class="demo-buttons">
+        <button class="btn-primary" id="loginDev">Login as Developer</button>
+        <button class="btn-primary" id="loginLead">Login as Team Lead</button>
+        <button class="btn-primary" id="loginAdmin">Login as Admin</button>
+        <button class="btn-secondary" id="logout">Logout</button>
+      </div>
+    </section>
+
+    <!-- Navigation -->
+    <section class="demo-section">
+      <h2>Navigation</h2>
+
+      <h3 style="margin-top: var(--spacing-6); margin-bottom: var(--spacing-3);">Public Routes</h3>
+      <div class="demo-buttons">
+        <a href="#/" class="btn-secondary">Home</a>
+        <a href="#/login" class="btn-secondary">Login</a>
+      </div>
+
+      <h3 style="margin-top: var(--spacing-6); margin-bottom: var(--spacing-3);">Protected Routes (Requires Auth)</h3>
+      <div class="demo-buttons">
+        <a href="#/dashboard" class="btn-secondary">Dashboard</a>
+        <a href="#/reports" class="btn-secondary">Reports</a>
+        <a href="#/leaderboard" class="btn-secondary">Leaderboard</a>
+        <a href="#/achievements" class="btn-secondary">Achievements</a>
+        <a href="#/profile" class="btn-secondary">Profile</a>
+        <a href="#/settings" class="btn-secondary">Settings</a>
+      </div>
+
+      <h3 style="margin-top: var(--spacing-6); margin-bottom: var(--spacing-3);">Team Lead Only</h3>
+      <div class="demo-buttons">
+        <a href="#/team" class="btn-secondary">Team Dashboard</a>
+        <a href="#/analytics" class="btn-secondary">Analytics</a>
+      </div>
+
+      <h3 style="margin-top: var(--spacing-6); margin-bottom: var(--spacing-3);">Admin Only</h3>
+      <div class="demo-buttons">
+        <a href="#/admin" class="btn-secondary">Admin Dashboard</a>
+      </div>
+
+      <h3 style="margin-top: var(--spacing-6); margin-bottom: var(--spacing-3);">Test 404</h3>
+      <div class="demo-buttons">
+        <a href="#/not-found" class="btn-secondary">Non-existent Route</a>
+      </div>
+    </section>
+
+    <!-- Route Content -->
+    <section class="demo-section">
+      <h2>Route Content</h2>
+      <div id="main-content" style="min-height: 200px;">
+        <p class="text-muted">Navigate to a route to see content here...</p>
+      </div>
+    </section>
+
+    <!-- Event Log -->
+    <section class="demo-section">
+      <h2>Event Log</h2>
+      <div class="demo-info">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-3);">
+          <h3 style="margin: 0;">Router & Auth Events</h3>
+          <button class="btn-ghost btn-sm" id="clearLog">Clear Log</button>
+        </div>
+        <pre id="eventLog" style="max-height: 300px; overflow-y: auto;">Waiting for events...</pre>
+      </div>
+    </section>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" aria-live="polite" aria-atomic="true" role="status"></div>
+
+  <!-- JavaScript -->
+  <script src="/js/router.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/routes.js"></script>
+  <script src="/js/components/Toast.js"></script>
+  <script src="/js/app.js"></script>
+
+  <script>
+    // Demo script
+    let eventLogEl;
+    let events = [];
+
+    function log(type, message, data) {
+      const timestamp = new Date().toLocaleTimeString();
+      const event = { timestamp, type, message, data };
+      events.push(event);
+
+      if (eventLogEl) {
+        eventLogEl.textContent = events.map(e =>
+          `[${e.timestamp}] ${e.type}: ${e.message}${e.data ? '\n  ' + JSON.stringify(e.data, null, 2) : ''}`
+        ).join('\n\n');
+        eventLogEl.scrollTop = eventLogEl.scrollHeight;
+      }
+    }
+
+    function updateUI() {
+      const isAuth = window.app.auth.check();
+      const user = window.app.auth.getUser();
+      const currentRoute = window.app.router.getCurrentRoute();
+
+      // Update auth status
+      const authStatusEl = document.getElementById('authStatus');
+      const userInfoEl = document.getElementById('userInfo');
+
+      if (isAuth && user) {
+        authStatusEl.className = 'auth-status authenticated';
+        authStatusEl.textContent = 'Authenticated';
+        userInfoEl.style.display = 'block';
+        document.getElementById('userName').textContent = user.name;
+        document.getElementById('userRole').textContent = user.role.replace('_', ' ');
+      } else {
+        authStatusEl.className = 'auth-status unauthenticated';
+        authStatusEl.textContent = 'Not Authenticated';
+        userInfoEl.style.display = 'none';
+      }
+
+      // Update route info
+      if (currentRoute) {
+        document.getElementById('currentPath').textContent = currentRoute.path;
+        document.getElementById('currentName').textContent = currentRoute.name || '-';
+        document.getElementById('currentQuery').textContent = JSON.stringify(currentRoute.query);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      eventLogEl = document.getElementById('eventLog');
+
+      // Setup auth event listeners
+      window.app.auth.on('login', ({ user }) => {
+        log('AUTH', 'User logged in', { email: user.email, role: user.role });
+        updateUI();
+      });
+
+      window.app.auth.on('logout', () => {
+        log('AUTH', 'User logged out');
+        updateUI();
+      });
+
+      // Setup router event listeners
+      window.app.router.on('beforeRouteChange', ({ to, from }) => {
+        log('ROUTER', 'Before route change', { from: from?.path, to: to.path });
+      });
+
+      window.app.router.on('afterRouteChange', ({ to, from }) => {
+        log('ROUTER', 'After route change', { from: from?.path, to: to.path });
+        updateUI();
+      });
+
+      window.app.router.on('routeError', ({ error, to }) => {
+        log('ERROR', 'Route error', { error: error.message, route: to.path });
+      });
+
+      // Demo buttons
+      document.getElementById('loginDev').addEventListener('click', async () => {
+        await window.app.auth.login({ email: 'developer@example.com', password: 'demo' }, true);
+      });
+
+      document.getElementById('loginLead').addEventListener('click', async () => {
+        await window.app.auth.login({ email: 'team.lead@example.com', password: 'demo' }, true);
+      });
+
+      document.getElementById('loginAdmin').addEventListener('click', async () => {
+        await window.app.auth.login({ email: 'admin@example.com', password: 'demo' }, true);
+      });
+
+      document.getElementById('logout').addEventListener('click', () => {
+        window.app.auth.logout();
+      });
+
+      document.getElementById('clearLog').addEventListener('click', () => {
+        events = [];
+        eventLogEl.textContent = 'Log cleared...';
+      });
+
+      // Initial UI update
+      updateUI();
+      log('SYSTEM', 'Demo initialized');
+    });
+  </script>
+</body>
+</html>

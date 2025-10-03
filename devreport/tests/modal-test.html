@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modal Component Test Suite</title>
+
+  <!-- Design Tokens -->
+  <link rel="stylesheet" href="../css/design-tokens.css">
+  <link rel="stylesheet" href="../css/base.css">
+
+  <!-- Modal Component -->
+  <link rel="stylesheet" href="../css/components/modals.css">
+
+  <style>
+    body {
+      padding: 2rem;
+      font-family: var(--font-family-primary);
+    }
+
+    .test-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      border: 2px solid var(--color-gray-300);
+      border-radius: var(--radius-md);
+    }
+
+    .test-section h2 {
+      margin-top: 0;
+      color: var(--color-gray-900);
+    }
+
+    .test-result {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: var(--radius-md);
+      font-family: var(--font-family-mono);
+      font-size: var(--font-size-sm);
+    }
+
+    .test-pass {
+      background: var(--color-success-50);
+      color: var(--color-success-900);
+      border: 1px solid var(--color-success-200);
+    }
+
+    .test-fail {
+      background: var(--color-error-50);
+      color: var(--color-error-900);
+      border: 1px solid var(--color-error-200);
+    }
+
+    .btn {
+      padding: var(--spacing-3) var(--spacing-6);
+      border: none;
+      border-radius: var(--radius-md);
+      background: var(--color-primary-500);
+      color: var(--color-white);
+      font-family: var(--font-family-primary);
+      font-size: var(--font-size-base);
+      cursor: pointer;
+      margin-right: var(--spacing-2);
+    }
+
+    .btn:hover {
+      background: var(--color-primary-600);
+    }
+
+    #test-results {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      padding: 1rem;
+      background: var(--color-white);
+      border: 2px solid var(--color-gray-300);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      min-width: 250px;
+    }
+
+    .result-item {
+      padding: 0.5rem;
+      margin: 0.25rem 0;
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-sm);
+    }
+  </style>
+</head>
+<body>
+  <h1>Modal Component Test Suite</h1>
+  <p>Automated tests for modal functionality and accessibility</p>
+
+  <div id="test-results">
+    <strong>Test Results</strong>
+    <div id="results-list"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 1: Modal Creation</h2>
+    <p>Test that a modal can be created and initialized properly.</p>
+    <button class="btn" onclick="runTest1()">Run Test</button>
+    <div id="test1-result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 2: Modal Open/Close</h2>
+    <p>Test modal opening and closing functionality.</p>
+    <button class="btn" onclick="runTest2()">Run Test</button>
+    <div id="test2-result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 3: Focus Management</h2>
+    <p>Test that focus is properly trapped and restored.</p>
+    <button class="btn" onclick="runTest3()">Run Test</button>
+    <div id="test3-result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 4: ARIA Attributes</h2>
+    <p>Test that proper ARIA attributes are set.</p>
+    <button class="btn" onclick="runTest4()">Run Test</button>
+    <div id="test4-result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 5: Modal Stacking</h2>
+    <p>Test that multiple modals can be opened and properly stacked.</p>
+    <button class="btn" onclick="runTest5()">Run Test</button>
+    <div id="test5-result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 6: Body Scroll Lock</h2>
+    <p>Test that body scroll is locked when modal is open.</p>
+    <button class="btn" onclick="runTest6()">Run Test</button>
+    <div id="test6-result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 7: Keyboard Navigation</h2>
+    <p>Test ESC key closes modal.</p>
+    <button class="btn" onclick="runTest7()">Run Test</button>
+    <div id="test7-result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 8: Modal Helpers</h2>
+    <p>Test ModalHelpers utility functions.</p>
+    <button class="btn" onclick="runTest8()">Run Test</button>
+    <div id="test8-result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Manual Test: Visual Inspection</h2>
+    <p>Open a modal and visually inspect animations, styling, and interactions.</p>
+    <button class="btn" onclick="openVisualTestModal()">Open Test Modal</button>
+  </div>
+
+  <!-- Modal Component Script -->
+  <script src="../js/components/Modal.js"></script>
+
+  <!-- Test Scripts -->
+  <script>
+    const testResults = [];
+
+    function addTestResult(testName, passed, message) {
+      testResults.push({ testName, passed, message });
+      updateResultsDisplay();
+    }
+
+    function updateResultsDisplay() {
+      const resultsList = document.getElementById('results-list');
+      resultsList.innerHTML = testResults.map(result =>
+        `<div class="result-item ${result.passed ? 'test-pass' : 'test-fail'}">
+          ${result.passed ? '✓' : '✗'} ${result.testName}
+        </div>`
+      ).join('');
+    }
+
+    function displayResult(elementId, passed, message) {
+      const element = document.getElementById(elementId);
+      element.innerHTML = `<div class="test-result ${passed ? 'test-pass' : 'test-fail'}">
+        ${passed ? '✓ PASS' : '✗ FAIL'}: ${message}
+      </div>`;
+    }
+
+    // Test 1: Modal Creation
+    function runTest1() {
+      try {
+        const modal = new Modal({ size: 'md' });
+        const passed = modal !== null && modal.id !== null;
+        displayResult('test1-result', passed, 'Modal created successfully');
+        addTestResult('Modal Creation', passed, 'Modal instance created');
+        if (passed) modal.destroy();
+      } catch (error) {
+        displayResult('test1-result', false, error.message);
+        addTestResult('Modal Creation', false, error.message);
+      }
+    }
+
+    // Test 2: Modal Open/Close
+    async function runTest2() {
+      try {
+        const modal = new Modal({ size: 'sm' });
+        modal.setContent({
+          title: 'Test Modal',
+          body: 'Testing open/close functionality'
+        });
+
+        modal.open();
+        const openPassed = modal.isOpen === true && document.body.contains(modal.backdropElement);
+
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        modal.close();
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        const closePassed = modal.isOpen === false;
+        const passed = openPassed && closePassed;
+
+        displayResult('test2-result', passed,
+          `Open: ${openPassed ? 'Pass' : 'Fail'}, Close: ${closePassed ? 'Pass' : 'Fail'}`);
+        addTestResult('Modal Open/Close', passed, 'Modal opens and closes correctly');
+
+        modal.destroy();
+      } catch (error) {
+        displayResult('test2-result', false, error.message);
+        addTestResult('Modal Open/Close', false, error.message);
+      }
+    }
+
+    // Test 3: Focus Management
+    async function runTest3() {
+      try {
+        const button = document.createElement('button');
+        button.textContent = 'Test Button';
+        document.body.appendChild(button);
+        button.focus();
+
+        const focusedBefore = document.activeElement;
+
+        const modal = new Modal({ size: 'sm' });
+        modal.setContent({
+          title: 'Focus Test',
+          body: '<button id="modal-btn">Modal Button</button>',
+          footer: '<button id="close-btn" data-modal-close>Close</button>'
+        });
+
+        modal.open();
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        const focusTrapped = document.activeElement !== focusedBefore;
+
+        modal.close();
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        const focusRestored = document.activeElement === focusedBefore;
+        const passed = focusTrapped && focusRestored;
+
+        displayResult('test3-result', passed,
+          `Focus Trap: ${focusTrapped ? 'Pass' : 'Fail'}, Restore: ${focusRestored ? 'Pass' : 'Fail'}`);
+        addTestResult('Focus Management', passed, 'Focus properly managed');
+
+        document.body.removeChild(button);
+        modal.destroy();
+      } catch (error) {
+        displayResult('test3-result', false, error.message);
+        addTestResult('Focus Management', false, error.message);
+      }
+    }
+
+    // Test 4: ARIA Attributes
+    function runTest4() {
+      try {
+        const modal = new Modal({ size: 'md' });
+        modal.setContent({
+          title: 'ARIA Test',
+          body: 'Testing ARIA attributes'
+        });
+
+        modal.open();
+
+        const hasRole = modal.modalElement.getAttribute('role') === 'dialog';
+        const hasAriaModal = modal.modalElement.getAttribute('aria-modal') === 'true';
+        const hasAriaLabelledBy = modal.modalElement.hasAttribute('aria-labelledby');
+
+        const passed = hasRole && hasAriaModal && hasAriaLabelledBy;
+
+        displayResult('test4-result', passed,
+          `role="${hasRole ? 'Pass' : 'Fail'}", aria-modal="${hasAriaModal ? 'Pass' : 'Fail'}", aria-labelledby="${hasAriaLabelledBy ? 'Pass' : 'Fail'}"`);
+        addTestResult('ARIA Attributes', passed, 'All ARIA attributes present');
+
+        modal.close();
+        setTimeout(() => modal.destroy(), 300);
+      } catch (error) {
+        displayResult('test4-result', false, error.message);
+        addTestResult('ARIA Attributes', false, error.message);
+      }
+    }
+
+    // Test 5: Modal Stacking
+    async function runTest5() {
+      try {
+        const modal1 = new Modal({ size: 'md' });
+        modal1.setContent({ title: 'Modal 1', body: 'First modal' });
+        modal1.open();
+
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        const modal2 = new Modal({ size: 'sm' });
+        modal2.setContent({ title: 'Modal 2', body: 'Second modal' });
+        modal2.open();
+
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        const stackingPassed = ModalManager.getModalCount() === 2;
+        const topModalPassed = ModalManager.getTopModal() === modal2;
+
+        modal2.close();
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        const countAfterClose = ModalManager.getModalCount() === 1;
+
+        modal1.close();
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        const passed = stackingPassed && topModalPassed && countAfterClose;
+
+        displayResult('test5-result', passed,
+          `Stacking: ${stackingPassed ? 'Pass' : 'Fail'}, Top Modal: ${topModalPassed ? 'Pass' : 'Fail'}, Count: ${countAfterClose ? 'Pass' : 'Fail'}`);
+        addTestResult('Modal Stacking', passed, 'Multiple modals stack correctly');
+
+        modal1.destroy();
+        modal2.destroy();
+      } catch (error) {
+        displayResult('test5-result', false, error.message);
+        addTestResult('Modal Stacking', false, error.message);
+      }
+    }
+
+    // Test 6: Body Scroll Lock
+    async function runTest6() {
+      try {
+        const originalOverflow = document.body.style.overflow;
+
+        const modal = new Modal({ size: 'md', preventBodyScroll: true });
+        modal.setContent({ title: 'Scroll Test', body: 'Testing body scroll lock' });
+        modal.open();
+
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        const scrollLocked = document.body.classList.contains('modal-open') &&
+                           document.body.style.overflow === 'hidden';
+
+        modal.close();
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        const scrollRestored = !document.body.classList.contains('modal-open');
+        const passed = scrollLocked && scrollRestored;
+
+        displayResult('test6-result', passed,
+          `Locked: ${scrollLocked ? 'Pass' : 'Fail'}, Restored: ${scrollRestored ? 'Pass' : 'Fail'}`);
+        addTestResult('Body Scroll Lock', passed, 'Body scroll properly managed');
+
+        modal.destroy();
+      } catch (error) {
+        displayResult('test6-result', false, error.message);
+        addTestResult('Body Scroll Lock', false, error.message);
+      }
+    }
+
+    // Test 7: Keyboard Navigation
+    async function runTest7() {
+      try {
+        const modal = new Modal({ size: 'sm', closeOnEscape: true });
+        modal.setContent({ title: 'Keyboard Test', body: 'Testing ESC key' });
+        modal.open();
+
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        // Simulate ESC key
+        const escEvent = new KeyboardEvent('keydown', { key: 'Escape', keyCode: 27 });
+        document.dispatchEvent(escEvent);
+
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        const passed = modal.isOpen === false;
+
+        displayResult('test7-result', passed, 'ESC key closes modal');
+        addTestResult('Keyboard Navigation', passed, 'ESC key works correctly');
+
+        modal.destroy();
+      } catch (error) {
+        displayResult('test7-result', false, error.message);
+        addTestResult('Keyboard Navigation', false, error.message);
+      }
+    }
+
+    // Test 8: Modal Helpers
+    async function runTest8() {
+      try {
+        // Test that helpers exist
+        const hasConfirm = typeof ModalHelpers.confirm === 'function';
+        const hasAlert = typeof ModalHelpers.alert === 'function';
+        const hasSuccess = typeof ModalHelpers.success === 'function';
+        const hasWarning = typeof ModalHelpers.warning === 'function';
+        const hasError = typeof ModalHelpers.error === 'function';
+        const hasInfo = typeof ModalHelpers.info === 'function';
+
+        const passed = hasConfirm && hasAlert && hasSuccess && hasWarning && hasError && hasInfo;
+
+        displayResult('test8-result', passed, 'All helper functions exist');
+        addTestResult('Modal Helpers', passed, 'Helper utilities available');
+      } catch (error) {
+        displayResult('test8-result', false, error.message);
+        addTestResult('Modal Helpers', false, error.message);
+      }
+    }
+
+    // Visual Test Modal
+    function openVisualTestModal() {
+      const modal = new Modal({
+        size: 'md',
+        variant: 'confirm',
+        closeOnBackdrop: true,
+        closeOnEscape: true
+      });
+
+      modal.setContent({
+        title: 'Visual Test Modal',
+        subtitle: 'Inspect styling, animations, and interactions',
+        body: `
+          <p>This modal demonstrates:</p>
+          <ul>
+            <li>Smooth fade-in and slide-down animation</li>
+            <li>Proper spacing and typography</li>
+            <li>Accessible focus management</li>
+            <li>Close button functionality</li>
+          </ul>
+          <p>Try the following:</p>
+          <ul>
+            <li>Click the backdrop to close</li>
+            <li>Press ESC to close</li>
+            <li>Tab through focusable elements</li>
+            <li>Click the X button to close</li>
+          </ul>
+        `,
+        footer: `
+          <button type="button" class="btn" data-modal-close>Cancel</button>
+          <button type="button" class="btn" data-modal-close>OK</button>
+        `,
+        showClose: true
+      });
+
+      modal.open();
+    }
+
+    // Auto-run all tests on page load
+    window.addEventListener('load', () => {
+      console.log('Modal Test Suite Loaded');
+      console.log('Click "Run Test" buttons to execute individual tests');
+    });
+  </script>
+</body>
+</html>

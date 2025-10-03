@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Meta Tags -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Admin Dashboard - Manage users, webhooks, point rules, and system settings.">
+  <meta name="keywords" content="admin, dashboard, management, users, webhooks, configuration">
+  <meta name="author" content="Your Company">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="../css/design-tokens.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/utilities.css">
+
+  <!-- Component CSS -->
+  <link rel="stylesheet" href="../css/components/buttons.css">
+  <link rel="stylesheet" href="../css/components/cards.css">
+  <link rel="stylesheet" href="../css/components/forms.css">
+  <link rel="stylesheet" href="../css/components/badges.css">
+  <link rel="stylesheet" href="../css/components/avatars.css">
+  <link rel="stylesheet" href="../css/components/modals.css">
+  <link rel="stylesheet" href="../css/components/toasts.css">
+  <link rel="stylesheet" href="../css/components/navigation.css">
+  <link rel="stylesheet" href="../css/components/header.css">
+  <link rel="stylesheet" href="../css/components/tables.css">
+  <link rel="stylesheet" href="../css/components/tabs.css">
+
+  <!-- Page-specific CSS -->
+  <link rel="stylesheet" href="../css/pages/admin-dashboard.css">
+
+  <!-- Page Title -->
+  <title>Admin Dashboard - Developer Report Dashboard</title>
+</head>
+<body>
+  <!-- Skip to Main Content Link -->
+  <a href="#main-content" class="skip-to-content">Skip to main content</a>
+
+  <!-- App Layout Container -->
+  <div class="app-layout" id="appLayout">
+
+    <!-- Top Header -->
+    <header class="app-header" role="banner">
+      <div class="header-left">
+        <!-- Mobile Menu Toggle -->
+        <button
+          class="btn-icon btn-ghost mobile-menu-toggle"
+          aria-label="Toggle navigation menu"
+          aria-expanded="false"
+          aria-controls="appSidebar"
+          id="mobileMenuToggle"
+        >
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+
+        <!-- Logo / Brand -->
+        <div class="header-brand">
+          <a href="/" aria-label="Developer Report Dashboard Home">
+            <svg class="logo" width="32" height="32" viewBox="0 0 32 32">
+              <rect width="32" height="32" rx="8" fill="currentColor"/>
+            </svg>
+            <span class="brand-text">DevReport</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Notification Icon -->
+        <button
+          class="btn-icon btn-ghost header-notification"
+          aria-label="Notifications"
+          id="notificationButton"
+        >
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span class="notification-badge" id="notificationBadge">2</span>
+        </button>
+
+        <!-- User Avatar / Dropdown -->
+        <div class="dropdown user-dropdown">
+          <button
+            class="avatar avatar-md avatar-status is-online"
+            aria-label="User menu"
+            aria-haspopup="true"
+            aria-expanded="false"
+            id="userMenuButton"
+          >
+            <span>AD</span>
+          </button>
+
+          <div class="dropdown-menu" role="menu" id="headerUserMenu">
+            <a href="/profile" class="dropdown-item">Profile</a>
+            <a href="/settings" class="dropdown-item">Settings</a>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item" id="logoutBtn">Logout</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar" id="appSidebar">
+      <nav class="sidebar-nav">
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="/pages/developer-dashboard.html" class="nav-link" data-route="dashboard">
+              <span class="nav-icon">📊</span>
+              <span class="nav-text">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/reports" class="nav-link" data-route="reports">
+              <span class="nav-icon">📝</span>
+              <span class="nav-text">Reports</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/activities" class="nav-link" data-route="activities">
+              <span class="nav-icon">⚡</span>
+              <span class="nav-text">Activities</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/leaderboard" class="nav-link" data-route="leaderboard">
+              <span class="nav-icon">🏆</span>
+              <span class="nav-text">Leaderboard</span>
+            </a>
+          </li>
+          <li class="nav-divider"></li>
+          <li class="nav-item">
+            <a href="/pages/admin-dashboard.html" class="nav-link is-active" data-route="admin" aria-current="page">
+              <span class="nav-icon">⚙️</span>
+              <span class="nav-text">Admin</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+    <!-- Main Content Area -->
+    <main class="app-main" id="main-content" role="main">
+      <div class="admin-container">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" id="pageTitle">Admin Dashboard</h1>
+            <p class="page-subtitle" id="pageSubtitle">System management and configuration</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-ghost" id="refreshDataBtn">
+              <span>🔄</span>
+              Refresh
+            </button>
+            <button class="btn btn-primary" id="inviteUserBtn">
+              <span>✉️</span>
+              Invite User
+            </button>
+          </div>
+        </div>
+
+        <!-- System Health Metrics -->
+        <section class="admin-section" aria-label="System health metrics">
+          <h2 class="section-title">System Health</h2>
+          <div class="metrics-grid">
+            <!-- System Uptime Card -->
+            <div class="metric-card metric-card--success">
+              <div class="metric-card__icon">✓</div>
+              <div class="metric-card__label">System Uptime</div>
+              <div class="metric-card__value" data-metric="uptime">99.9%</div>
+              <div class="metric-card__description">Last 30 days</div>
+            </div>
+
+            <!-- Active Users Card -->
+            <div class="metric-card metric-card--primary">
+              <div class="metric-card__icon">👥</div>
+              <div class="metric-card__label">Active Users</div>
+              <div class="metric-card__value" data-metric="activeUsers">248</div>
+              <div class="metric-card__description">Last 24 hours</div>
+            </div>
+
+            <!-- Webhook Events Card -->
+            <div class="metric-card metric-card--info">
+              <div class="metric-card__icon">🔗</div>
+              <div class="metric-card__label">Webhook Events</div>
+              <div class="metric-card__value" data-metric="webhookEvents">1,234</div>
+              <div class="metric-card__description">Today</div>
+            </div>
+
+            <!-- API Response Time Card -->
+            <div class="metric-card metric-card--warning">
+              <div class="metric-card__icon">⚡</div>
+              <div class="metric-card__label">Avg Response Time</div>
+              <div class="metric-card__value" data-metric="responseTime">85ms</div>
+              <div class="metric-card__description">Last hour</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Main Admin Tabs -->
+        <section class="admin-section tabs-section" aria-label="Admin management tabs">
+          <div class="tabs" role="tablist">
+            <button class="tab-button active" role="tab" aria-selected="true" aria-controls="usersPanel" id="usersTab">
+              Users
+            </button>
+            <button class="tab-button" role="tab" aria-selected="false" aria-controls="webhooksPanel" id="webhooksTab">
+              Webhooks
+            </button>
+            <button class="tab-button" role="tab" aria-selected="false" aria-controls="pointsPanel" id="pointsTab">
+              Point Rules
+            </button>
+            <button class="tab-button" role="tab" aria-selected="false" aria-controls="analyticsPanel" id="analyticsTab">
+              Analytics
+            </button>
+            <button class="tab-button" role="tab" aria-selected="false" aria-controls="logsPanel" id="logsTab">
+              System Logs
+            </button>
+          </div>
+
+          <div class="tab-content">
+            <!-- Users Panel -->
+            <div class="tab-panel active" role="tabpanel" id="usersPanel" aria-labelledby="usersTab">
+              <div class="panel-header">
+                <div class="panel-header-left">
+                  <input
+                    type="search"
+                    class="form-input form-input-search"
+                    placeholder="Search users..."
+                    id="userSearchInput"
+                    aria-label="Search users"
+                  >
+                </div>
+                <div class="panel-header-right">
+                  <select class="form-select form-select-sm" id="userRoleFilter" aria-label="Filter by role">
+                    <option value="">All Roles</option>
+                    <option value="admin">Admin</option>
+                    <option value="team_lead">Team Lead</option>
+                    <option value="developer">Developer</option>
+                  </select>
+                  <select class="form-select form-select-sm" id="userStatusFilter" aria-label="Filter by status">
+                    <option value="">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="invited">Invited</option>
+                    <option value="inactive">Inactive</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="table-container">
+                <table class="table table--hoverable table--striped" id="usersTable">
+                  <thead>
+                    <tr>
+                      <th class="sortable" data-sort="name">Name</th>
+                      <th class="sortable" data-sort="email">Email</th>
+                      <th class="sortable" data-sort="role">Role</th>
+                      <th class="sortable" data-sort="team">Team</th>
+                      <th class="sortable" data-sort="status">Status</th>
+                      <th class="sortable" data-sort="points">Points</th>
+                      <th class="sortable" data-sort="lastLogin">Last Login</th>
+                      <th class="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="usersTableBody">
+                    <!-- User rows will be inserted here -->
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="panel-footer">
+                <div class="pagination-info">
+                  Showing <strong id="usersShowing">1-10</strong> of <strong id="usersTotal">248</strong> users
+                </div>
+                <div class="pagination" id="usersPagination">
+                  <!-- Pagination controls will be inserted here -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Webhooks Panel -->
+            <div class="tab-panel" role="tabpanel" id="webhooksPanel" aria-labelledby="webhooksTab" hidden>
+              <div class="panel-header">
+                <h3 class="panel-title">Webhook Configurations</h3>
+                <button class="btn btn-primary btn-sm" id="addWebhookBtn">
+                  <span>+</span>
+                  Add Webhook
+                </button>
+              </div>
+
+              <div class="webhooks-grid" id="webhooksGrid">
+                <!-- Webhook cards will be inserted here -->
+              </div>
+            </div>
+
+            <!-- Point Rules Panel -->
+            <div class="tab-panel" role="tabpanel" id="pointsPanel" aria-labelledby="pointsTab" hidden>
+              <div class="panel-header">
+                <h3 class="panel-title">Point Allocation Rules</h3>
+                <button class="btn btn-primary btn-sm" id="addPointRuleBtn">
+                  <span>+</span>
+                  Add Rule
+                </button>
+              </div>
+
+              <div class="point-rules-container" id="pointRulesContainer">
+                <!-- Point rules will be inserted here -->
+              </div>
+            </div>
+
+            <!-- Analytics Panel -->
+            <div class="tab-panel" role="tabpanel" id="analyticsPanel" aria-labelledby="analyticsTab" hidden>
+              <div class="analytics-grid">
+                <div class="analytics-card">
+                  <h3 class="analytics-card__title">Report Submission Rate</h3>
+                  <div class="analytics-card__chart" id="reportSubmissionChart">
+                    <div class="chart-placeholder">Chart will be rendered here</div>
+                  </div>
+                  <div class="analytics-card__stats">
+                    <div class="stat-item">
+                      <span class="stat-label">This Week</span>
+                      <span class="stat-value">95.2%</span>
+                    </div>
+                    <div class="stat-item">
+                      <span class="stat-label">Last Week</span>
+                      <span class="stat-value">92.8%</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="analytics-card">
+                  <h3 class="analytics-card__title">Top Contributors</h3>
+                  <div class="analytics-card__list" id="topContributorsList">
+                    <!-- Top contributors will be inserted here -->
+                  </div>
+                </div>
+
+                <div class="analytics-card analytics-card--wide">
+                  <h3 class="analytics-card__title">Activity Trends</h3>
+                  <div class="analytics-card__chart" id="activityTrendsChart">
+                    <div class="chart-placeholder">Chart will be rendered here</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- System Logs Panel -->
+            <div class="tab-panel" role="tabpanel" id="logsPanel" aria-labelledby="logsTab" hidden>
+              <div class="panel-header">
+                <div class="panel-header-left">
+                  <input
+                    type="search"
+                    class="form-input form-input-search"
+                    placeholder="Search logs..."
+                    id="logsSearchInput"
+                    aria-label="Search logs"
+                  >
+                </div>
+                <div class="panel-header-right">
+                  <select class="form-select form-select-sm" id="logsLevelFilter" aria-label="Filter by log level">
+                    <option value="">All Levels</option>
+                    <option value="error">Error</option>
+                    <option value="warning">Warning</option>
+                    <option value="info">Info</option>
+                    <option value="debug">Debug</option>
+                  </select>
+                  <select class="form-select form-select-sm" id="logsServiceFilter" aria-label="Filter by service">
+                    <option value="">All Services</option>
+                    <option value="api">API</option>
+                    <option value="webhook">Webhook</option>
+                    <option value="auth">Auth</option>
+                    <option value="database">Database</option>
+                  </select>
+                  <button class="btn btn-ghost btn-sm" id="exportLogsBtn">
+                    <span>📥</span>
+                    Export
+                  </button>
+                </div>
+              </div>
+
+              <div class="logs-container" id="logsContainer">
+                <!-- Log entries will be inserted here -->
+              </div>
+
+              <div class="panel-footer">
+                <div class="pagination-info">
+                  Showing <strong id="logsShowing">1-50</strong> of <strong id="logsTotal">1,234</strong> entries
+                </div>
+                <button class="btn btn-ghost btn-sm" id="loadMoreLogsBtn">Load More</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Invite User Modal -->
+  <div class="modal" id="inviteUserModal" role="dialog" aria-labelledby="inviteUserModalTitle" aria-hidden="true">
+    <div class="modal-overlay"></div>
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2 class="modal-title" id="inviteUserModalTitle">Invite New User</h2>
+        <button class="modal-close" aria-label="Close modal">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="inviteUserForm" data-validate>
+          <div class="form-field">
+            <label for="inviteEmail" class="form-label">
+              Email Address
+              <span class="form-required">*</span>
+            </label>
+            <input
+              type="email"
+              id="inviteEmail"
+              name="email"
+              class="form-input"
+              placeholder="john.doe@company.com"
+              required
+              data-validate
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="inviteName" class="form-label">
+              Full Name
+              <span class="form-required">*</span>
+            </label>
+            <input
+              type="text"
+              id="inviteName"
+              name="name"
+              class="form-input"
+              placeholder="John Doe"
+              required
+              data-validate
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="inviteRole" class="form-label">
+              Role
+              <span class="form-required">*</span>
+            </label>
+            <select id="inviteRole" name="role" class="form-select" required data-validate>
+              <option value="">Select a role...</option>
+              <option value="developer">Developer</option>
+              <option value="team_lead">Team Lead</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="inviteTeam" class="form-label">Team</label>
+            <select id="inviteTeam" name="team" class="form-select">
+              <option value="">Select a team...</option>
+              <option value="team-1">Frontend Team</option>
+              <option value="team-2">Backend Team</option>
+              <option value="team-3">DevOps Team</option>
+              <option value="team-4">QA Team</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="inviteDepartment" class="form-label">Department</label>
+            <select id="inviteDepartment" name="department" class="form-select">
+              <option value="">Select a department...</option>
+              <option value="engineering">Engineering</option>
+              <option value="product">Product</option>
+              <option value="design">Design</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" data-modal-close>Cancel</button>
+        <button type="submit" form="inviteUserForm" class="btn btn-primary" id="sendInviteBtn">
+          Send Invitation
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit User Modal -->
+  <div class="modal" id="editUserModal" role="dialog" aria-labelledby="editUserModalTitle" aria-hidden="true">
+    <div class="modal-overlay"></div>
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2 class="modal-title" id="editUserModalTitle">Edit User</h2>
+        <button class="modal-close" aria-label="Close modal">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="editUserForm" data-validate>
+          <input type="hidden" id="editUserId" name="userId">
+
+          <div class="form-field">
+            <label for="editUserName" class="form-label">
+              Full Name
+              <span class="form-required">*</span>
+            </label>
+            <input
+              type="text"
+              id="editUserName"
+              name="name"
+              class="form-input"
+              required
+              data-validate
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="editUserEmail" class="form-label">
+              Email Address
+              <span class="form-required">*</span>
+            </label>
+            <input
+              type="email"
+              id="editUserEmail"
+              name="email"
+              class="form-input"
+              required
+              data-validate
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="editUserRole" class="form-label">
+              Role
+              <span class="form-required">*</span>
+            </label>
+            <select id="editUserRole" name="role" class="form-select" required data-validate>
+              <option value="developer">Developer</option>
+              <option value="team_lead">Team Lead</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="editUserTeam" class="form-label">Team</label>
+            <select id="editUserTeam" name="team" class="form-select">
+              <option value="">Select a team...</option>
+              <option value="team-1">Frontend Team</option>
+              <option value="team-2">Backend Team</option>
+              <option value="team-3">DevOps Team</option>
+              <option value="team-4">QA Team</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="editUserStatus" class="form-label">
+              Status
+              <span class="form-required">*</span>
+            </label>
+            <select id="editUserStatus" name="status" class="form-select" required data-validate>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="invited">Invited</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" data-modal-close>Cancel</button>
+        <button type="submit" form="editUserForm" class="btn btn-primary" id="updateUserBtn">
+          Update User
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Webhook Modal -->
+  <div class="modal" id="addWebhookModal" role="dialog" aria-labelledby="addWebhookModalTitle" aria-hidden="true">
+    <div class="modal-overlay"></div>
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2 class="modal-title" id="addWebhookModalTitle">Add Webhook Configuration</h2>
+        <button class="modal-close" aria-label="Close modal">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="addWebhookForm" data-validate>
+          <div class="form-field">
+            <label for="webhookName" class="form-label">
+              Webhook Name
+              <span class="form-required">*</span>
+            </label>
+            <input
+              type="text"
+              id="webhookName"
+              name="name"
+              class="form-input"
+              placeholder="GitLab Production"
+              required
+              data-validate
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="webhookService" class="form-label">
+              Service Type
+              <span class="form-required">*</span>
+            </label>
+            <select id="webhookService" name="service" class="form-select" required data-validate>
+              <option value="">Select service...</option>
+              <option value="gitlab">GitLab</option>
+              <option value="openproject">OpenProject</option>
+              <option value="sonarqube">SonarQube</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="webhookUrl" class="form-label">
+              Webhook URL
+              <span class="form-required">*</span>
+            </label>
+            <input
+              type="url"
+              id="webhookUrl"
+              name="url"
+              class="form-input"
+              placeholder="https://api.example.com/webhooks/gitlab"
+              required
+              data-validate
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="webhookSecret" class="form-label">
+              Secret Token
+              <span class="form-required">*</span>
+            </label>
+            <input
+              type="text"
+              id="webhookSecret"
+              name="secret"
+              class="form-input"
+              placeholder="Enter secret token..."
+              required
+              data-validate
+            />
+          </div>
+
+          <div class="form-field">
+            <label class="form-label">Events to Track</label>
+            <div class="form-checkbox-group">
+              <label class="form-checkbox">
+                <input type="checkbox" name="events" value="push" checked>
+                <span>Push Events</span>
+              </label>
+              <label class="form-checkbox">
+                <input type="checkbox" name="events" value="merge_request" checked>
+                <span>Merge Requests</span>
+              </label>
+              <label class="form-checkbox">
+                <input type="checkbox" name="events" value="issues" checked>
+                <span>Issues</span>
+              </label>
+              <label class="form-checkbox">
+                <input type="checkbox" name="events" value="pipeline">
+                <span>Pipelines</span>
+              </label>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" data-modal-close>Cancel</button>
+        <button type="submit" form="addWebhookForm" class="btn btn-primary" id="saveWebhookBtn">
+          Save Webhook
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Point Rule Modal -->
+  <div class="modal" id="addPointRuleModal" role="dialog" aria-labelledby="addPointRuleModalTitle" aria-hidden="true">
+    <div class="modal-overlay"></div>
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2 class="modal-title" id="addPointRuleModalTitle">Add Point Rule</h2>
+        <button class="modal-close" aria-label="Close modal">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="addPointRuleForm" data-validate>
+          <div class="form-field">
+            <label for="ruleEvent" class="form-label">
+              Event Type
+              <span class="form-required">*</span>
+            </label>
+            <select id="ruleEvent" name="event" class="form-select" required data-validate>
+              <option value="">Select event...</option>
+              <option value="commit">Git Commit</option>
+              <option value="merge_request">Merge Request</option>
+              <option value="code_review">Code Review</option>
+              <option value="task_completion">Task Completion</option>
+              <option value="quality_gate">Quality Gate Pass</option>
+              <option value="report_submission">Report Submission</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="rulePoints" class="form-label">
+              Points Award
+              <span class="form-required">*</span>
+            </label>
+            <input
+              type="number"
+              id="rulePoints"
+              name="points"
+              class="form-input"
+              placeholder="10"
+              required
+              data-validate
+            />
+            <div class="form-hint">Use negative values for penalties</div>
+          </div>
+
+          <div class="form-field">
+            <label for="ruleDescription" class="form-label">
+              Description
+              <span class="form-required">*</span>
+            </label>
+            <textarea
+              id="ruleDescription"
+              name="description"
+              class="form-textarea"
+              rows="3"
+              placeholder="Describe the rule..."
+              required
+              data-validate
+            ></textarea>
+          </div>
+
+          <div class="form-field">
+            <label class="form-checkbox">
+              <input type="checkbox" name="enabled" checked>
+              <span>Enable this rule</span>
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" data-modal-close>Cancel</button>
+        <button type="submit" form="addPointRuleForm" class="btn btn-primary" id="savePointRuleBtn">
+          Save Rule
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" aria-live="polite" aria-atomic="true" id="toastContainer"></div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay" style="display: none;" aria-hidden="true">
+    <div class="spinner spinner-lg"></div>
+    <p class="loading-text">Loading...</p>
+  </div>
+
+  <!-- JavaScript Files -->
+  <!-- Components -->
+  <script src="../js/components/Toast.js"></script>
+  <script src="../js/components/Modal.js"></script>
+  <script src="../js/components/Card.js"></script>
+  <script src="../js/components/Form.js"></script>
+  <script src="../js/components/Tabs.js"></script>
+
+  <!-- Layout -->
+  <script src="../js/layout/AppShell.js"></script>
+
+  <!-- Page-specific script -->
+  <script src="../js/pages/AdminDashboard.js"></script>
+
+  <!-- Initialize App -->
+  <script>
+    // Initialize App Shell
+    const appShell = new AppShell();
+
+    // Initialize Admin Dashboard
+    const adminDashboard = new AdminDashboard();
+  </script>
+</body>
+</html>

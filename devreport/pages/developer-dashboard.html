@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Meta Tags -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Developer Dashboard - Track your productivity, earn points, and celebrate achievements.">
+  <meta name="keywords" content="developer, dashboard, productivity, reports, gamification">
+  <meta name="author" content="Your Company">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="../css/design-tokens.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/utilities.css">
+
+  <!-- Component CSS -->
+  <link rel="stylesheet" href="../css/components/buttons.css">
+  <link rel="stylesheet" href="../css/components/cards.css">
+  <link rel="stylesheet" href="../css/components/forms.css">
+  <link rel="stylesheet" href="../css/components/badges.css">
+  <link rel="stylesheet" href="../css/components/avatars.css">
+  <link rel="stylesheet" href="../css/components/modals.css">
+  <link rel="stylesheet" href="../css/components/toasts.css">
+  <link rel="stylesheet" href="../css/components/navigation.css">
+  <link rel="stylesheet" href="../css/components/header.css">
+  <link rel="stylesheet" href="../css/components/timeline.css">
+  <link rel="stylesheet" href="../css/components/achievements.css">
+  <link rel="stylesheet" href="../css/components/leaderboard.css">
+
+  <!-- Page-specific CSS -->
+  <link rel="stylesheet" href="../css/pages/dashboard.css">
+  <link rel="stylesheet" href="../css/pages/developer-dashboard.css">
+
+  <!-- Page Title -->
+  <title>Developer Dashboard - Developer Report Dashboard</title>
+</head>
+<body>
+  <!-- Skip to Main Content Link -->
+  <a href="#main-content" class="skip-to-content">Skip to main content</a>
+
+  <!-- App Layout Container -->
+  <div class="app-layout" id="appLayout">
+
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar" id="appSidebar">
+      <nav class="sidebar-nav">
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="/pages/developer-dashboard.html" class="nav-link is-active" data-route="dashboard" aria-current="page">
+              <span class="nav-icon">📊</span>
+              <span class="nav-text">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/reports" class="nav-link" data-route="reports">
+              <span class="nav-icon">📝</span>
+              <span class="nav-text">Reports</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/activities" class="nav-link" data-route="activities">
+              <span class="nav-icon">⚡</span>
+              <span class="nav-text">Activities</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/leaderboard" class="nav-link" data-route="leaderboard">
+              <span class="nav-icon">🏆</span>
+              <span class="nav-text">Leaderboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/achievements" class="nav-link" data-route="achievements">
+              <span class="nav-icon">🎖️</span>
+              <span class="nav-text">Achievements</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="app-content-wrapper">
+
+      <!-- Top Header -->
+      <header class="app-header" role="banner">
+        <div class="header-left">
+          <!-- Mobile Menu Toggle -->
+          <button
+            class="btn-icon btn-ghost mobile-menu-toggle"
+            aria-label="Toggle navigation menu"
+            aria-expanded="false"
+            aria-controls="appSidebar"
+            id="mobileMenuToggle"
+          >
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+
+          <!-- Logo / Brand -->
+          <div class="header-brand">
+            <a href="/" aria-label="Developer Report Dashboard Home">
+              <svg class="logo" width="32" height="32" viewBox="0 0 32 32">
+                <rect width="32" height="32" rx="8" fill="currentColor"/>
+              </svg>
+              <span class="brand-text">DevReport</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Notification Icon -->
+          <button
+            class="btn-icon btn-ghost header-notification"
+            aria-label="Notifications"
+            id="notificationButton"
+          >
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span class="notification-badge" id="notificationBadge">3</span>
+          </button>
+
+          <!-- User Avatar / Dropdown -->
+          <div class="dropdown user-dropdown">
+            <button
+              class="avatar avatar-md avatar-status is-online"
+              aria-label="User menu"
+              aria-haspopup="true"
+              aria-expanded="false"
+              id="userMenuButton"
+            >
+              <span>JD</span>
+            </button>
+
+            <div class="dropdown-menu" role="menu" id="headerUserMenu">
+              <a href="/profile" class="dropdown-item">Profile</a>
+              <a href="/settings" class="dropdown-item">Settings</a>
+              <div class="dropdown-divider"></div>
+              <button class="dropdown-item" id="logoutBtn">Logout</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Mobile Menu Overlay -->
+      <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+      <!-- Main Content Area -->
+      <main class="app-main" id="main-content" role="main">
+        <div class="dashboard-container">
+
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" id="pageTitle">Developer Dashboard</h1>
+            <p class="page-subtitle" id="pageSubtitle">Welcome back, John Doe</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-primary" id="submitReportBtn">
+              <span>📝</span>
+              Submit Report
+            </button>
+          </div>
+        </div>
+
+        <!-- Stats Overview Section -->
+        <section class="stats-section" aria-label="Statistics overview">
+          <div class="stats-grid">
+            <!-- Total Points Card -->
+            <div class="stat-card">
+              <div class="stat-card__icon-wrapper stat-card__icon-wrapper--primary">
+                <span class="stat-card__icon">⭐</span>
+              </div>
+              <div class="stat-card__label">Total Points</div>
+              <div class="stat-card__value" data-stat="totalPoints">1,250</div>
+              <div class="stat-card__trend stat-card__trend--positive">
+                <span class="stat-card__trend-icon">↑</span>
+                <span>+120 this week</span>
+              </div>
+            </div>
+
+            <!-- Daily Streak Card -->
+            <div class="stat-card">
+              <div class="stat-card__icon-wrapper stat-card__icon-wrapper--success">
+                <span class="stat-card__icon">🔥</span>
+              </div>
+              <div class="stat-card__label">Daily Streak</div>
+              <div class="stat-card__value" data-stat="dailyStreak">7</div>
+              <div class="stat-card__description">days in a row</div>
+            </div>
+
+            <!-- Current Rank Card -->
+            <div class="stat-card">
+              <div class="stat-card__icon-wrapper stat-card__icon-wrapper--warning">
+                <span class="stat-card__icon">🏅</span>
+              </div>
+              <div class="stat-card__label">Current Rank</div>
+              <div class="stat-card__value" data-stat="currentRank">#3</div>
+              <div class="stat-card__trend stat-card__trend--positive">
+                <span class="stat-card__trend-icon">↑</span>
+                <span>+2 positions</span>
+              </div>
+            </div>
+
+            <!-- Current Level Card -->
+            <div class="stat-card">
+              <div class="stat-card__icon-wrapper stat-card__icon-wrapper--info">
+                <span class="stat-card__icon">🎯</span>
+              </div>
+              <div class="stat-card__label">Current Level</div>
+              <div class="stat-card__value" data-stat="currentLevel">Senior</div>
+              <div class="stat-card__description">Level 4 of 5</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Main Dashboard Grid -->
+        <div class="dashboard-grid">
+
+          <!-- Activity Timeline Section -->
+          <section class="dashboard-section activity-section" aria-label="Recent activity">
+            <div class="section-header">
+              <h2 class="section-title">Recent Activity</h2>
+              <button class="btn btn-ghost btn-sm" id="refreshActivityBtn">
+                <span>🔄</span>
+                Refresh
+              </button>
+            </div>
+
+            <div class="activity-timeline" id="activityTimeline">
+              <!-- Activity items will be inserted here dynamically -->
+              <div class="timeline-loading">
+                <div class="spinner"></div>
+                <p>Loading activities...</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Sidebar Column -->
+          <aside class="dashboard-sidebar">
+
+            <!-- Quick Actions Section -->
+            <section class="dashboard-section quick-actions-section" aria-label="Quick actions">
+              <h2 class="section-title">Quick Actions</h2>
+              <div class="quick-actions-grid">
+                <button class="quick-action-card" id="viewReportsBtn">
+                  <span class="quick-action-icon">📄</span>
+                  <span class="quick-action-label">View Reports</span>
+                </button>
+                <button class="quick-action-card" id="viewAchievementsBtn">
+                  <span class="quick-action-icon">🎖️</span>
+                  <span class="quick-action-label">Achievements</span>
+                </button>
+                <button class="quick-action-card" id="viewLeaderboardBtn">
+                  <span class="quick-action-icon">🏆</span>
+                  <span class="quick-action-label">Leaderboard</span>
+                </button>
+                <button class="quick-action-card" id="viewTeamBtn">
+                  <span class="quick-action-icon">👥</span>
+                  <span class="quick-action-label">Team</span>
+                </button>
+              </div>
+            </section>
+
+            <!-- Achievements Preview Section -->
+            <section class="dashboard-section achievements-preview-section" aria-label="Recent achievements">
+              <div class="section-header">
+                <h2 class="section-title">Recent Achievements</h2>
+                <a href="/achievements" class="btn-link">View all</a>
+              </div>
+              <div class="achievements-grid" id="achievementsPreview">
+                <!-- Achievement cards will be inserted here -->
+              </div>
+            </section>
+
+            <!-- Leaderboard Preview Section -->
+            <section class="dashboard-section leaderboard-preview-section" aria-label="Top performers">
+              <div class="section-header">
+                <h2 class="section-title">Top 5 Leaderboard</h2>
+                <a href="/leaderboard" class="btn-link">View full</a>
+              </div>
+              <div class="leaderboard-list" id="leaderboardPreview">
+                <!-- Leaderboard cards will be inserted here -->
+              </div>
+            </section>
+
+          </aside>
+        </div>
+
+      </div>
+    </main>
+
+    </div><!-- /app-content-wrapper -->
+
+  </div><!-- /app-layout -->
+
+  <!-- Report Submission Modal -->
+  <div class="modal" id="reportModal" role="dialog" aria-labelledby="reportModalTitle" aria-hidden="true">
+    <div class="modal-overlay"></div>
+    <div class="modal-container modal-lg">
+      <div class="modal-header">
+        <h2 class="modal-title" id="reportModalTitle">Submit Daily Report</h2>
+        <button class="modal-close" aria-label="Close modal">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="reportForm" data-validate>
+
+          <!-- Work Completed -->
+          <div class="form-field">
+            <label for="workCompleted" class="form-label">
+              Work Completed Today
+              <span class="form-required">*</span>
+            </label>
+            <div class="form-textarea-wrapper">
+              <textarea
+                id="workCompleted"
+                name="workCompleted"
+                class="form-textarea"
+                rows="4"
+                placeholder="Describe what you accomplished today..."
+                required
+                minlength="50"
+                maxlength="500"
+                data-validate
+              ></textarea>
+            </div>
+            <div class="form-hint">Minimum 50 characters required</div>
+          </div>
+
+          <!-- Incidents Encountered -->
+          <div class="form-field">
+            <label for="incidents" class="form-label">
+              Incidents or Blockers
+              <span class="form-required">*</span>
+            </label>
+            <div class="form-textarea-wrapper">
+              <textarea
+                id="incidents"
+                name="incidents"
+                class="form-textarea"
+                rows="3"
+                placeholder="Any issues or blockers you encountered..."
+                required
+                minlength="20"
+                maxlength="300"
+                data-validate
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Tomorrow's Priorities -->
+          <div class="form-field">
+            <label for="priorities" class="form-label">
+              Tomorrow's Priorities
+              <span class="form-required">*</span>
+            </label>
+            <div class="form-textarea-wrapper">
+              <textarea
+                id="priorities"
+                name="priorities"
+                class="form-textarea"
+                rows="3"
+                placeholder="What you plan to work on tomorrow..."
+                required
+                minlength="20"
+                maxlength="300"
+                data-validate
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Help Needed -->
+          <div class="form-field">
+            <label for="helpNeeded" class="form-label">Help Needed (Optional)</label>
+            <div class="form-textarea-wrapper">
+              <textarea
+                id="helpNeeded"
+                name="helpNeeded"
+                class="form-textarea"
+                rows="2"
+                placeholder="Any assistance you need from the team..."
+                maxlength="200"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Team Recognition -->
+          <div class="form-field">
+            <label for="teamRecognition" class="form-label">Team Recognition (Optional)</label>
+            <select id="teamRecognition" name="teamRecognition" class="form-select">
+              <option value="">Select a team member...</option>
+              <option value="alice">Alice Johnson</option>
+              <option value="bob">Bob Smith</option>
+              <option value="carol">Carol Williams</option>
+              <option value="david">David Brown</option>
+            </select>
+            <div class="form-hint">Recognize someone who helped you today</div>
+          </div>
+
+          <div class="form-field" id="recognitionReasonField" style="display: none;">
+            <label for="recognitionReason" class="form-label">Recognition Reason</label>
+            <input
+              type="text"
+              id="recognitionReason"
+              name="recognitionReason"
+              class="form-input"
+              placeholder="Why are you recognizing this person?"
+              maxlength="100"
+            />
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" data-modal-close>Cancel</button>
+        <button type="submit" form="reportForm" class="btn btn-primary" id="submitReportFormBtn">
+          Submit Report
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" aria-live="polite" aria-atomic="true" id="toastContainer"></div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay" style="display: none;" aria-hidden="true">
+    <div class="spinner spinner-lg"></div>
+    <p class="loading-text">Loading...</p>
+  </div>
+
+  <!-- JavaScript Files -->
+  <!-- Components -->
+  <script src="../js/components/Toast.js"></script>
+  <script src="../js/components/Modal.js"></script>
+  <script src="../js/components/Card.js"></script>
+  <script src="../js/components/Form.js"></script>
+  <script src="../js/components/Timeline.js"></script>
+  <script src="../js/components/Achievements.js"></script>
+  <script src="../js/components/Leaderboard.js"></script>
+
+  <!-- Layout -->
+  <script src="../js/layout/AppShell.js"></script>
+
+  <!-- Page-specific script -->
+  <script src="../js/pages/DeveloperDashboard.js"></script>
+
+  <!-- Initialize App -->
+  <script>
+    // Initialize App Shell
+    const appShell = new AppShell();
+
+    // Initialize Developer Dashboard
+    const developerDashboard = new DeveloperDashboard();
+  </script>
+</body>
+</html>

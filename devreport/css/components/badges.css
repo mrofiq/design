@@ -1,0 +1,440 @@
+/**
+ * Developer Report Dashboard - Badge Components
+ * Version: 1.0
+ * Last Updated: 2025-10-02
+ *
+ * Badge styles for status indicators, notifications, and labels.
+ * Follows design tokens and accessibility guidelines.
+ */
+
+/* ============================================
+   BASE BADGE STYLES
+   ============================================ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-medium);
+  line-height: 1;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  vertical-align: middle;
+  transition: var(--transition-color);
+}
+
+/* ============================================
+   BADGE SIZES
+   ============================================ */
+
+.badge--sm {
+  padding: var(--spacing-1) var(--spacing-2);
+  font-size: var(--font-size-xs);
+  min-height: 1.25rem;
+  gap: var(--spacing-1);
+}
+
+.badge--md {
+  padding: var(--spacing-1) var(--spacing-3);
+  font-size: var(--font-size-sm);
+  min-height: 1.5rem;
+  gap: var(--spacing-1);
+}
+
+.badge--lg {
+  padding: var(--spacing-2) var(--spacing-4);
+  font-size: var(--font-size-base);
+  min-height: 2rem;
+  gap: var(--spacing-2);
+}
+
+/* ============================================
+   BADGE VARIANTS
+   ============================================ */
+
+/* Primary Badge */
+.badge--primary {
+  background-color: var(--color-primary-500);
+  color: var(--color-white);
+}
+
+.badge--primary-subtle {
+  background-color: var(--color-primary-50);
+  color: var(--color-primary-700);
+  border: var(--border-width-thin) solid var(--color-primary-200);
+}
+
+/* Success Badge */
+.badge--success {
+  background-color: var(--color-success-500);
+  color: var(--color-white);
+}
+
+.badge--success-subtle {
+  background-color: var(--color-success-50);
+  color: var(--color-success-700);
+  border: var(--border-width-thin) solid var(--color-success-200);
+}
+
+/* Error Badge */
+.badge--error {
+  background-color: var(--color-error-500);
+  color: var(--color-white);
+}
+
+.badge--error-subtle {
+  background-color: var(--color-error-50);
+  color: var(--color-error-700);
+  border: var(--border-width-thin) solid var(--color-error-200);
+}
+
+/* Warning Badge */
+.badge--warning {
+  background-color: var(--color-warning-500);
+  color: var(--color-gray-900);
+}
+
+.badge--warning-subtle {
+  background-color: var(--color-warning-50);
+  color: var(--color-warning-800);
+  border: var(--border-width-thin) solid var(--color-warning-200);
+}
+
+/* Info Badge */
+.badge--info {
+  background-color: var(--color-info-500);
+  color: var(--color-white);
+}
+
+.badge--info-subtle {
+  background-color: var(--color-info-50);
+  color: var(--color-info-700);
+  border: var(--border-width-thin) solid var(--color-info-200);
+}
+
+/* Gray/Neutral Badge */
+.badge--gray {
+  background-color: var(--color-gray-500);
+  color: var(--color-white);
+}
+
+.badge--gray-subtle {
+  background-color: var(--color-gray-100);
+  color: var(--color-gray-700);
+  border: var(--border-width-thin) solid var(--color-gray-300);
+}
+
+/* ============================================
+   DOT BADGES
+   ============================================ */
+
+.badge-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  position: relative;
+  vertical-align: middle;
+}
+
+.badge-dot--sm {
+  width: 6px;
+  height: 6px;
+}
+
+.badge-dot--md {
+  width: 8px;
+  height: 8px;
+}
+
+.badge-dot--lg {
+  width: 10px;
+  height: 10px;
+}
+
+/* Dot Colors */
+.badge-dot--primary {
+  background-color: var(--color-primary-500);
+}
+
+.badge-dot--success {
+  background-color: var(--color-success-500);
+}
+
+.badge-dot--error {
+  background-color: var(--color-error-500);
+}
+
+.badge-dot--warning {
+  background-color: var(--color-warning-500);
+}
+
+.badge-dot--info {
+  background-color: var(--color-info-500);
+}
+
+.badge-dot--gray {
+  background-color: var(--color-gray-400);
+}
+
+/* Pulsing Animation for Active Dot */
+.badge-dot--pulse {
+  animation: badge-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes badge-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.badge-dot--pulse::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-full);
+  background: inherit;
+  animation: badge-ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes badge-ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   BADGE WITH DOT
+   ============================================ */
+
+.badge--with-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+/* ============================================
+   BADGE POSITIONING
+   ============================================ */
+
+/* Container for positioned badges */
+.badge-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Positioned badge (for avatars, icons) */
+.badge--positioned {
+  position: absolute;
+  transform: translate(50%, -50%);
+}
+
+/* Position variants */
+.badge--positioned.badge--top-right {
+  top: 0;
+  right: 0;
+}
+
+.badge--positioned.badge--top-left {
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+}
+
+.badge--positioned.badge--bottom-right {
+  top: 100%;
+  right: 0;
+  transform: translate(50%, 50%);
+}
+
+.badge--positioned.badge--bottom-left {
+  top: 100%;
+  left: 0;
+  transform: translate(-50%, 50%);
+}
+
+/* Notification Count Badge */
+.badge--count {
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 var(--spacing-1);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  background-color: var(--color-error-500);
+  color: var(--color-white);
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-white);
+}
+
+.badge--count.badge--sm {
+  min-width: 1rem;
+  height: 1rem;
+  font-size: 0.625rem;
+}
+
+.badge--count.badge--lg {
+  min-width: 1.5rem;
+  height: 1.5rem;
+  font-size: var(--font-size-sm);
+}
+
+/* Hide badge when empty */
+.badge--count:empty {
+  display: none;
+}
+
+/* ============================================
+   BADGE GROUPS
+   ============================================ */
+
+.badge-group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  flex-wrap: wrap;
+}
+
+.badge-group--compact {
+  gap: var(--spacing-1);
+}
+
+/* ============================================
+   SPECIAL BADGES
+   ============================================ */
+
+/* Achievement/Gamification Badges */
+.badge--bronze {
+  background: linear-gradient(135deg, #CD7F32 0%, #A0522D 100%);
+  color: var(--color-white);
+}
+
+.badge--silver {
+  background: linear-gradient(135deg, #C0C0C0 0%, #A8A8A8 100%);
+  color: var(--color-gray-900);
+}
+
+.badge--gold {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  color: var(--color-gray-900);
+}
+
+.badge--platinum {
+  background: linear-gradient(135deg, #E5E4E2 0%, #B8B8B8 100%);
+  color: var(--color-gray-900);
+}
+
+/* Status Badge */
+.badge--online {
+  background-color: var(--color-success-500);
+  color: var(--color-white);
+}
+
+.badge--offline {
+  background-color: var(--color-gray-400);
+  color: var(--color-white);
+}
+
+.badge--busy {
+  background-color: var(--color-error-500);
+  color: var(--color-white);
+}
+
+.badge--away {
+  background-color: var(--color-warning-500);
+  color: var(--color-gray-900);
+}
+
+/* ============================================
+   INTERACTIVE BADGES
+   ============================================ */
+
+.badge--clickable {
+  cursor: pointer;
+  transition: var(--transition-default);
+}
+
+.badge--clickable:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.badge--clickable:active {
+  transform: translateY(0);
+}
+
+.badge--removable {
+  padding-right: var(--spacing-1);
+}
+
+.badge__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  padding: 0;
+  margin-left: var(--spacing-1);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: var(--transition-default);
+}
+
+.badge__remove:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.badge__remove:focus {
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+/* Screen reader only text */
+.badge__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus styles */
+.badge:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 640px) {
+  .badge--lg {
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: var(--font-size-sm);
+  }
+
+  .badge-group {
+    gap: var(--spacing-1);
+  }
+}

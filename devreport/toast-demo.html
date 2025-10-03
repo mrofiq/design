@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toast Notification Demo - Developer Report Dashboard</title>
+
+  <!-- Design Tokens -->
+  <link rel="stylesheet" href="css/design-tokens.css">
+
+  <!-- Toast Component CSS -->
+  <link rel="stylesheet" href="css/components/toasts.css">
+
+  <style>
+    body {
+      font-family: var(--font-family-primary);
+      padding: var(--spacing-8);
+      background: var(--color-gray-50);
+      color: var(--color-gray-900);
+    }
+
+    .demo-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .demo-section {
+      background: var(--color-white);
+      padding: var(--spacing-6);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--spacing-6);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .demo-section h2 {
+      margin-top: 0;
+      margin-bottom: var(--spacing-4);
+      color: var(--color-gray-900);
+      font-size: var(--font-size-xl);
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-3);
+      margin-top: var(--spacing-4);
+    }
+
+    .demo-button {
+      padding: var(--padding-button-md);
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: var(--transition-default);
+    }
+
+    .demo-button:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .demo-button:active {
+      transform: translateY(0);
+    }
+
+    .demo-button--success {
+      background: var(--color-success-500);
+      color: white;
+    }
+
+    .demo-button--error {
+      background: var(--color-error-500);
+      color: white;
+    }
+
+    .demo-button--warning {
+      background: var(--color-warning-500);
+      color: white;
+    }
+
+    .demo-button--info {
+      background: var(--color-info-500);
+      color: white;
+    }
+
+    .demo-button--primary {
+      background: var(--color-primary-500);
+      color: white;
+    }
+
+    .demo-button--secondary {
+      background: var(--color-gray-200);
+      color: var(--color-gray-900);
+    }
+
+    .position-selector {
+      margin-top: var(--spacing-4);
+    }
+
+    .position-selector label {
+      display: block;
+      margin-bottom: var(--spacing-2);
+      font-weight: var(--font-weight-medium);
+    }
+
+    .position-selector select {
+      width: 100%;
+      padding: var(--padding-input);
+      border: var(--border-default);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-sm);
+      background: white;
+    }
+
+    code {
+      background: var(--color-gray-100);
+      padding: var(--spacing-1) var(--spacing-2);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-family-mono);
+      font-size: var(--font-size-sm);
+    }
+
+    .code-example {
+      background: var(--color-gray-900);
+      color: var(--color-gray-100);
+      padding: var(--spacing-4);
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      margin-top: var(--spacing-3);
+      font-family: var(--font-family-mono);
+      font-size: var(--font-size-sm);
+      line-height: var(--line-height-relaxed);
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-container">
+    <h1>Toast Notification Demo</h1>
+
+    <div class="demo-section">
+      <h2>Basic Toast Types</h2>
+      <p>Click the buttons below to see different toast notification types:</p>
+
+      <div class="button-grid">
+        <button class="demo-button demo-button--success" onclick="showSuccess('Operation completed successfully!')">
+          Show Success
+        </button>
+
+        <button class="demo-button demo-button--error" onclick="showError('An error occurred. Please try again.')">
+          Show Error
+        </button>
+
+        <button class="demo-button demo-button--warning" onclick="showWarning('Warning: This action cannot be undone.')">
+          Show Warning
+        </button>
+
+        <button class="demo-button demo-button--info" onclick="showInfo('Here is some helpful information.')">
+          Show Info
+        </button>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <h2>Toast with Title</h2>
+      <p>Toasts can include optional titles for better context:</p>
+
+      <div class="button-grid">
+        <button class="demo-button demo-button--success" onclick="showSuccess('Your changes have been saved.', { title: 'Success!' })">
+          Success with Title
+        </button>
+
+        <button class="demo-button demo-button--error" onclick="showError('Network connection failed.', { title: 'Connection Error' })">
+          Error with Title
+        </button>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <h2>Custom Duration</h2>
+      <p>Control how long toasts are displayed (in milliseconds):</p>
+
+      <div class="button-grid">
+        <button class="demo-button demo-button--info" onclick="showInfo('This will disappear quickly!', 2000)">
+          2 Second Toast
+        </button>
+
+        <button class="demo-button demo-button--warning" onclick="showWarning('This will stay longer.', 10000)">
+          10 Second Toast
+        </button>
+
+        <button class="demo-button demo-button--primary" onclick="showInfo('This will stay until dismissed.', { duration: 0 })">
+          Persistent Toast
+        </button>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <h2>Toast Positioning</h2>
+      <div class="position-selector">
+        <label for="position-select">Select Toast Position:</label>
+        <select id="position-select" onchange="changePosition(this.value)">
+          <option value="top-right" selected>Top Right</option>
+          <option value="top-left">Top Left</option>
+          <option value="top-center">Top Center</option>
+          <option value="bottom-right">Bottom Right</option>
+          <option value="bottom-left">Bottom Left</option>
+          <option value="bottom-center">Bottom Center</option>
+        </select>
+      </div>
+
+      <div class="button-grid">
+        <button class="demo-button demo-button--info" onclick="showInfo('Check the position!')">
+          Test Position
+        </button>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <h2>Multiple Toasts</h2>
+      <p>The system handles multiple toasts with proper stacking:</p>
+
+      <div class="button-grid">
+        <button class="demo-button demo-button--primary" onclick="showMultipleToasts()">
+          Show 3 Toasts
+        </button>
+
+        <button class="demo-button demo-button--secondary" onclick="dismissAllToasts()">
+          Dismiss All
+        </button>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <h2>Usage Examples</h2>
+
+      <h3 style="margin-top: var(--spacing-4);">Basic Usage</h3>
+      <div class="code-example">
+<span style="color: #6FB3D2;">// Show a simple toast</span>
+<span style="color: #C792EA;">showToast</span>(<span style="color: #C3E88D;">'Hello World!'</span>, <span style="color: #C3E88D;">'info'</span>);
+
+<span style="color: #6FB3D2;">// Show success toast</span>
+<span style="color: #C792EA;">showSuccess</span>(<span style="color: #C3E88D;">'Operation completed!'</span>);
+
+<span style="color: #6FB3D2;">// Show error toast</span>
+<span style="color: #C792EA;">showError</span>(<span style="color: #C3E88D;">'Something went wrong!'</span>);
+
+<span style="color: #6FB3D2;">// Show warning toast</span>
+<span style="color: #C792EA;">showWarning</span>(<span style="color: #C3E88D;">'Be careful!'</span>);
+
+<span style="color: #6FB3D2;">// Show info toast</span>
+<span style="color: #C792EA;">showInfo</span>(<span style="color: #C3E88D;">'Did you know?'</span>);
+      </div>
+
+      <h3 style="margin-top: var(--spacing-4);">Advanced Options</h3>
+      <div class="code-example">
+<span style="color: #6FB3D2;">// Toast with custom duration</span>
+<span style="color: #C792EA;">showSuccess</span>(<span style="color: #C3E88D;">'Saved!'</span>, <span style="color: #F78C6C;">3000</span>);
+
+<span style="color: #6FB3D2;">// Toast with title</span>
+<span style="color: #C792EA;">showSuccess</span>(<span style="color: #C3E88D;">'Your profile has been updated'</span>, {
+  title: <span style="color: #C3E88D;">'Success!'</span>,
+  duration: <span style="color: #F78C6C;">5000</span>
+});
+
+<span style="color: #6FB3D2;">// Persistent toast (no auto-dismiss)</span>
+<span style="color: #C792EA;">showError</span>(<span style="color: #C3E88D;">'Critical error occurred'</span>, {
+  title: <span style="color: #C3E88D;">'Error'</span>,
+  duration: <span style="color: #F78C6C;">0</span>
+});
+
+<span style="color: #6FB3D2;">// Toast with custom position</span>
+<span style="color: #C792EA;">showInfo</span>(<span style="color: #C3E88D;">'New message received'</span>, {
+  position: <span style="color: #C3E88D;">'bottom-right'</span>
+});
+
+<span style="color: #6FB3D2;">// Dismiss specific toast</span>
+<span style="color: #89DDFF;">const</span> <span style="color: #82AAFF;">toastId</span> = <span style="color: #C792EA;">showSuccess</span>(<span style="color: #C3E88D;">'Hello'</span>);
+<span style="color: #C792EA;">dismissToast</span>(toastId);
+
+<span style="color: #6FB3D2;">// Dismiss all toasts</span>
+<span style="color: #C792EA;">dismissAllToasts</span>();
+
+<span style="color: #6FB3D2;">// Change global position</span>
+<span style="color: #C792EA;">setToastPosition</span>(<span style="color: #C3E88D;">'top-center'</span>);
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Component JS -->
+  <script src="js/components/Toast.js"></script>
+
+  <script>
+    function changePosition(position) {
+      setToastPosition(position);
+      showInfo(`Position changed to: ${position.replace('-', ' ')}`);
+    }
+
+    function showMultipleToasts() {
+      showSuccess('First toast notification');
+      setTimeout(() => showWarning('Second toast notification'), 300);
+      setTimeout(() => showInfo('Third toast notification'), 600);
+    }
+  </script>
+</body>
+</html>

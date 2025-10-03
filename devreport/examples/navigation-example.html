@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navigation Component - Developer Report Dashboard</title>
+
+  <!-- Design Tokens -->
+  <link rel="stylesheet" href="../css/design-tokens.css">
+
+  <!-- Base Styles -->
+  <link rel="stylesheet" href="../css/base.css">
+
+  <!-- Component Styles -->
+  <link rel="stylesheet" href="../css/components/navigation.css">
+  <link rel="stylesheet" href="../css/components/badges.css">
+  <link rel="stylesheet" href="../css/components/avatars.css">
+
+  <style>
+    /* Demo page styles */
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .demo-content {
+      margin-left: var(--sidebar-width);
+      padding: var(--spacing-8);
+      transition: margin-left var(--duration-normal) var(--ease-out);
+    }
+
+    .nav-sidebar--collapsed ~ .demo-content {
+      margin-left: var(--sidebar-width-collapsed);
+    }
+
+    @media (max-width: 1023px) {
+      .demo-content {
+        margin-left: 0;
+      }
+    }
+
+    .demo-section {
+      margin-bottom: var(--spacing-8);
+      padding: var(--spacing-6);
+      background: var(--color-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .demo-section h2 {
+      margin-bottom: var(--spacing-4);
+    }
+  </style>
+</head>
+<body>
+  <!-- Skip to Content -->
+  <a href="#main-content" class="nav-skip-link">Skip to main content</a>
+
+  <!-- Mobile Navigation Toggle -->
+  <button class="nav-mobile-toggle" data-nav-mobile-toggle aria-label="Toggle navigation menu">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+
+  <!-- Navigation Sidebar -->
+  <nav class="nav-sidebar" id="nav-sidebar" data-nav-sidebar>
+    <!-- Sidebar Header -->
+    <div class="nav-header">
+      <a href="#" class="nav-header__logo">
+        <svg class="nav-header__logo-img" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="8" fill="#2196F3"/>
+          <path d="M8 12L16 8L24 12L16 16L8 12Z" fill="white"/>
+          <path d="M8 16V20L16 24L24 20V16L16 20L8 16Z" fill="white" opacity="0.7"/>
+        </svg>
+        <span class="nav-header__text">DevReport</span>
+      </a>
+      <button class="nav-header__toggle" data-nav-toggle aria-label="Toggle navigation collapse">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Navigation Container -->
+    <div class="nav-container">
+      <!-- Main Navigation Group -->
+      <div class="nav-group">
+        <span class="nav-group__title">Main</span>
+        <ul class="nav-group__list" role="list">
+          <li class="nav-item nav-item--active" data-nav-item>
+            <a href="#dashboard" class="nav-item__link">
+              <span class="nav-item__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </span>
+              <span class="nav-item__text">Dashboard</span>
+            </a>
+          </li>
+
+          <li class="nav-item" data-nav-item data-nav-expandable>
+            <a href="#reports" class="nav-item__link">
+              <span class="nav-item__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              </span>
+              <span class="nav-item__text">Reports</span>
+              <span class="badge nav-item__badge">3</span>
+              <span class="nav-item__expand">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </span>
+            </a>
+            <ul class="nav-submenu" role="menu">
+              <li class="nav-item" data-nav-item>
+                <a href="#daily" class="nav-item__link">
+                  <span class="nav-item__text">Daily Reports</span>
+                </a>
+              </li>
+              <li class="nav-item" data-nav-item>
+                <a href="#weekly" class="nav-item__link">
+                  <span class="nav-item__text">Weekly Reports</span>
+                  <span class="badge nav-item__badge">2</span>
+                </a>
+              </li>
+              <li class="nav-item" data-nav-item>
+                <a href="#monthly" class="nav-item__link">
+                  <span class="nav-item__text">Monthly Reports</span>
+                  <span class="badge nav-item__badge">1</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item" data-nav-item>
+            <a href="#analytics" class="nav-item__link">
+              <span class="nav-item__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+              </span>
+              <span class="nav-item__text">Analytics</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="nav-divider"></div>
+
+      <!-- Team Navigation Group -->
+      <div class="nav-group">
+        <span class="nav-group__title">Team</span>
+        <ul class="nav-group__list" role="list">
+          <li class="nav-item" data-nav-item>
+            <a href="#members" class="nav-item__link">
+              <span class="nav-item__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </span>
+              <span class="nav-item__text">Team Members</span>
+            </a>
+          </li>
+
+          <li class="nav-item" data-nav-item>
+            <a href="#projects" class="nav-item__link">
+              <span class="nav-item__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
+              </span>
+              <span class="nav-item__text">Projects</span>
+            </a>
+          </li>
+
+          <li class="nav-item" data-nav-item>
+            <a href="#tasks" class="nav-item__link">
+              <span class="nav-item__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 11 12 14 22 4"></polyline>
+                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                </svg>
+              </span>
+              <span class="nav-item__text">Tasks</span>
+              <span class="nav-item__notification"></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="nav-divider"></div>
+
+      <!-- Settings Navigation Group -->
+      <div class="nav-group">
+        <span class="nav-group__title">Settings</span>
+        <ul class="nav-group__list" role="list">
+          <li class="nav-item" data-nav-item data-nav-expandable>
+            <a href="#settings" class="nav-item__link">
+              <span class="nav-item__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M12 1v6m0 6v6m5.2-13L14 9m-4 6l-3.2 3.2M1 12h6m6 0h6M4.8 4.8L8 8m6 4l3.2 3.2"></path>
+                </svg>
+              </span>
+              <span class="nav-item__text">Settings</span>
+              <span class="nav-item__expand">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </span>
+            </a>
+            <ul class="nav-submenu" role="menu">
+              <li class="nav-item" data-nav-item>
+                <a href="#profile" class="nav-item__link">
+                  <span class="nav-item__text">Profile</span>
+                </a>
+              </li>
+              <li class="nav-item" data-nav-item>
+                <a href="#preferences" class="nav-item__link">
+                  <span class="nav-item__text">Preferences</span>
+                </a>
+              </li>
+              <li class="nav-item" data-nav-item>
+                <a href="#notifications" class="nav-item__link">
+                  <span class="nav-item__text">Notifications</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item" data-nav-item>
+            <a href="#help" class="nav-item__link">
+              <span class="nav-item__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+              </span>
+              <span class="nav-item__text">Help & Support</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Navigation Footer -->
+    <div class="nav-footer">
+      <button class="nav-footer__user">
+        <img src="https://ui-avatars.com/api/?name=John+Doe&background=2196F3&color=fff" alt="John Doe" class="nav-footer__avatar">
+        <div class="nav-footer__info">
+          <span class="nav-footer__name">John Doe</span>
+          <span class="nav-footer__role">Senior Developer</span>
+        </div>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Navigation Overlay (for mobile) -->
+  <div class="nav-overlay" data-nav-overlay></div>
+
+  <!-- Main Content -->
+  <main id="main-content" class="demo-content">
+    <div class="demo-section">
+      <h1>Navigation Component Demo</h1>
+      <p>This page demonstrates the navigation component with full accessibility support.</p>
+    </div>
+
+    <div class="demo-section">
+      <h2>Features</h2>
+      <ul>
+        <li>Responsive sidebar navigation</li>
+        <li>Collapsible sub-menus</li>
+        <li>Mobile navigation drawer</li>
+        <li>Keyboard navigation (Arrow keys, Home, End, Enter, Space)</li>
+        <li>ARIA attributes for screen readers</li>
+        <li>Notification badges</li>
+        <li>Active item tracking</li>
+        <li>State persistence (localStorage)</li>
+        <li>Focus management and focus trap</li>
+        <li>Smooth animations and transitions</li>
+      </ul>
+    </div>
+
+    <div class="demo-section">
+      <h2>Keyboard Shortcuts</h2>
+      <dl>
+        <dt><kbd>↑</kbd> / <kbd>↓</kbd></dt>
+        <dd>Navigate between menu items</dd>
+
+        <dt><kbd>Home</kbd> / <kbd>End</kbd></dt>
+        <dd>Jump to first/last menu item</dd>
+
+        <dt><kbd>Enter</kbd> / <kbd>Space</kbd></dt>
+        <dd>Expand/collapse sub-menus or activate links</dd>
+
+        <dt><kbd>←</kbd> / <kbd>→</kbd></dt>
+        <dd>Collapse/expand sub-menus when focused</dd>
+
+        <dt><kbd>Esc</kbd></dt>
+        <dd>Close mobile menu</dd>
+
+        <dt><kbd>Tab</kbd></dt>
+        <dd>Navigate between focusable elements</dd>
+      </dl>
+    </div>
+
+    <div class="demo-section">
+      <h2>JavaScript API</h2>
+      <pre><code>// Initialize navigation
+const nav = new Navigation({
+  sidebarSelector: '[data-nav-sidebar]',
+  toggleSelector: '[data-nav-toggle]',
+  scrollToActiveOnInit: true,
+  persistState: true
+});
+
+// Event listeners
+nav.sidebar.addEventListener('nav:expand', (e) => {
+  console.log('Menu expanded:', e.detail.item);
+});
+
+nav.sidebar.addEventListener('nav:activate', (e) => {
+  console.log('Item activated:', e.detail.item);
+});
+
+// Methods
+nav.expand(item);       // Expand menu item
+nav.collapse(item);     // Collapse menu item
+nav.setActiveItem(item); // Set active item
+nav.toggleCollapse();   // Toggle sidebar collapse
+nav.destroy();          // Clean up</code></pre>
+    </div>
+  </main>
+
+  <!-- JavaScript -->
+  <script src="../js/components/Navigation.js"></script>
+  <script>
+    // Initialize navigation
+    document.addEventListener('DOMContentLoaded', () => {
+      const navigation = new Navigation({
+        scrollToActiveOnInit: true,
+        persistState: true
+      });
+
+      // Listen to navigation events
+      const sidebar = document.querySelector('[data-nav-sidebar]');
+
+      sidebar.addEventListener('nav:expand', (e) => {
+        console.log('Menu expanded:', e.detail.item);
+      });
+
+      sidebar.addEventListener('nav:collapse', (e) => {
+        console.log('Menu collapsed:', e.detail.item);
+      });
+
+      sidebar.addEventListener('nav:activate', (e) => {
+        console.log('Item activated:', e.detail.item);
+      });
+
+      sidebar.addEventListener('nav:toggle', (e) => {
+        console.log('Sidebar toggled. Collapsed:', e.detail.collapsed);
+      });
+
+      sidebar.addEventListener('nav:open', () => {
+        console.log('Mobile menu opened');
+      });
+
+      sidebar.addEventListener('nav:close', () => {
+        console.log('Mobile menu closed');
+      });
+    });
+  </script>
+</body>
+</html>

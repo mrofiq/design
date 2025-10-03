@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timeline Component - Developer Report Dashboard</title>
+
+  <!-- Design Tokens -->
+  <link rel="stylesheet" href="../css/design-tokens.css">
+
+  <!-- Component Styles -->
+  <link rel="stylesheet" href="../css/components/timeline.css">
+  <link rel="stylesheet" href="../css/components/cards.css">
+
+  <style>
+    body {
+      font-family: var(--font-family-primary);
+      background-color: var(--color-gray-50);
+      margin: 0;
+      padding: var(--spacing-8) var(--spacing-6);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      margin-bottom: var(--spacing-8);
+    }
+
+    .page-title {
+      font-size: var(--font-size-3xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-gray-900);
+      margin: 0 0 var(--spacing-2);
+    }
+
+    .page-description {
+      font-size: var(--font-size-base);
+      color: var(--color-gray-600);
+      margin: 0;
+    }
+
+    .demo-controls {
+      display: flex;
+      gap: var(--spacing-3);
+      margin-bottom: var(--spacing-6);
+      padding: var(--spacing-4);
+      background-color: var(--color-white);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .demo-button {
+      padding: var(--spacing-2) var(--spacing-4);
+      background-color: var(--color-primary-500);
+      color: var(--color-white);
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .demo-button:hover {
+      background-color: var(--color-primary-600);
+    }
+
+    .demo-button--secondary {
+      background-color: var(--color-gray-200);
+      color: var(--color-gray-700);
+    }
+
+    .demo-button--secondary:hover {
+      background-color: var(--color-gray-300);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1 class="page-title">Activity Timeline</h1>
+      <p class="page-description">
+        Chronological view of developer activities including commits, merges, tasks, reviews, and quality checks.
+      </p>
+    </div>
+
+    <div class="demo-controls">
+      <button class="demo-button" onclick="addSampleEvent()">Add Random Event</button>
+      <button class="demo-button" onclick="addMultipleEvents()">Add 5 Events</button>
+      <button class="demo-button demo-button--secondary" onclick="clearTimeline()">Clear Timeline</button>
+      <button class="demo-button demo-button--secondary" onclick="toggleCompact()">Toggle Compact</button>
+    </div>
+
+    <div id="activityTimeline"></div>
+  </div>
+
+  <!-- Component JavaScript -->
+  <script src="../js/components/Timeline.js"></script>
+
+  <script>
+    // Initialize timeline
+    const timeline = new Timeline('activityTimeline', {
+      compact: false,
+      enableFilters: true,
+      enableInfiniteScroll: false,
+      autoUpdateInterval: 60000, // Update timestamps every minute
+      groupByDate: true,
+      onEventClick: (event) => {
+        console.log('Event clicked:', event);
+        alert(`Event: ${event.title}\nType: ${event.type}\nPoints: ${event.points}`);
+      }
+    });
+
+    // Sample event data
+    const eventTypes = ['commit', 'merge', 'task', 'review', 'quality', 'error'];
+
+    const eventTemplates = {
+      commit: [
+        { title: 'Pushed 3 commits to main branch', description: 'Updated user authentication module', points: 6 },
+        { title: 'Fixed critical bug in payment processing', description: 'Resolved issue with duplicate transactions', points: 2 },
+        { title: 'Added unit tests for API endpoints', description: 'Increased test coverage to 85%', points: 2 }
+      ],
+      merge: [
+        { title: 'Merged feature/user-dashboard', description: 'Successfully merged user dashboard feature into main', points: 10 },
+        { title: 'Merged hotfix/security-patch', description: 'Applied security updates from upstream', points: 10 }
+      ],
+      task: [
+        { title: 'Completed: Implement user profile page', description: 'Added profile editing and avatar upload', points: 10 },
+        { title: 'Started: Design database schema', description: 'Working on normalized table structure', points: 3 },
+        { title: 'Completed: Update API documentation', description: 'Documented all REST endpoints', points: 10 }
+      ],
+      review: [
+        { title: 'Reviewed PR #245: Authentication refactor', description: 'Suggested improvements to error handling', points: 3 },
+        { title: 'Approved PR #246: Dashboard updates', description: 'LGTM - Ready to merge', points: 3 }
+      ],
+      quality: [
+        { title: 'Quality gate passed', description: 'All code quality checks passed successfully', points: 15 },
+        { title: 'Code coverage increased', description: 'Coverage improved from 78% to 85%', points: 10 },
+        { title: 'Quality gate failed', description: 'Code smells and duplications detected', points: -10 }
+      ],
+      error: [
+        { title: 'Pipeline failed', description: 'Build failed due to TypeScript errors', points: -3 },
+        { title: 'Critical bug introduced', description: 'Production error in checkout process', points: -15 }
+      ]
+    };
+
+    // Add initial sample events
+    function addInitialEvents() {
+      const now = new Date();
+      const events = [];
+
+      // Today's events
+      events.push({
+        type: 'commit',
+        title: 'Pushed 3 commits to main branch',
+        description: 'Updated user authentication module',
+        timestamp: new Date(now.getTime() - 2 * 60 * 60 * 1000), // 2 hours ago
+        points: 6,
+        meta: {
+          branch: 'main',
+          user: 'John Doe'
+        }
+      });
+
+      events.push({
+        type: 'task',
+        title: 'Completed: Implement user profile page',
+        description: 'Added profile editing and avatar upload functionality',
+        timestamp: new Date(now.getTime() - 4 * 60 * 60 * 1000), // 4 hours ago
+        points: 10,
+        meta: {
+          user: 'John Doe'
+        }
+      });
+
+      events.push({
+        type: 'quality',
+        title: 'Quality gate passed',
+        description: 'All code quality checks passed successfully',
+        timestamp: new Date(now.getTime() - 5 * 60 * 60 * 1000), // 5 hours ago
+        points: 15
+      });
+
+      // Yesterday's events
+      const yesterday = new Date(now);
+      yesterday.setDate(yesterday.getDate() - 1);
+
+      events.push({
+        type: 'merge',
+        title: 'Merged feature/user-dashboard',
+        description: 'Successfully merged user dashboard feature into main',
+        timestamp: new Date(yesterday.getTime() - 2 * 60 * 60 * 1000),
+        points: 10,
+        meta: {
+          branch: 'feature/user-dashboard'
+        }
+      });
+
+      events.push({
+        type: 'review',
+        title: 'Reviewed PR #245: Authentication refactor',
+        description: 'Suggested improvements to error handling',
+        timestamp: new Date(yesterday.getTime() - 6 * 60 * 60 * 1000),
+        points: 3
+      });
+
+      // 2 days ago
+      const twoDaysAgo = new Date(now);
+      twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+
+      events.push({
+        type: 'task',
+        title: 'Started: Design database schema',
+        description: 'Working on normalized table structure',
+        timestamp: new Date(twoDaysAgo.getTime() - 3 * 60 * 60 * 1000),
+        points: 3
+      });
+
+      events.push({
+        type: 'commit',
+        title: 'Fixed critical bug in payment processing',
+        description: 'Resolved issue with duplicate transactions',
+        timestamp: new Date(twoDaysAgo.getTime() - 7 * 60 * 60 * 1000),
+        points: 2,
+        meta: {
+          branch: 'hotfix/payment-bug'
+        }
+      });
+
+      timeline.addEvents(events);
+    }
+
+    // Add random sample event
+    function addSampleEvent() {
+      const type = eventTypes[Math.floor(Math.random() * eventTypes.length)];
+      const templates = eventTemplates[type];
+      const template = templates[Math.floor(Math.random() * templates.length)];
+
+      const now = new Date();
+      const randomMinutes = Math.floor(Math.random() * 120); // Random time within last 2 hours
+
+      timeline.addEvent({
+        type: type,
+        title: template.title,
+        description: template.description,
+        timestamp: new Date(now.getTime() - randomMinutes * 60 * 1000),
+        points: template.points,
+        meta: {
+          user: 'John Doe',
+          branch: type === 'commit' || type === 'merge' ? 'main' : undefined
+        }
+      });
+    }
+
+    // Add multiple events
+    function addMultipleEvents() {
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => addSampleEvent(), i * 200);
+      }
+    }
+
+    // Clear timeline
+    function clearTimeline() {
+      if (confirm('Clear all events?')) {
+        timeline.clear();
+      }
+    }
+
+    // Toggle compact mode
+    let isCompact = false;
+    function toggleCompact() {
+      isCompact = !isCompact;
+      timeline.destroy();
+
+      const newTimeline = new Timeline('activityTimeline', {
+        compact: isCompact,
+        enableFilters: true,
+        enableInfiniteScroll: false,
+        autoUpdateInterval: 60000,
+        groupByDate: true,
+        onEventClick: (event) => {
+          console.log('Event clicked:', event);
+          alert(`Event: ${event.title}\nType: ${event.type}\nPoints: ${event.points}`);
+        }
+      });
+
+      // Re-add events
+      addInitialEvents();
+
+      // Replace global reference
+      window.timeline = newTimeline;
+    }
+
+    // Initialize with sample events
+    addInitialEvents();
+
+    // Example: Add new event via webhook simulation
+    function simulateWebhookEvent(eventData) {
+      timeline.addEvent({
+        type: eventData.type || 'commit',
+        title: eventData.title,
+        description: eventData.description,
+        timestamp: new Date(eventData.timestamp),
+        points: eventData.points || 0,
+        meta: eventData.meta || {}
+      });
+    }
+
+    // Make timeline accessible globally for console testing
+    window.timeline = timeline;
+    window.simulateWebhookEvent = simulateWebhookEvent;
+
+    console.log('Timeline initialized!');
+    console.log('Try: timeline.addEvent({ type: "commit", title: "Test", points: 5 })');
+    console.log('Or: simulateWebhookEvent({ type: "merge", title: "Merged PR #123", points: 10 })');
+  </script>
+</body>
+</html>

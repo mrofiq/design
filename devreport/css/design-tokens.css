@@ -1,0 +1,326 @@
+/**
+ * Developer Report Dashboard - Design Tokens
+ * Version: 1.0
+ * Last Updated: 2025-10-02
+ *
+ * This file contains all design system tokens (CSS custom properties)
+ * for the Developer Report Dashboard application.
+ */
+
+:root {
+  /* ============================================
+     COLOR SYSTEM
+     ============================================ */
+
+  /* Primary Brand Colors */
+  --color-primary-50: #E3F2FD;
+  --color-primary-100: #BBDEFB;
+  --color-primary-200: #90CAF9;
+  --color-primary-300: #64B5F6;
+  --color-primary-400: #42A5F5;
+  --color-primary-500: #2196F3;
+  --color-primary-600: #1E88E5;
+  --color-primary-700: #1976D2;
+  --color-primary-800: #1565C0;
+  --color-primary-900: #0D47A1;
+
+  /* Accent Colors */
+  --color-accent-50: #FFF3E0;
+  --color-accent-100: #FFE0B2;
+  --color-accent-200: #FFCC80;
+  --color-accent-300: #FFB74D;
+  --color-accent-400: #FFA726;
+  --color-accent-500: #FF9800;
+  --color-accent-600: #FB8C00;
+  --color-accent-700: #F57C00;
+  --color-accent-800: #EF6C00;
+  --color-accent-900: #E65100;
+
+  /* Success States */
+  --color-success-50: #E8F5E9;
+  --color-success-100: #C8E6C9;
+  --color-success-200: #A5D6A7;
+  --color-success-300: #81C784;
+  --color-success-400: #66BB6A;
+  --color-success-500: #4CAF50;
+  --color-success-600: #43A047;
+  --color-success-700: #388E3C;
+  --color-success-800: #2E7D32;
+  --color-success-900: #1B5E20;
+
+  /* Warning States */
+  --color-warning-50: #FFF8E1;
+  --color-warning-100: #FFECB3;
+  --color-warning-200: #FFE082;
+  --color-warning-300: #FFD54F;
+  --color-warning-400: #FFCA28;
+  --color-warning-500: #FFC107;
+  --color-warning-600: #FFB300;
+  --color-warning-700: #FFA000;
+  --color-warning-800: #FF8F00;
+  --color-warning-900: #FF6F00;
+
+  /* Error States */
+  --color-error-50: #FFEBEE;
+  --color-error-100: #FFCDD2;
+  --color-error-200: #EF9A9A;
+  --color-error-300: #E57373;
+  --color-error-400: #EF5350;
+  --color-error-500: #F44336;
+  --color-error-600: #E53935;
+  --color-error-700: #D32F2F;
+  --color-error-800: #C62828;
+  --color-error-900: #B71C1C;
+
+  /* Info States */
+  --color-info-50: #E1F5FE;
+  --color-info-100: #B3E5FC;
+  --color-info-200: #81D4FA;
+  --color-info-300: #4FC3F7;
+  --color-info-400: #29B6F6;
+  --color-info-500: #03A9F4;
+  --color-info-600: #039BE5;
+  --color-info-700: #0288D1;
+  --color-info-800: #0277BD;
+  --color-info-900: #01579B;
+
+  /* Gray Scale */
+  --color-gray-50: #FAFAFA;
+  --color-gray-100: #F5F5F5;
+  --color-gray-200: #EEEEEE;
+  --color-gray-300: #E0E0E0;
+  --color-gray-400: #BDBDBD;
+  --color-gray-500: #9E9E9E;
+  --color-gray-600: #757575;
+  --color-gray-700: #616161;
+  --color-gray-800: #424242;
+  --color-gray-900: #212121;
+
+  /* Pure Colors */
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+
+  /* Gamification Colors */
+  --color-points-positive: #4CAF50;
+  --color-points-negative: #F44336;
+  --color-points-neutral: #757575;
+
+  /* Badges & Achievements */
+  --color-badge-bronze: #CD7F32;
+  --color-badge-silver: #C0C0C0;
+  --color-badge-gold: #FFD700;
+  --color-badge-platinum: #E5E4E2;
+
+  /* Level Colors */
+  --color-level-junior: #64B5F6;
+  --color-level-senior: #42A5F5;
+  --color-level-expert: #1976D2;
+  --color-level-master: #7B1FA2;
+
+  /* ============================================
+     TYPOGRAPHY SYSTEM
+     ============================================ */
+
+  /* Font Families */
+  --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Helvetica Neue', sans-serif;
+  --font-family-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  --font-family-display: 'Poppins', 'Inter', sans-serif;
+
+  /* Font Sizes (Type Scale - 1.250 Major Third) */
+  --font-size-xs: 0.75rem;      /* 12px */
+  --font-size-sm: 0.875rem;     /* 14px */
+  --font-size-base: 1rem;       /* 16px */
+  --font-size-md: 1.125rem;     /* 18px */
+  --font-size-lg: 1.25rem;      /* 20px */
+  --font-size-xl: 1.5rem;       /* 24px */
+  --font-size-2xl: 1.875rem;    /* 30px */
+  --font-size-3xl: 2.25rem;     /* 36px */
+  --font-size-4xl: 3rem;        /* 48px */
+  --font-size-5xl: 3.75rem;     /* 60px */
+
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* Line Heights */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  --line-height-loose: 2;
+
+  /* Letter Spacing */
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+
+  /* ============================================
+     SPACING SYSTEM (8px Base Unit)
+     ============================================ */
+
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;     /* 4px */
+  --spacing-2: 0.5rem;      /* 8px */
+  --spacing-3: 0.75rem;     /* 12px */
+  --spacing-4: 1rem;        /* 16px */
+  --spacing-5: 1.25rem;     /* 20px */
+  --spacing-6: 1.5rem;      /* 24px */
+  --spacing-8: 2rem;        /* 32px */
+  --spacing-10: 2.5rem;     /* 40px */
+  --spacing-12: 3rem;       /* 48px */
+  --spacing-16: 4rem;       /* 64px */
+  --spacing-20: 5rem;       /* 80px */
+  --spacing-24: 6rem;       /* 96px */
+
+  /* Component Spacing Presets */
+  --padding-input: var(--spacing-3) var(--spacing-4);
+  --padding-button-sm: var(--spacing-2) var(--spacing-4);
+  --padding-button-md: var(--spacing-3) var(--spacing-6);
+  --padding-button-lg: var(--spacing-4) var(--spacing-8);
+  --padding-card: var(--spacing-6);
+  --padding-section: var(--spacing-8) var(--spacing-6);
+
+  /* Margin Presets */
+  --margin-component: var(--spacing-4);
+  --margin-section: var(--spacing-8);
+
+  /* ============================================
+     BORDER SYSTEM
+     ============================================ */
+
+  /* Border Widths */
+  --border-width-none: 0;
+  --border-width-thin: 1px;
+  --border-width-medium: 2px;
+  --border-width-thick: 4px;
+
+  /* Border Radius */
+  --radius-none: 0;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  /* Border Styles */
+  --border-default: var(--border-width-thin) solid var(--color-gray-200);
+  --border-focus: var(--border-width-medium) solid var(--color-primary-500);
+  --border-error: var(--border-width-medium) solid var(--color-error-500);
+  --border-success: var(--border-width-medium) solid var(--color-success-500);
+
+  /* ============================================
+     ELEVATION SYSTEM (Shadows)
+     ============================================ */
+
+  /* Shadow Levels */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+  /* Colored Shadows */
+  --shadow-primary: 0 4px 14px 0 rgba(33, 150, 243, 0.2);
+  --shadow-success: 0 4px 14px 0 rgba(76, 175, 80, 0.2);
+  --shadow-error: 0 4px 14px 0 rgba(244, 67, 54, 0.2);
+
+  /* Focus Shadow */
+  --shadow-focus: 0 0 0 3px rgba(33, 150, 243, 0.2);
+
+  /* ============================================
+     Z-INDEX SYSTEM
+     ============================================ */
+
+  --z-index-base: 0;
+  --z-index-dropdown: 1000;
+  --z-index-sticky: 1020;
+  --z-index-fixed: 1030;
+  --z-index-modal-backdrop: 1040;
+  --z-index-modal: 1050;
+  --z-index-popover: 1060;
+  --z-index-tooltip: 1070;
+  --z-index-notification: 1080;
+
+  /* ============================================
+     ANIMATION & TRANSITIONS
+     ============================================ */
+
+  /* Easing Curves */
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-sharp: cubic-bezier(0.4, 0, 0.6, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* Duration */
+  --duration-instant: 100ms;
+  --duration-fast: 200ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --duration-slower: 700ms;
+
+  /* Transition Presets */
+  --transition-default: all var(--duration-normal) var(--ease-out);
+  --transition-fast: all var(--duration-fast) var(--ease-out);
+  --transition-color: color var(--duration-fast) var(--ease-out), background-color var(--duration-fast) var(--ease-out);
+  --transition-transform: transform var(--duration-normal) var(--ease-out);
+
+  /* ============================================
+     BREAKPOINT SYSTEM
+     ============================================ */
+
+  --breakpoint-xs: 0;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  /* ============================================
+     LAYOUT CONSTRAINTS
+     ============================================ */
+
+  /* Container Max Widths */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1536px;
+
+  /* Sidebar */
+  --sidebar-width: 280px;
+  --sidebar-width-collapsed: 64px;
+
+  /* Header */
+  --header-height: 64px;
+
+  /* Content Padding */
+  --content-padding-x: var(--spacing-6);
+  --content-padding-y: var(--spacing-8);
+}
+
+/* ============================================
+   DARK MODE TOKENS (Optional)
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Override specific tokens for dark mode */
+    --color-gray-50: #212121;
+    --color-gray-100: #424242;
+    --color-gray-200: #616161;
+    --color-gray-300: #757575;
+    --color-gray-400: #9E9E9E;
+    --color-gray-500: #BDBDBD;
+    --color-gray-600: #E0E0E0;
+    --color-gray-700: #EEEEEE;
+    --color-gray-800: #F5F5F5;
+    --color-gray-900: #FAFAFA;
+  }
+}

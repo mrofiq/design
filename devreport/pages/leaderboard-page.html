@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard - Developer Report Dashboard</title>
+
+  <!-- Design Tokens & Base Styles -->
+  <link rel="stylesheet" href="../css/design-tokens.css">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/utilities.css">
+
+  <!-- Component Styles -->
+  <link rel="stylesheet" href="../css/components/header.css">
+  <link rel="stylesheet" href="../css/components/navigation.css">
+  <link rel="stylesheet" href="../css/components/cards.css">
+  <link rel="stylesheet" href="../css/components/leaderboard.css">
+  <link rel="stylesheet" href="../css/components/badges.css">
+  <link rel="stylesheet" href="../css/components/buttons.css">
+  <link rel="stylesheet" href="../css/components/avatars.css">
+
+  <style>
+    /* Page-specific styles */
+    .page-container {
+      min-height: 100vh;
+      background-color: var(--color-gray-50);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page-header {
+      background-color: var(--color-white);
+      border-bottom: var(--border-default);
+      padding: var(--spacing-6);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .page-header__content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-4);
+    }
+
+    .page-header__left {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-4);
+    }
+
+    .page-header__back {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-2);
+      padding: var(--spacing-2) var(--spacing-3);
+      border: var(--border-default);
+      border-radius: var(--radius-md);
+      background-color: var(--color-white);
+      color: var(--color-gray-700);
+      text-decoration: none;
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      transition: var(--transition-default);
+    }
+
+    .page-header__back:hover {
+      border-color: var(--color-primary-300);
+      color: var(--color-primary-700);
+      background-color: var(--color-primary-50);
+    }
+
+    .page-header__title {
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-gray-900);
+      margin: 0;
+    }
+
+    .page-header__subtitle {
+      font-size: var(--font-size-sm);
+      color: var(--color-gray-600);
+      margin-top: var(--spacing-1);
+    }
+
+    .page-content {
+      flex: 1;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      padding: var(--spacing-8);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-6);
+      margin-bottom: var(--spacing-8);
+    }
+
+    .leaderboard-container {
+      background-color: var(--color-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .page-content {
+        padding: var(--spacing-4);
+      }
+
+      .page-header__content {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-4);
+        margin-bottom: var(--spacing-6);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-container">
+    <!-- Page Header -->
+    <header class="page-header">
+      <div class="page-header__content">
+        <div class="page-header__left">
+          <a href="../dashboard.html" class="page-header__back">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Back to Dashboard
+          </a>
+          <div>
+            <h1 class="page-header__title">Leaderboard</h1>
+            <p class="page-header__subtitle">Track performance and achievements across teams</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="page-content">
+      <!-- Stats Overview -->
+      <div class="stats-grid">
+        <!-- Total Participants -->
+        <div class="stat-card">
+          <div class="stat-card__icon-wrapper stat-card__icon-wrapper--primary">
+            <svg class="stat-card__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+          </div>
+          <div class="stat-card__label">Active Participants</div>
+          <div class="stat-card__value" data-stat="participants">127</div>
+          <div class="stat-card__description">This week</div>
+        </div>
+
+        <!-- Average Points -->
+        <div class="stat-card">
+          <div class="stat-card__icon-wrapper stat-card__icon-wrapper--success">
+            <svg class="stat-card__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+          </div>
+          <div class="stat-card__label">Average Points</div>
+          <div class="stat-card__value" data-stat="average">1,245</div>
+          <div class="stat-card__trend stat-card__trend--positive">
+            <svg class="stat-card__trend-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+            </svg>
+            <span>+12%</span>
+          </div>
+        </div>
+
+        <!-- Top Score -->
+        <div class="stat-card">
+          <div class="stat-card__icon-wrapper stat-card__icon-wrapper--warning">
+            <svg class="stat-card__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+            </svg>
+          </div>
+          <div class="stat-card__label">Top Score</div>
+          <div class="stat-card__value" data-stat="top">3,890</div>
+          <div class="stat-card__description">Sarah Chen</div>
+        </div>
+
+        <!-- Active Streaks -->
+        <div class="stat-card">
+          <div class="stat-card__icon-wrapper stat-card__icon-wrapper--info">
+            <svg class="stat-card__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"></path>
+            </svg>
+          </div>
+          <div class="stat-card__label">Active Streaks</div>
+          <div class="stat-card__value" data-stat="streaks">42</div>
+          <div class="stat-card__description">7+ days</div>
+        </div>
+      </div>
+
+      <!-- Leaderboard Widget -->
+      <div class="leaderboard-container">
+        <div id="leaderboard-full"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Component Scripts -->
+  <script src="../js/components/Leaderboard.js"></script>
+
+  <script>
+    // Mock API endpoint that returns sample data
+    const mockLeaderboardData = {
+      individual: {
+        weekly: [
+          {
+            id: '1',
+            name: 'Sarah Chen',
+            team: 'Frontend Team',
+            department: 'Engineering',
+            avatar: 'https://i.pravatar.cc/150?img=1',
+            points: 3890,
+            trend: 5
+          },
+          {
+            id: '2',
+            name: 'Michael Rodriguez',
+            team: 'Backend Team',
+            department: 'Engineering',
+            avatar: 'https://i.pravatar.cc/150?img=12',
+            points: 3654,
+            trend: 3
+          },
+          {
+            id: '3',
+            name: 'Emily Watson',
+            team: 'DevOps Team',
+            department: 'Engineering',
+            avatar: 'https://i.pravatar.cc/150?img=5',
+            points: 3421,
+            trend: -2
+          },
+          {
+            id: '4',
+            name: 'David Kim',
+            team: 'Frontend Team',
+            department: 'Engineering',
+            avatar: 'https://i.pravatar.cc/150?img=14',
+            points: 3198,
+            trend: 1
+          },
+          {
+            id: '5',
+            name: 'Jessica Taylor',
+            team: 'QA Team',
+            department: 'Quality',
+            avatar: 'https://i.pravatar.cc/150?img=9',
+            points: 2987,
+            trend: 4
+          },
+          {
+            id: '6',
+            name: 'Robert Johnson',
+            team: 'Backend Team',
+            department: 'Engineering',
+            avatar: 'https://i.pravatar.cc/150?img=13',
+            points: 2876,
+            trend: -1
+          },
+          {
+            id: '7',
+            name: 'Amanda Lee',
+            team: 'Design Team',
+            department: 'Product',
+            avatar: 'https://i.pravatar.cc/150?img=45',
+            points: 2754,
+            trend: 2
+          },
+          {
+            id: '8',
+            name: 'James Brown',
+            team: 'Frontend Team',
+            department: 'Engineering',
+            avatar: 'https://i.pravatar.cc/150?img=33',
+            points: 2643,
+            trend: 0
+          },
+          {
+            id: '9',
+            name: 'Lisa Anderson',
+            team: 'Backend Team',
+            department: 'Engineering',
+            avatar: 'https://i.pravatar.cc/150?img=20',
+            points: 2532,
+            trend: 3
+          },
+          {
+            id: '10',
+            name: 'Christopher Martin',
+            team: 'DevOps Team',
+            department: 'Engineering',
+            avatar: 'https://i.pravatar.cc/150?img=15',
+            points: 2421,
+            trend: -2
+          },
+          {
+            id: '11',
+            name: 'Jennifer White',
+            team: 'QA Team',
+            department: 'Quality',
+            avatar: 'https://i.pravatar.cc/150?img=32',
+            points: 2310,
+            trend: 1
+          },
+          {
+            id: '12',
+            name: 'Daniel Garcia',
+            team: 'Frontend Team',
+            department: 'Engineering',
+            avatar: 'https://i.pravatar.cc/150?img=68',
+            points: 2198,
+            trend: 4
+          },
+          {
+            id: '13',
+            name: 'Michelle Davis',
+            team: 'Backend Team',
+            department: 'Engineering',
+            avatar: 'https://i.pravatar.cc/150?img=44',
+            points: 2087,
+            trend: -1
+          },
+          {
+            id: '14',
+            name: 'Matthew Wilson',
+            team: 'DevOps Team',
+            department: 'Engineering',
+            avatar: 'https://i.pravatar.cc/150?img=59',
+            points: 1976,
+            trend: 2
+          },
+          {
+            id: '15',
+            name: 'Ashley Moore',
+            team: 'Design Team',
+            department: 'Product',
+            avatar: 'https://i.pravatar.cc/150?img=47',
+            points: 1865,
+            trend: 0
+          }
+        ],
+        monthly: [
+          {
+            id: '1',
+            name: 'Sarah Chen',
+            team: 'Frontend Team',
+            department: 'Engineering',
+            avatar: 'https://i.pravatar.cc/150?img=1',
+            points: 15890,
+            trend: 8
+          },
+          {
+            id: '2',
+            name: 'Michael Rodriguez',
+            team: 'Backend Team',
+            department: 'Engineering',
+            avatar: 'https://i.pravatar.cc/150?img=12',
+            points: 14654,
+            trend: 5
+          },
+          // Add more monthly data as needed
+        ],
+        quarterly: [
+          // Add quarterly data
+        ]
+      },
+      team: {
+        weekly: [
+          {
+            id: 't1',
+            name: 'Frontend Team',
+            department: 'Engineering',
+            points: 12890,
+            trend: 7
+          },
+          {
+            id: 't2',
+            name: 'Backend Team',
+            department: 'Engineering',
+            points: 11654,
+            trend: 4
+          },
+          {
+            id: 't3',
+            name: 'DevOps Team',
+            department: 'Engineering',
+            points: 10421,
+            trend: -1
+          }
+        ]
+      },
+      department: {
+        weekly: [
+          {
+            id: 'd1',
+            name: 'Engineering',
+            points: 45890,
+            trend: 12
+          },
+          {
+            id: 'd2',
+            name: 'Product',
+            points: 32654,
+            trend: 8
+          },
+          {
+            id: 'd3',
+            name: 'Quality',
+            points: 28421,
+            trend: 5
+          }
+        ]
+      }
+    };
+
+    // Mock fetch function
+    const originalFetch = window.fetch;
+    window.fetch = function(url, options) {
+      if (url.includes('/api/leaderboard')) {
+        return new Promise((resolve) => {
+          const params = new URLSearchParams(url.split('?')[1]);
+          const type = params.get('type') || 'individual';
+          const period = params.get('period') || 'weekly';
+
+          setTimeout(() => {
+            resolve({
+              ok: true,
+              json: () => Promise.resolve(mockLeaderboardData[type][period] || [])
+            });
+          }, 500); // Simulate network delay
+        });
+      }
+      return originalFetch.apply(this, arguments);
+    };
+
+    // Initialize full leaderboard
+    const leaderboard = new LeaderboardComponent('leaderboard-full', {
+      apiEndpoint: '/api/leaderboard',
+      viewType: 'individual',
+      period: 'weekly',
+      compact: false,
+      showPodium: true,
+      pageSize: 10,
+      autoRefresh: true,
+      refreshInterval: 60000,
+      currentUserId: '4', // David Kim as current user for demo
+      enableWebSocket: false, // Disabled for demo
+      showSearch: true
+    });
+
+    // Listen for member selection
+    document.getElementById('leaderboard-full').addEventListener('leaderboard:select', (e) => {
+      console.log('Selected member:', e.detail);
+      // Could open a modal or navigate to user profile
+    });
+
+    // Update stats with animation on load
+    window.addEventListener('load', () => {
+      animateStatValue('participants', 127);
+      animateStatValue('average', 1245);
+      animateStatValue('top', 3890);
+      animateStatValue('streaks', 42);
+    });
+
+    function animateStatValue(statName, targetValue) {
+      const element = document.querySelector(`[data-stat="${statName}"]`);
+      if (!element) return;
+
+      const duration = 2000;
+      const steps = 60;
+      const stepValue = targetValue / steps;
+      const stepDuration = duration / steps;
+
+      let currentValue = 0;
+      let currentStep = 0;
+
+      const counter = setInterval(() => {
+        currentStep++;
+        currentValue += stepValue;
+
+        if (currentStep >= steps) {
+          currentValue = targetValue;
+          clearInterval(counter);
+        }
+
+        element.textContent = Math.round(currentValue).toLocaleString();
+      }, stepDuration);
+    }
+  </script>
+</body>
+</html>

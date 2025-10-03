@@ -1,0 +1,650 @@
+/**
+ * Developer Report Dashboard - Login Page Styles
+ * Version: 1.0
+ * Last Updated: 2025-10-02
+ *
+ * This file contains all styles for the login page including:
+ * - Split-screen layout (left branding, right form)
+ * - Microsoft SSO button styling
+ * - Form layout and styling
+ * - Animations (fade in, slide up)
+ * - Responsive design for mobile
+ * - Password toggle functionality
+ */
+
+/* ============================================
+   LOGIN PAGE BASE STYLES
+   ============================================ */
+
+.login-page {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: var(--color-gray-50);
+}
+
+/* ============================================
+   LOGIN CONTAINER (Split Screen)
+   ============================================ */
+
+.login-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* ============================================
+   LEFT PANEL: BRANDING & IMAGERY
+   ============================================ */
+
+.login-panel--left {
+  background: linear-gradient(135deg, #1976D2 0%, #2196F3 50%, #42A5F5 100%);
+  color: var(--color-white);
+  padding: var(--spacing-12);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative background pattern */
+.login-panel--left::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: float 20s ease-in-out infinite;
+}
+
+.login-panel--left::after {
+  content: '';
+  position: absolute;
+  bottom: -15%;
+  left: -15%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: float 25s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -30px) scale(1.05);
+  }
+  66% {
+    transform: translate(-30px, 30px) scale(0.95);
+  }
+}
+
+/* Login Branding */
+.login-branding {
+  position: relative;
+  z-index: 1;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+/* Logo */
+.login-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-12);
+}
+
+.login-logo-text {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-white);
+  margin: 0;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+/* Hero Section */
+.login-hero {
+  margin-bottom: var(--spacing-12);
+  animation: fadeInUp 0.8s ease-out 0.2s backwards;
+}
+
+.login-hero-title {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-white);
+  margin: 0 0 var(--spacing-6) 0;
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.login-hero-description {
+  font-size: var(--font-size-lg);
+  color: rgba(255, 255, 255, 0.9);
+  line-height: var(--line-height-relaxed);
+  margin: 0;
+  max-width: 480px;
+}
+
+/* Features List */
+.login-features {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  margin-bottom: var(--spacing-12);
+}
+
+.login-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-4);
+  animation: fadeInUp 0.8s ease-out backwards;
+}
+
+.login-feature:nth-child(1) {
+  animation-delay: 0.3s;
+}
+
+.login-feature:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.login-feature:nth-child(3) {
+  animation-delay: 0.5s;
+}
+
+.login-feature-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-lg);
+  color: var(--color-white);
+  backdrop-filter: blur(10px);
+}
+
+.login-feature-content {
+  flex: 1;
+}
+
+.login-feature-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-white);
+  margin: 0 0 var(--spacing-2) 0;
+  line-height: var(--line-height-tight);
+}
+
+.login-feature-text {
+  font-size: var(--font-size-base);
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+  line-height: var(--line-height-normal);
+}
+
+/* Footer */
+.login-footer {
+  position: relative;
+  z-index: 1;
+  animation: fadeIn 1s ease-out 0.6s backwards;
+}
+
+.login-footer-text {
+  font-size: var(--font-size-sm);
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+/* ============================================
+   RIGHT PANEL: LOGIN FORM
+   ============================================ */
+
+.login-panel--right {
+  background: var(--color-white);
+  padding: var(--spacing-12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.6s ease-out 0.3s backwards;
+}
+
+.login-form-wrapper {
+  width: 100%;
+  max-width: 440px;
+}
+
+/* Login Header */
+.login-header {
+  text-align: center;
+  margin-bottom: var(--spacing-10);
+  animation: fadeInUp 0.8s ease-out 0.4s backwards;
+}
+
+.login-title {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-gray-900);
+  margin: 0 0 var(--spacing-3) 0;
+  line-height: var(--line-height-tight);
+}
+
+.login-subtitle {
+  font-size: var(--font-size-base);
+  color: var(--color-gray-600);
+  margin: 0;
+  line-height: var(--line-height-normal);
+}
+
+/* Login Form */
+.login-form {
+  animation: fadeInUp 0.8s ease-out 0.5s backwards;
+}
+
+/* Microsoft SSO Button */
+.btn-microsoft {
+  background-color: var(--color-white);
+  color: var(--color-gray-900);
+  border: 2px solid var(--color-gray-300);
+  box-shadow: var(--shadow-sm);
+  font-weight: var(--font-weight-semibold);
+  transition: var(--transition-default);
+  margin-bottom: var(--spacing-6);
+}
+
+.btn-microsoft:hover:not(:disabled):not(.is-disabled) {
+  background-color: var(--color-gray-50);
+  border-color: var(--color-gray-400);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.btn-microsoft:active:not(:disabled):not(.is-disabled) {
+  background-color: var(--color-gray-100);
+  transform: translateY(0);
+}
+
+.btn-microsoft .btn-icon-left {
+  margin-right: var(--spacing-2);
+}
+
+/* Divider */
+.login-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: var(--spacing-8) 0;
+  position: relative;
+}
+
+.login-divider::before,
+.login-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-gray-300);
+}
+
+.login-divider-text {
+  padding: 0 var(--spacing-4);
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-500);
+  font-weight: var(--font-weight-medium);
+  background: var(--color-white);
+}
+
+/* Form Fields */
+.login-form .form-field {
+  margin-bottom: var(--spacing-6);
+}
+
+/* Password Toggle Button */
+.form-input-password-toggle {
+  position: absolute;
+  right: var(--spacing-4);
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: var(--spacing-2);
+  cursor: pointer;
+  color: var(--color-gray-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-color);
+  border-radius: var(--radius-sm);
+}
+
+.form-input-password-toggle:hover {
+  color: var(--color-gray-700);
+  background: var(--color-gray-100);
+}
+
+.form-input-password-toggle:focus {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+.form-input-group--icon-left input[type="password"] {
+  padding-right: var(--spacing-12);
+}
+
+/* Login Options (Remember Me & Forgot Password) */
+.login-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-8);
+}
+
+.login-link {
+  font-size: var(--font-size-sm);
+  color: var(--color-primary-500);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  transition: var(--transition-color);
+}
+
+.login-link:hover {
+  color: var(--color-primary-600);
+  text-decoration: underline;
+}
+
+.login-link:focus {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Submit Button */
+.login-form .btn-primary {
+  margin-top: var(--spacing-6);
+  margin-bottom: var(--spacing-8);
+}
+
+/* Help Text */
+.login-help {
+  text-align: center;
+  margin-top: var(--spacing-6);
+}
+
+.login-help-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-600);
+  margin: 0;
+  line-height: var(--line-height-normal);
+}
+
+/* Footer Links */
+.login-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  margin-top: var(--spacing-10);
+  padding-top: var(--spacing-6);
+  border-top: 1px solid var(--color-gray-200);
+  animation: fadeIn 1s ease-out 0.7s backwards;
+}
+
+.login-link-secondary {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-600);
+  text-decoration: none;
+  transition: var(--transition-color);
+}
+
+.login-link-secondary:hover {
+  color: var(--color-gray-900);
+  text-decoration: underline;
+}
+
+.login-link-divider {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-400);
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Loading State for Submit Button */
+.login-form .btn.is-loading {
+  pointer-events: none;
+  position: relative;
+  color: transparent;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet (1024px and below) */
+@media (max-width: 1024px) {
+  .login-container {
+    grid-template-columns: 1fr;
+  }
+
+  .login-panel--left {
+    display: none;
+  }
+
+  .login-panel--right {
+    min-height: 100vh;
+  }
+}
+
+/* Mobile (768px and below) */
+@media (max-width: 768px) {
+  .login-panel--right {
+    padding: var(--spacing-6);
+  }
+
+  .login-form-wrapper {
+    max-width: 100%;
+  }
+
+  .login-header {
+    margin-bottom: var(--spacing-8);
+  }
+
+  .login-title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .login-subtitle {
+    font-size: var(--font-size-sm);
+  }
+
+  .btn-microsoft {
+    font-size: var(--font-size-sm);
+    padding: var(--spacing-3) var(--spacing-4);
+  }
+
+  .login-options {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+  }
+
+  .login-links {
+    flex-direction: column;
+    gap: var(--spacing-3);
+  }
+
+  .login-link-divider {
+    display: none;
+  }
+}
+
+/* Small Mobile (480px and below) */
+@media (max-width: 480px) {
+  .login-panel--right {
+    padding: var(--spacing-4);
+  }
+
+  .login-title {
+    font-size: var(--font-size-xl);
+  }
+
+  .login-form .btn-lg {
+    height: 48px;
+    font-size: var(--font-size-base);
+  }
+
+  .btn-microsoft {
+    height: 48px;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY ENHANCEMENTS
+   ============================================ */
+
+/* Focus visible for keyboard navigation */
+.login-form .form-input:focus-visible,
+.login-form .form-checkbox:focus-visible + .form-checkbox-custom {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .btn-microsoft {
+    border-width: 3px;
+  }
+
+  .login-divider::before,
+  .login-divider::after {
+    height: 2px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .login-panel--left::before,
+  .login-panel--left::after {
+    animation: none;
+  }
+}
+
+/* ============================================
+   DARK MODE SUPPORT (Optional)
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+  .login-page {
+    background: var(--color-gray-900);
+  }
+
+  .login-panel--right {
+    background: var(--color-gray-800);
+  }
+
+  .login-title {
+    color: var(--color-gray-50);
+  }
+
+  .login-subtitle,
+  .login-help-text {
+    color: var(--color-gray-400);
+  }
+
+  .btn-microsoft {
+    background-color: var(--color-gray-700);
+    border-color: var(--color-gray-600);
+    color: var(--color-gray-100);
+  }
+
+  .btn-microsoft:hover {
+    background-color: var(--color-gray-600);
+  }
+
+  .login-divider::before,
+  .login-divider::after {
+    background: var(--color-gray-600);
+  }
+
+  .login-divider-text {
+    color: var(--color-gray-400);
+    background: var(--color-gray-800);
+  }
+
+  .login-link-secondary {
+    color: var(--color-gray-400);
+  }
+
+  .login-link-secondary:hover {
+    color: var(--color-gray-200);
+  }
+
+  .login-links {
+    border-top-color: var(--color-gray-700);
+  }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+  .login-panel--left {
+    display: none;
+  }
+
+  .login-form-wrapper {
+    box-shadow: none;
+  }
+}

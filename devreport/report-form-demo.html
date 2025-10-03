@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report Form Demo - Developer Report Dashboard</title>
+
+  <!-- Design Tokens -->
+  <link rel="stylesheet" href="css/design-tokens.css">
+
+  <!-- Base Styles -->
+  <link rel="stylesheet" href="css/base.css">
+
+  <!-- Utilities -->
+  <link rel="stylesheet" href="css/utilities.css">
+
+  <!-- Components -->
+  <link rel="stylesheet" href="css/components/buttons.css">
+  <link rel="stylesheet" href="css/components/forms.css">
+  <link rel="stylesheet" href="css/components/report-form.css">
+  <link rel="stylesheet" href="css/components/toasts.css">
+</head>
+<body>
+  <!-- Page Header -->
+  <header style="background-color: var(--color-primary-600); color: white; padding: var(--spacing-6); margin-bottom: var(--spacing-8);">
+    <div style="max-width: 1200px; margin: 0 auto;">
+      <h1 style="margin: 0 0 var(--spacing-2) 0; font-size: var(--font-size-3xl);">Developer Report Dashboard</h1>
+      <p style="margin: 0; opacity: 0.9;">Report Form Component Demo</p>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main style="max-width: 1200px; margin: 0 auto; padding: 0 var(--spacing-6) var(--spacing-12);">
+    <!-- Demo Instructions -->
+    <div style="background-color: var(--color-info-50); border: var(--border-width-thin) solid var(--color-info-300); border-radius: var(--radius-md); padding: var(--spacing-6); margin-bottom: var(--spacing-8);">
+      <h2 style="margin: 0 0 var(--spacing-4) 0; color: var(--color-info-800); font-size: var(--font-size-xl);">
+        Demo Instructions
+      </h2>
+      <ul style="margin: 0; padding-left: var(--spacing-6); color: var(--color-info-700); line-height: var(--line-height-relaxed);">
+        <li><strong>Auto-populated Events:</strong> Mock webhook events are pre-loaded (GitLab, OpenProject, SonarQube)</li>
+        <li><strong>Validation:</strong> All required fields have real-time validation</li>
+        <li><strong>Character Counters:</strong> Watch the counters update as you type</li>
+        <li><strong>Word Counter:</strong> Work completed requires minimum 10 words</li>
+        <li><strong>Incidents:</strong> Minimum 50 characters required</li>
+        <li><strong>Priorities:</strong> Add/remove at least 3 priorities for tomorrow</li>
+        <li><strong>Auto-save:</strong> Form data is automatically saved to localStorage every 30 seconds</li>
+        <li><strong>Submission Window:</strong> Form can only be submitted between 3:00 PM - 11:59 PM</li>
+        <li><strong>Team Recognition:</strong> Select a team member to enable the reason field</li>
+      </ul>
+    </div>
+
+    <!-- Report Form Container -->
+    <div id="reportFormContainer"></div>
+
+    <!-- Features Overview -->
+    <section style="margin-top: var(--spacing-12);">
+      <h2 style="font-size: var(--font-size-2xl); margin-bottom: var(--spacing-6);">Component Features</h2>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--spacing-6);">
+        <!-- Feature Card 1 -->
+        <div style="background-color: var(--color-white); border: var(--border-default); border-radius: var(--radius-md); padding: var(--spacing-6); box-shadow: var(--shadow-sm);">
+          <h3 style="color: var(--color-primary-600); margin: 0 0 var(--spacing-3) 0;">Auto-population</h3>
+          <p style="margin: 0; color: var(--color-gray-600); line-height: var(--line-height-relaxed);">
+            Webhook events from GitLab, OpenProject, and SonarQube are automatically fetched and displayed with points calculation.
+          </p>
+        </div>
+
+        <!-- Feature Card 2 -->
+        <div style="background-color: var(--color-white); border: var(--border-default); border-radius: var(--radius-md); padding: var(--spacing-6); box-shadow: var(--shadow-sm);">
+          <h3 style="color: var(--color-primary-600); margin: 0 0 var(--spacing-3) 0;">Real-time Validation</h3>
+          <p style="margin: 0; color: var(--color-gray-600); line-height: var(--line-height-relaxed);">
+            All fields are validated in real-time with visual feedback. Minimum word counts, character limits, and required fields.
+          </p>
+        </div>
+
+        <!-- Feature Card 3 -->
+        <div style="background-color: var(--color-white); border: var(--border-default); border-radius: var(--radius-md); padding: var(--spacing-6); box-shadow: var(--shadow-sm);">
+          <h3 style="color: var(--color-primary-600); margin: 0 0 var(--spacing-3) 0;">Draft Auto-save</h3>
+          <p style="margin: 0; color: var(--color-gray-600); line-height: var(--line-height-relaxed);">
+            Form data is automatically saved to localStorage. Reload the page and your draft will be restored.
+          </p>
+        </div>
+
+        <!-- Feature Card 4 -->
+        <div style="background-color: var(--color-white); border: var(--border-default); border-radius: var(--radius-md); padding: var(--spacing-6); box-shadow: var(--shadow-sm);">
+          <h3 style="color: var(--color-primary-600); margin: 0 0 var(--spacing-3) 0;">Submission Window</h3>
+          <p style="margin: 0; color: var(--color-gray-600); line-height: var(--line-height-relaxed);">
+            Reports can only be submitted between 3:00 PM and 11:59 PM. Visual warnings are shown outside this window.
+          </p>
+        </div>
+
+        <!-- Feature Card 5 -->
+        <div style="background-color: var(--color-white); border: var(--border-default); border-radius: var(--radius-md); padding: var(--spacing-6); box-shadow: var(--shadow-sm);">
+          <h3 style="color: var(--color-primary-600); margin: 0 0 var(--spacing-3) 0;">Priorities Builder</h3>
+          <p style="margin: 0; color: var(--color-gray-600); line-height: var(--line-height-relaxed);">
+            Dynamic list builder for tomorrow's priorities with add/remove functionality and drag handles.
+          </p>
+        </div>
+
+        <!-- Feature Card 6 -->
+        <div style="background-color: var(--color-white); border: var(--border-default); border-radius: var(--radius-md); padding: var(--spacing-6); box-shadow: var(--shadow-sm);">
+          <h3 style="color: var(--color-primary-600); margin: 0 0 var(--spacing-3) 0;">Team Recognition</h3>
+          <p style="margin: 0; color: var(--color-gray-600); line-height: var(--line-height-relaxed);">
+            Select a team member to recognize and describe why. Helps foster team collaboration.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRD Requirements -->
+    <section style="margin-top: var(--spacing-12); background-color: var(--color-gray-50); border-radius: var(--radius-md); padding: var(--spacing-8);">
+      <h2 style="font-size: var(--font-size-2xl); margin-bottom: var(--spacing-6);">PRD Requirements Met</h2>
+
+      <div style="display: grid; gap: var(--spacing-4);">
+        <div style="display: flex; gap: var(--spacing-3);">
+          <svg style="width: 24px; height: 24px; color: var(--color-success-500); flex-shrink: 0;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+          </svg>
+          <div>
+            <strong>Required Fields:</strong> Date, auto-populated events, work completed, incidents, team recognition, tomorrow's priorities
+          </div>
+        </div>
+
+        <div style="display: flex; gap: var(--spacing-3);">
+          <svg style="width: 24px; height: 24px; color: var(--color-success-500); flex-shrink: 0;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+          </svg>
+          <div>
+            <strong>Submission Window:</strong> 3:00 PM - 11:59 PM daily with enforcement and visual warnings
+          </div>
+        </div>
+
+        <div style="display: flex; gap: var(--spacing-3);">
+          <svg style="width: 24px; height: 24px; color: var(--color-success-500); flex-shrink: 0;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+          </svg>
+          <div>
+            <strong>Validation:</strong> Minimum word count for work completed (10 words), minimum 50 characters for incidents, at least 3 webhook events required
+          </div>
+        </div>
+
+        <div style="display: flex; gap: var(--spacing-3);">
+          <svg style="width: 24px; height: 24px; color: var(--color-success-500); flex-shrink: 0;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+          </svg>
+          <div>
+            <strong>Auto-draft:</strong> Form data automatically saved to localStorage with visual feedback
+          </div>
+        </div>
+
+        <div style="display: flex; gap: var(--spacing-3);">
+          <svg style="width: 24px; height: 24px; color: var(--color-success-500); flex-shrink: 0;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+          </svg>
+          <div>
+            <strong>Character Counters:</strong> Real-time character counting for all text fields with warning states
+          </div>
+        </div>
+
+        <div style="display: flex; gap: var(--spacing-3);">
+          <svg style="width: 24px; height: 24px; color: var(--color-success-500); flex-shrink: 0;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+          </svg>
+          <div>
+            <strong>Events Display:</strong> Auto-populated webhook events with service icons, timestamps, and points calculation
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Scripts -->
+  <script src="js/components/Toast.js"></script>
+  <script src="js/components/Form.js"></script>
+  <script src="js/components/ReportForm.js"></script>
+
+  <script>
+    // Initialize the Report Form
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize report form
+      const reportForm = new ReportForm('reportFormContainer', {
+        submissionWindowStart: 15, // 3 PM
+        submissionWindowEnd: 23,   // 11:59 PM
+        minEvents: 3,
+        minIncidentsLength: 50,
+        minWorkCompletedWords: 10,
+        autoSaveInterval: 30000    // 30 seconds
+      });
+
+      console.log('Report Form initialized:', reportForm);
+    });
+  </script>
+</body>
+</html>

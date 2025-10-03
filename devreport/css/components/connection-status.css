@@ -1,0 +1,455 @@
+/**
+ * Developer Report Dashboard - Connection Status Component
+ * Version: 1.0
+ * Last Updated: 2025-10-03
+ *
+ * Connection status indicator with:
+ * - Online/offline/reconnecting states
+ * - Pulse animations
+ * - Status messages
+ * - Smooth transitions
+ */
+
+/* =================================================================
+   Connection Status Container
+   ================================================================= */
+
+.connection-status {
+  --status-connected: var(--color-success);
+  --status-connecting: var(--color-warning);
+  --status-reconnecting: var(--color-warning);
+  --status-disconnected: var(--color-error);
+
+  position: fixed;
+  top: var(--spacing-4);
+  right: var(--spacing-4);
+  z-index: var(--z-index-toast);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-base);
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+/* Show on non-connected states */
+.connection-status:not(.connection-status--connected) {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Compact mode - always show but minimal */
+.connection-status.connection-status--compact {
+  opacity: 1;
+  transform: translateY(0);
+  padding: var(--spacing-1) var(--spacing-2);
+}
+
+.connection-status.connection-status--compact .connection-status__label {
+  display: none;
+}
+
+/* =================================================================
+   Status Indicator Dot
+   ================================================================= */
+
+.connection-status__indicator {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+/* Pulse animation for connecting/reconnecting states */
+.connection-status__indicator::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  animation: none;
+}
+
+.connection-status--connecting .connection-status__indicator::before,
+.connection-status--reconnecting .connection-status__indicator::before {
+  animation: connection-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes connection-pulse {
+  0%, 100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(2.5);
+  }
+}
+
+/* =================================================================
+   Status States
+   ================================================================= */
+
+/* Connected State */
+.connection-status--connected {
+  color: var(--status-connected);
+  border-color: color-mix(in srgb, var(--status-connected) 20%, transparent);
+  background: color-mix(in srgb, var(--status-connected) 5%, var(--color-surface));
+}
+
+/* Connecting State */
+.connection-status--connecting {
+  color: var(--status-connecting);
+  border-color: color-mix(in srgb, var(--status-connecting) 20%, transparent);
+  background: color-mix(in srgb, var(--status-connecting) 5%, var(--color-surface));
+}
+
+/* Reconnecting State */
+.connection-status--reconnecting {
+  color: var(--status-reconnecting);
+  border-color: color-mix(in srgb, var(--status-reconnecting) 20%, transparent);
+  background: color-mix(in srgb, var(--status-reconnecting) 5%, var(--color-surface));
+}
+
+.connection-status--reconnecting .connection-status__indicator {
+  animation: blink 1s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Disconnected State */
+.connection-status--disconnected {
+  color: var(--status-disconnected);
+  border-color: color-mix(in srgb, var(--status-disconnected) 20%, transparent);
+  background: color-mix(in srgb, var(--status-disconnected) 5%, var(--color-surface));
+}
+
+/* =================================================================
+   Status Label
+   ================================================================= */
+
+.connection-status__label {
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* =================================================================
+   Retry Button
+   ================================================================= */
+
+.connection-status__retry {
+  margin-left: var(--spacing-2);
+  padding: var(--spacing-1) var(--spacing-2);
+  background: transparent;
+  border: 1px solid currentColor;
+  border-radius: var(--radius-md);
+  color: currentColor;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.connection-status__retry:hover {
+  background: currentColor;
+  color: var(--color-surface);
+}
+
+.connection-status__retry:active {
+  transform: scale(0.95);
+}
+
+/* =================================================================
+   Alternative Position - Bottom
+   ================================================================= */
+
+.connection-status--bottom {
+  top: auto;
+  bottom: var(--spacing-4);
+}
+
+/* =================================================================
+   Alternative Position - Left
+   ================================================================= */
+
+.connection-status--left {
+  right: auto;
+  left: var(--spacing-4);
+}
+
+/* =================================================================
+   Alternative Position - Header Inline
+   ================================================================= */
+
+.connection-status--inline {
+  position: relative;
+  top: auto;
+  right: auto;
+  box-shadow: none;
+  border: none;
+  padding: 0;
+  background: transparent;
+  opacity: 1;
+  transform: none;
+}
+
+/* =================================================================
+   Connection Status Details (Expandable)
+   ================================================================= */
+
+.connection-status--detailed {
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 200px;
+}
+
+.connection-status__header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  width: 100%;
+}
+
+.connection-status__details {
+  margin-top: var(--spacing-2);
+  padding-top: var(--spacing-2);
+  border-top: 1px solid var(--color-border);
+  width: 100%;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.connection-status__detail-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-1);
+}
+
+.connection-status__detail-row:last-child {
+  margin-bottom: 0;
+}
+
+.connection-status__detail-label {
+  font-weight: var(--font-weight-medium);
+}
+
+.connection-status__detail-value {
+  color: var(--color-text-primary);
+  font-family: var(--font-family-mono);
+}
+
+/* =================================================================
+   Reconnection Progress
+   ================================================================= */
+
+.connection-status__progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: color-mix(in srgb, currentColor 20%, transparent);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  overflow: hidden;
+}
+
+.connection-status__progress-bar {
+  height: 100%;
+  background: currentColor;
+  transform-origin: left;
+  animation: reconnect-progress 3s linear;
+}
+
+@keyframes reconnect-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* =================================================================
+   Connection Quality Indicator
+   ================================================================= */
+
+.connection-quality {
+  display: flex;
+  gap: 2px;
+  align-items: flex-end;
+  height: 12px;
+  margin-left: var(--spacing-2);
+}
+
+.connection-quality__bar {
+  width: 2px;
+  background: currentColor;
+  border-radius: var(--radius-xs);
+  opacity: 0.3;
+  transition: opacity var(--transition-base);
+}
+
+.connection-quality__bar:nth-child(1) {
+  height: 4px;
+}
+
+.connection-quality__bar:nth-child(2) {
+  height: 7px;
+}
+
+.connection-quality__bar:nth-child(3) {
+  height: 10px;
+}
+
+.connection-quality__bar:nth-child(4) {
+  height: 12px;
+}
+
+/* Quality levels */
+.connection-quality--excellent .connection-quality__bar {
+  opacity: 1;
+}
+
+.connection-quality--good .connection-quality__bar:nth-child(-n+3) {
+  opacity: 1;
+}
+
+.connection-quality--fair .connection-quality__bar:nth-child(-n+2) {
+  opacity: 1;
+}
+
+.connection-quality--poor .connection-quality__bar:nth-child(1) {
+  opacity: 1;
+}
+
+/* =================================================================
+   Mobile Responsive
+   ================================================================= */
+
+@media (max-width: 768px) {
+  .connection-status {
+    top: var(--spacing-2);
+    right: var(--spacing-2);
+    padding: var(--spacing-1-5) var(--spacing-2);
+    font-size: var(--font-size-xs);
+  }
+
+  .connection-status__label {
+    display: none;
+  }
+
+  .connection-status--detailed {
+    min-width: 160px;
+  }
+
+  .connection-status--detailed .connection-status__label {
+    display: block;
+  }
+}
+
+/* =================================================================
+   Dark Mode Support
+   ================================================================= */
+
+@media (prefers-color-scheme: dark) {
+  .connection-status {
+    background: var(--color-surface-elevated);
+  }
+
+  .connection-status--connected {
+    background: color-mix(in srgb, var(--status-connected) 10%, var(--color-surface-elevated));
+  }
+
+  .connection-status--connecting {
+    background: color-mix(in srgb, var(--status-connecting) 10%, var(--color-surface-elevated));
+  }
+
+  .connection-status--reconnecting {
+    background: color-mix(in srgb, var(--status-reconnecting) 10%, var(--color-surface-elevated));
+  }
+
+  .connection-status--disconnected {
+    background: color-mix(in srgb, var(--status-disconnected) 10%, var(--color-surface-elevated));
+  }
+}
+
+/* =================================================================
+   Accessibility
+   ================================================================= */
+
+.connection-status:focus-within {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Screen reader only text */
+.connection-status__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* =================================================================
+   Print Styles
+   ================================================================= */
+
+@media print {
+  .connection-status {
+    display: none !important;
+  }
+}
+
+/* =================================================================
+   Reduced Motion
+   ================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .connection-status,
+  .connection-status__indicator,
+  .connection-status__indicator::before,
+  .connection-status__progress-bar {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* =================================================================
+   High Contrast Mode
+   ================================================================= */
+
+@media (prefers-contrast: high) {
+  .connection-status {
+    border-width: 2px;
+  }
+
+  .connection-status__indicator {
+    border: 2px solid currentColor;
+  }
+}

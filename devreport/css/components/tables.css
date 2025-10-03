@@ -1,0 +1,602 @@
+/**
+ * Developer Report Dashboard - Table Components
+ * Version: 1.0
+ * Last Updated: 2025-10-02
+ *
+ * Table styles with responsive layouts, sorting, and various states.
+ * Includes striped rows, hover effects, and mobile-friendly patterns.
+ */
+
+/* ============================================
+   TABLE CONTAINER
+   ============================================ */
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-gray-200);
+  background-color: var(--color-white);
+}
+
+.table-container--no-border {
+  border: none;
+}
+
+/* ============================================
+   BASE TABLE STYLES
+   ============================================ */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-900);
+  background-color: var(--color-white);
+}
+
+/* ============================================
+   TABLE SIZES
+   ============================================ */
+
+.table--sm {
+  font-size: var(--font-size-xs);
+}
+
+.table--sm th,
+.table--sm td {
+  padding: var(--spacing-2) var(--spacing-3);
+}
+
+.table--md {
+  font-size: var(--font-size-sm);
+}
+
+.table--md th,
+.table--md td {
+  padding: var(--spacing-3) var(--spacing-4);
+}
+
+.table--lg {
+  font-size: var(--font-size-base);
+}
+
+.table--lg th,
+.table--lg td {
+  padding: var(--spacing-4) var(--spacing-6);
+}
+
+/* ============================================
+   TABLE HEADER
+   ============================================ */
+
+.table thead {
+  background-color: var(--color-gray-50);
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.table th {
+  padding: var(--spacing-3) var(--spacing-4);
+  text-align: left;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-700);
+  white-space: nowrap;
+  vertical-align: middle;
+  line-height: var(--line-height-tight);
+}
+
+.table th:first-child {
+  padding-left: var(--spacing-6);
+}
+
+.table th:last-child {
+  padding-right: var(--spacing-6);
+}
+
+/* Right-aligned header */
+.table th.text-right {
+  text-align: right;
+}
+
+/* Centered header */
+.table th.text-center {
+  text-align: center;
+}
+
+/* ============================================
+   TABLE BODY
+   ============================================ */
+
+.table tbody {
+  background-color: var(--color-white);
+}
+
+.table td {
+  padding: var(--spacing-3) var(--spacing-4);
+  border-bottom: 1px solid var(--color-gray-200);
+  vertical-align: middle;
+  line-height: var(--line-height-normal);
+}
+
+.table td:first-child {
+  padding-left: var(--spacing-6);
+}
+
+.table td:last-child {
+  padding-right: var(--spacing-6);
+}
+
+/* Right-aligned cell */
+.table td.text-right {
+  text-align: right;
+}
+
+/* Centered cell */
+.table td.text-center {
+  text-align: center;
+}
+
+/* Remove border from last row */
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ============================================
+   TABLE VARIANTS
+   ============================================ */
+
+/* Striped rows */
+.table--striped tbody tr:nth-child(odd) {
+  background-color: var(--color-gray-50);
+}
+
+/* Bordered table */
+.table--bordered {
+  border: 1px solid var(--color-gray-200);
+}
+
+.table--bordered th,
+.table--bordered td {
+  border: 1px solid var(--color-gray-200);
+}
+
+/* Borderless table */
+.table--borderless th,
+.table--borderless td {
+  border: none;
+}
+
+/* Compact table */
+.table--compact th,
+.table--compact td {
+  padding: var(--spacing-2) var(--spacing-3);
+}
+
+/* Spacious table */
+.table--spacious th,
+.table--spacious td {
+  padding: var(--spacing-5) var(--spacing-6);
+}
+
+/* ============================================
+   TABLE ROW STATES
+   ============================================ */
+
+/* Hoverable rows */
+.table--hoverable tbody tr {
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.table--hoverable tbody tr:hover {
+  background-color: var(--color-gray-50);
+}
+
+.table--striped.table--hoverable tbody tr:nth-child(odd):hover {
+  background-color: var(--color-gray-100);
+}
+
+/* Clickable rows */
+.table--clickable tbody tr {
+  cursor: pointer;
+  transition: var(--transition-default);
+}
+
+.table--clickable tbody tr:hover {
+  background-color: var(--color-primary-50);
+  transform: scale(1.001);
+}
+
+.table--clickable tbody tr:active {
+  background-color: var(--color-primary-100);
+}
+
+/* Selected row */
+.table tbody tr.selected,
+.table tbody tr[aria-selected="true"] {
+  background-color: var(--color-primary-50);
+}
+
+.table tbody tr.selected td {
+  border-bottom-color: var(--color-primary-200);
+}
+
+/* Disabled row */
+.table tbody tr.disabled,
+.table tbody tr[aria-disabled="true"] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ============================================
+   SORTABLE HEADERS
+   ============================================ */
+
+.table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  padding-right: var(--spacing-8);
+  transition: var(--transition-color);
+}
+
+.table th.sortable:hover {
+  background-color: var(--color-gray-100);
+  color: var(--color-gray-900);
+}
+
+.table th.sortable::after {
+  content: '';
+  position: absolute;
+  right: var(--spacing-4);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  opacity: 0.3;
+}
+
+/* Default/unsorted state - both arrows */
+.table th.sortable:not(.sorted-asc):not(.sorted-desc)::after {
+  border-top: 4px solid currentColor;
+}
+
+.table th.sortable:not(.sorted-asc):not(.sorted-desc)::before {
+  content: '';
+  position: absolute;
+  right: var(--spacing-4);
+  top: 50%;
+  transform: translateY(-50%) translateY(-6px);
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 4px solid currentColor;
+  opacity: 0.3;
+}
+
+/* Ascending sort */
+.table th.sorted-asc::after {
+  border-bottom: 5px solid var(--color-primary-600);
+  opacity: 1;
+  transform: translateY(-50%) translateY(-2px);
+}
+
+/* Descending sort */
+.table th.sorted-desc::after {
+  border-top: 5px solid var(--color-primary-600);
+  opacity: 1;
+  transform: translateY(-50%) translateY(2px);
+}
+
+/* Focus state for sortable headers */
+.table th.sortable:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: -2px;
+}
+
+/* ============================================
+   TABLE FOOTER
+   ============================================ */
+
+.table tfoot {
+  background-color: var(--color-gray-50);
+  border-top: 2px solid var(--color-gray-300);
+  font-weight: var(--font-weight-semibold);
+}
+
+.table tfoot td {
+  border-bottom: none;
+}
+
+/* ============================================
+   TABLE CELL ALIGNMENTS
+   ============================================ */
+
+.table .cell-numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.table .cell-center {
+  text-align: center;
+}
+
+.table .cell-truncate {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================
+   TABLE WITH ACTIONS
+   ============================================ */
+
+.table__actions {
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.table__action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-gray-600);
+  cursor: pointer;
+  transition: var(--transition-default);
+}
+
+.table__action-btn:hover {
+  background-color: var(--color-gray-100);
+  color: var(--color-gray-900);
+}
+
+.table__action-btn:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 1px;
+}
+
+/* ============================================
+   TABLE WITH CHECKBOX
+   ============================================ */
+
+.table .cell-checkbox {
+  width: 3rem;
+  padding-right: 0;
+}
+
+.table__checkbox {
+  width: 1.125rem;
+  height: 1.125rem;
+  cursor: pointer;
+}
+
+/* ============================================
+   TABLE WITH EXPANDABLE ROWS
+   ============================================ */
+
+.table__expand-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-gray-600);
+  cursor: pointer;
+  transition: var(--transition-transform);
+}
+
+.table__expand-btn:hover {
+  background-color: var(--color-gray-100);
+  color: var(--color-gray-900);
+}
+
+.table__expand-btn.expanded {
+  transform: rotate(90deg);
+}
+
+.table__expanded-content {
+  display: none;
+  padding: var(--spacing-4) var(--spacing-6);
+  background-color: var(--color-gray-50);
+  border-top: 1px solid var(--color-gray-200);
+}
+
+.table tbody tr.expanded + tr .table__expanded-content {
+  display: block;
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+
+.table__empty {
+  padding: var(--spacing-12) var(--spacing-6);
+  text-align: center;
+  color: var(--color-gray-500);
+}
+
+.table__empty-icon {
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto var(--spacing-4);
+  color: var(--color-gray-400);
+}
+
+.table__empty-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-700);
+  margin-bottom: var(--spacing-2);
+}
+
+.table__empty-description {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-500);
+}
+
+/* ============================================
+   LOADING STATE
+   ============================================ */
+
+.table--loading {
+  position: relative;
+  min-height: 200px;
+}
+
+.table--loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.table__loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid var(--color-gray-200);
+  border-top-color: var(--color-primary-500);
+  border-radius: var(--radius-full);
+  animation: table-loading-spin 0.8s linear infinite;
+  z-index: 2;
+}
+
+@keyframes table-loading-spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* ============================================
+   RESPONSIVE TABLES
+   ============================================ */
+
+/* Horizontal scroll on mobile */
+@media (max-width: 768px) {
+  .table-container {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .table th:first-child,
+  .table td:first-child {
+    padding-left: var(--spacing-4);
+  }
+
+  .table th:last-child,
+  .table td:last-child {
+    padding-right: var(--spacing-4);
+  }
+}
+
+/* Stacked table on mobile */
+.table--stacked {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .table--stacked {
+    display: block;
+  }
+
+  .table--stacked thead {
+    display: none;
+  }
+
+  .table--stacked tbody,
+  .table--stacked tr,
+  .table--stacked td {
+    display: block;
+    width: 100%;
+  }
+
+  .table--stacked tr {
+    margin-bottom: var(--spacing-4);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .table--stacked td {
+    padding: var(--spacing-3) var(--spacing-4);
+    border-bottom: 1px solid var(--color-gray-200);
+    position: relative;
+    padding-left: 40%;
+    text-align: right;
+  }
+
+  .table--stacked td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: var(--spacing-4);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-gray-700);
+    text-align: left;
+  }
+
+  .table--stacked td:last-child {
+    border-bottom: none;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+.table[role="table"] {
+  /* Ensure proper ARIA structure */
+}
+
+.table caption {
+  padding: var(--spacing-4);
+  font-weight: var(--font-weight-semibold);
+  text-align: left;
+  color: var(--color-gray-900);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus visible styles for keyboard navigation */
+.table tbody tr:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: -2px;
+}

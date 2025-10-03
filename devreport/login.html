@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Developer Report Dashboard - Login to track your development activities and performance">
+  <title>Login - Developer Report Dashboard</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/design-tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/utilities.css">
+  <link rel="stylesheet" href="css/components/buttons.css">
+  <link rel="stylesheet" href="css/components/forms.css">
+  <link rel="stylesheet" href="css/components/toasts.css">
+  <link rel="stylesheet" href="css/pages/login.css">
+</head>
+<body class="login-page">
+
+  <!-- Login Container -->
+  <div class="login-container">
+
+    <!-- Left Panel: Branding & Imagery -->
+    <div class="login-panel login-panel--left">
+      <div class="login-branding">
+        <div class="login-logo">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="48" height="48" rx="12" fill="url(#logo-gradient)"/>
+            <path d="M24 12L32 18V30L24 36L16 30V18L24 12Z" fill="white" fill-opacity="0.9"/>
+            <path d="M24 18L28 21V27L24 30L20 27V21L24 18Z" fill="#2196F3"/>
+            <defs>
+              <linearGradient id="logo-gradient" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#2196F3"/>
+                <stop offset="1" stop-color="#1976D2"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <h1 class="login-logo-text">DevReport</h1>
+        </div>
+
+        <div class="login-hero">
+          <h2 class="login-hero-title">Track Your Development Journey</h2>
+          <p class="login-hero-description">
+            Monitor activities, earn achievements, and collaborate with your team through daily reporting and real-time insights.
+          </p>
+        </div>
+
+        <div class="login-features">
+          <div class="login-feature">
+            <div class="login-feature-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="login-feature-content">
+              <h3 class="login-feature-title">Real-time Activity Tracking</h3>
+              <p class="login-feature-text">Automatic tracking from GitLab, OpenProject, and SonarQube</p>
+            </div>
+          </div>
+
+          <div class="login-feature">
+            <div class="login-feature-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 4.354C10.424 2.852 8.14 2 5.5 2C4.565 2 3.66 2.144 2.812 2.408C2.326 2.566 2 3.018 2 3.528V18.456C2 19.3 2.848 19.888 3.65 19.622C4.262 19.422 4.912 19.318 5.588 19.318C7.604 19.318 9.462 20.092 10.85 21.376C11.318 21.78 12 21.45 12 20.842V4.354ZM12 4.354C13.576 2.852 15.86 2 18.5 2C19.435 2 20.34 2.144 21.188 2.408C21.674 2.566 22 3.018 22 3.528V18.456C22 19.3 21.152 19.888 20.35 19.622C19.738 19.422 19.088 19.318 18.412 19.318C16.396 19.318 14.538 20.092 13.15 21.376C12.682 21.78 12 21.45 12 20.842V4.354Z" fill="currentColor"/>
+              </svg>
+            </div>
+            <div class="login-feature-content">
+              <h3 class="login-feature-title">Gamification & Achievements</h3>
+              <p class="login-feature-text">Earn points, unlock badges, and compete on leaderboards</p>
+            </div>
+          </div>
+
+          <div class="login-feature">
+            <div class="login-feature-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17 20H22V18C22 16.3431 20.6569 15 19 15C18.0444 15 17.1931 15.4468 16.6438 16.1429M17 20H7M17 20V18C17 17.3438 16.8736 16.717 16.6438 16.1429M7 20H2V18C2 16.3431 3.34315 15 5 15C5.95561 15 6.80686 15.4468 7.35625 16.1429M7 20V18C7 17.3438 7.12642 16.717 7.35625 16.1429M7.35625 16.1429C8.0935 14.301 9.89482 13 12 13C14.1052 13 15.9065 14.301 16.6438 16.1429M15 7C15 8.65685 13.6569 10 12 10C10.3431 10 9 8.65685 9 7C9 5.34315 10.3431 4 12 4C13.6569 4 15 5.34315 15 7ZM21 10C21 11.1046 20.1046 12 19 12C17.8954 12 17 11.1046 17 10C17 8.89543 17.8954 8 19 8C20.1046 8 21 8.89543 21 10ZM7 10C7 11.1046 6.10457 12 5 12C3.89543 12 3 11.1046 3 10C3 8.89543 3.89543 8 5 8C6.10457 8 7 8.89543 7 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="login-feature-content">
+              <h3 class="login-feature-title">Team Collaboration</h3>
+              <p class="login-feature-text">Recognize teammates and track collective performance</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="login-footer">
+          <p class="login-footer-text">
+            &copy; 2025 Developer Report Dashboard. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel: Login Form -->
+    <div class="login-panel login-panel--right">
+      <div class="login-form-wrapper">
+
+        <!-- Login Header -->
+        <div class="login-header">
+          <h2 class="login-title">Welcome Back</h2>
+          <p class="login-subtitle">Sign in to access your developer dashboard</p>
+        </div>
+
+        <!-- Login Form -->
+        <form class="login-form" id="loginForm" data-validate novalidate>
+
+          <!-- Microsoft SSO Button (Primary) -->
+          <button type="button" class="btn btn-microsoft btn-block" id="microsoftSsoBtn">
+            <svg class="btn-icon-left" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 0H9.5V9.5H0V0Z" fill="#F25022"/>
+              <path d="M10.5 0H20V9.5H10.5V0Z" fill="#7FBA00"/>
+              <path d="M0 10.5H9.5V20H0V10.5Z" fill="#00A4EF"/>
+              <path d="M10.5 10.5H20V20H10.5V10.5Z" fill="#FFB900"/>
+            </svg>
+            <span>Sign in with Microsoft</span>
+          </button>
+
+          <!-- Divider -->
+          <div class="login-divider">
+            <span class="login-divider-text">or sign in with email</span>
+          </div>
+
+          <!-- Email Field -->
+          <div class="form-field">
+            <label for="email" class="form-label form-label--required">Email Address</label>
+            <div class="form-input-group form-input-group--icon-left">
+              <span class="form-input-group__icon form-input-group__icon--left">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                </svg>
+              </span>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="form-input"
+                placeholder="john.doe@company.com"
+                data-validate="email"
+                required
+                autocomplete="email"
+              >
+            </div>
+          </div>
+
+          <!-- Password Field -->
+          <div class="form-field">
+            <label for="password" class="form-label form-label--required">Password</label>
+            <div class="form-input-group form-input-group--icon-left">
+              <span class="form-input-group__icon form-input-group__icon--left">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                </svg>
+              </span>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                class="form-input"
+                placeholder="Enter your password"
+                data-validate="password"
+                required
+                autocomplete="current-password"
+                minlength="8"
+              >
+              <button type="button" class="form-input-password-toggle" id="passwordToggle" aria-label="Toggle password visibility">
+                <svg class="password-show-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                  <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+                </svg>
+                <svg class="password-hide-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                  <path fill-rule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z" clip-rule="evenodd"/>
+                  <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Remember Me & Forgot Password -->
+          <div class="login-options">
+            <div class="form-checkbox-wrapper">
+              <input type="checkbox" id="rememberMe" name="rememberMe" class="form-checkbox">
+              <label for="rememberMe" class="form-checkbox-custom"></label>
+              <label for="rememberMe" class="form-checkbox-label">Remember me</label>
+            </div>
+            <a href="#forgot-password" class="login-link" id="forgotPasswordLink">Forgot password?</a>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn btn-primary btn-block btn-lg" id="loginBtn">
+            Sign In
+          </button>
+
+          <!-- Help Text -->
+          <div class="login-help">
+            <p class="login-help-text">
+              Don't have an account? Contact your administrator to get access.
+            </p>
+          </div>
+        </form>
+
+        <!-- Footer Links -->
+        <div class="login-links">
+          <a href="#privacy" class="login-link-secondary">Privacy Policy</a>
+          <span class="login-link-divider">&bull;</span>
+          <a href="#terms" class="login-link-secondary">Terms of Service</a>
+          <span class="login-link-divider">&bull;</span>
+          <a href="#help" class="login-link-secondary">Help Center</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="js/components/Toast.js"></script>
+  <script src="js/components/Form.js"></script>
+  <script src="js/pages/LoginPage.js"></script>
+</body>
+</html>
