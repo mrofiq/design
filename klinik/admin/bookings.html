@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookings - Klinik Sehat Admin</title>
+    <link rel="stylesheet" href="css/tokens.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo"><å</div>
+            <h2 class="clinic-name">Klinik Sehat</h2>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="bookings.html" class="nav-item active">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>Bookings</span>
+                <span class="badge">8</span>
+            </a>
+
+            <a href="doctors.html" class="nav-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span>Doctors</span>
+            </a>
+
+            <a href="schedule.html" class="nav-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>Schedule</span>
+            </a>
+
+            <a href="clinic-profile.html" class="nav-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M12 1v6m0 6v6m9-9h-6m-6 0H3"></path>
+                </svg>
+                <span>Clinic Profile</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="avatar">=d</div>
+                <div class="user-info">
+                    <p class="name">Admin User</p>
+                    <p class="role">Admin</p>
+                </div>
+            </div>
+            <button class="logout-button" onclick="Auth.logout()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-button" id="mobileMenuBtn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Bookings</h1>
+                <p class="breadcrumb">Dashboard / <span>Bookings</span></p>
+            </div>
+            <button class="button-primary" onclick="window.location.href='#new-booking'">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                New Booking
+            </button>
+        </div>
+
+        <!-- Filter Panel -->
+        <div class="filter-panel">
+            <div class="filter-group">
+                <label>Date From</label>
+                <input type="date" class="filter-input" id="dateFrom" value="2025-10-04">
+            </div>
+
+            <div class="filter-group">
+                <label>Date To</label>
+                <input type="date" class="filter-input" id="dateTo" value="2025-10-04">
+            </div>
+
+            <div class="filter-group">
+                <label>Doctor</label>
+                <select class="filter-select" id="filterDoctor">
+                    <option value="">All Doctors</option>
+                    <option value="1">Dr. Ahmad Surya</option>
+                    <option value="2">Dr. Siti Nurhaliza</option>
+                    <option value="3">Dr. Budi Santoso</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Status</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" value="pending" checked>
+                        <span>Pending</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" value="confirmed" checked>
+                        <span>Confirmed</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" value="paid" checked>
+                        <span>Paid</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="filter-group" style="min-width: 300px;">
+                <label>Search</label>
+                <div class="search-input">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" placeholder="Search by booking number, name, or phone" id="searchInput">
+                </div>
+            </div>
+
+            <button class="filter-apply" onclick="applyFilters()">Apply Filters</button>
+            <button class="filter-reset" onclick="resetFilters()">Reset</button>
+        </div>
+
+        <!-- Bookings Table -->
+        <div class="data-table-container">
+            <table class="data-table" id="bookingsTable">
+                <thead>
+                    <tr>
+                        <th class="sortable" onclick="sortTable(0)">
+                            Booking Number
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="18 15 12 9 6 15"></polyline>
+                            </svg>
+                        </th>
+                        <th class="sortable" onclick="sortTable(1)">
+                            Patient Name
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="18 15 12 9 6 15"></polyline>
+                            </svg>
+                        </th>
+                        <th>Patient Phone</th>
+                        <th class="sortable" onclick="sortTable(3)">
+                            Doctor
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="18 15 12 9 6 15"></polyline>
+                            </svg>
+                        </th>
+                        <th class="sortable" onclick="sortTable(4)">
+                            Date
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="18 15 12 9 6 15"></polyline>
+                            </svg>
+                        </th>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="bookingsTableBody">
+                    <!-- Fast-Track Booking -->
+                    <tr class="table-row fast-track" onclick="openBookingDetail('BK20251004001')">
+                        <td><code>BK20251004001</code></td>
+                        <td>Budi Santoso</td>
+                        <td>0812-3456-7890</td>
+                        <td>
+                            <div class="doctor-cell">
+                                <div class="avatar-small">=h•</div>
+                                <span>Dr. Ahmad Surya</span>
+                            </div>
+                        </td>
+                        <td>04 Okt 2025</td>
+                        <td>10:00 WIB</td>
+                        <td><span class="badge badge-fast-track">Fast-Track</span></td>
+                        <td><span class="badge badge-paid">Paid</span></td>
+                        <td class="action-buttons">
+                            <button class="icon-button" onclick="event.stopPropagation(); openBookingDetail('BK20251004001')" title="View">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                            <button class="icon-button" onclick="event.stopPropagation(); editBooking('BK20251004001')" title="Edit">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Regular Booking -->
+                    <tr class="table-row" onclick="openBookingDetail('BK20251004002')">
+                        <td><code>BK20251004002</code></td>
+                        <td>Siti Aminah</td>
+                        <td>0813-9876-5432</td>
+                        <td>
+                            <div class="doctor-cell">
+                                <div class="avatar-small">=i•</div>
+                                <span>Dr. Siti Nurhaliza</span>
+                            </div>
+                        </td>
+                        <td>04 Okt 2025</td>
+                        <td>Reservasi</td>
+                        <td><span class="badge badge-regular">Regular</span></td>
+                        <td><span class="badge badge-confirmed">Confirmed</span></td>
+                        <td class="action-buttons">
+                            <button class="icon-button" onclick="event.stopPropagation(); openBookingDetail('BK20251004002')" title="View">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                            <button class="icon-button" onclick="event.stopPropagation(); editBooking('BK20251004002')" title="Edit">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Fast-Track Booking -->
+                    <tr class="table-row fast-track" onclick="openBookingDetail('BK20251004003')">
+                        <td><code>BK20251004003</code></td>
+                        <td>Ahmad Fauzi</td>
+                        <td>0821-5555-1234</td>
+                        <td>
+                            <div class="doctor-cell">
+                                <div class="avatar-small">=h•</div>
+                                <span>Dr. Budi Santoso</span>
+                            </div>
+                        </td>
+                        <td>04 Okt 2025</td>
+                        <td>11:30 WIB</td>
+                        <td><span class="badge badge-fast-track">Fast-Track</span></td>
+                        <td><span class="badge badge-pending">Pending</span></td>
+                        <td class="action-buttons">
+                            <button class="icon-button" onclick="event.stopPropagation(); openBookingDetail('BK20251004003')" title="View">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                            <button class="icon-button" onclick="event.stopPropagation(); editBooking('BK20251004003')" title="Edit">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Regular Booking -->
+                    <tr class="table-row" onclick="openBookingDetail('BK20251004004')">
+                        <td><code>BK20251004004</code></td>
+                        <td>Dewi Lestari</td>
+                        <td>0856-7777-8888</td>
+                        <td>
+                            <div class="doctor-cell">
+                                <div class="avatar-small">=h•</div>
+                                <span>Dr. Ahmad Surya</span>
+                            </div>
+                        </td>
+                        <td>04 Okt 2025</td>
+                        <td>Reservasi</td>
+                        <td><span class="badge badge-regular">Regular</span></td>
+                        <td><span class="badge badge-completed">Completed</span></td>
+                        <td class="action-buttons">
+                            <button class="icon-button" onclick="event.stopPropagation(); openBookingDetail('BK20251004004')" title="View">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                            <button class="icon-button" onclick="event.stopPropagation(); editBooking('BK20251004004')" title="Edit">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Fast-Track Booking -->
+                    <tr class="table-row fast-track" onclick="openBookingDetail('BK20251004005')">
+                        <td><code>BK20251004005</code></td>
+                        <td>Rudi Hartono</td>
+                        <td>0877-1111-2222</td>
+                        <td>
+                            <div class="doctor-cell">
+                                <div class="avatar-small">=i•</div>
+                                <span>Dr. Siti Nurhaliza</span>
+                            </div>
+                        </td>
+                        <td>04 Okt 2025</td>
+                        <td>14:00 WIB</td>
+                        <td><span class="badge badge-fast-track">Fast-Track</span></td>
+                        <td><span class="badge badge-paid">Paid</span></td>
+                        <td class="action-buttons">
+                            <button class="icon-button" onclick="event.stopPropagation(); openBookingDetail('BK20251004005')" title="View">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                            <button class="icon-button" onclick="event.stopPropagation(); editBooking('BK20251004005')" title="Edit">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Cancelled Booking -->
+                    <tr class="table-row" onclick="openBookingDetail('BK20251004006')">
+                        <td><code>BK20251004006</code></td>
+                        <td>Linda Wijaya</td>
+                        <td>0888-3333-4444</td>
+                        <td>
+                            <div class="doctor-cell">
+                                <div class="avatar-small">=h•</div>
+                                <span>Dr. Budi Santoso</span>
+                            </div>
+                        </td>
+                        <td>04 Okt 2025</td>
+                        <td>Reservasi</td>
+                        <td><span class="badge badge-regular">Regular</span></td>
+                        <td><span class="badge badge-cancelled">Cancelled</span></td>
+                        <td class="action-buttons">
+                            <button class="icon-button" onclick="event.stopPropagation(); openBookingDetail('BK20251004006')" title="View">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                            <button class="icon-button" onclick="event.stopPropagation(); editBooking('BK20251004006')" title="Edit">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- No-Show Booking -->
+                    <tr class="table-row" onclick="openBookingDetail('BK20251004007')">
+                        <td><code>BK20251004007</code></td>
+                        <td>Eko Prasetyo</td>
+                        <td>0899-5555-6666</td>
+                        <td>
+                            <div class="doctor-cell">
+                                <div class="avatar-small">=h•</div>
+                                <span>Dr. Ahmad Surya</span>
+                            </div>
+                        </td>
+                        <td>04 Okt 2025</td>
+                        <td>Reservasi</td>
+                        <td><span class="badge badge-regular">Regular</span></td>
+                        <td><span class="badge badge-no-show">No-Show</span></td>
+                        <td class="action-buttons">
+                            <button class="icon-button" onclick="event.stopPropagation(); openBookingDetail('BK20251004007')" title="View">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                            <button class="icon-button" onclick="event.stopPropagation(); editBooking('BK20251004007')" title="Edit">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Fast-Track Booking -->
+                    <tr class="table-row fast-track" onclick="openBookingDetail('BK20251004008')">
+                        <td><code>BK20251004008</code></td>
+                        <td>Nina Anggraini</td>
+                        <td>0811-2222-9999</td>
+                        <td>
+                            <div class="doctor-cell">
+                                <div class="avatar-small">=i•</div>
+                                <span>Dr. Siti Nurhaliza</span>
+                            </div>
+                        </td>
+                        <td>04 Okt 2025</td>
+                        <td>15:30 WIB</td>
+                        <td><span class="badge badge-fast-track">Fast-Track</span></td>
+                        <td><span class="badge badge-confirmed">Confirmed</span></td>
+                        <td class="action-buttons">
+                            <button class="icon-button" onclick="event.stopPropagation(); openBookingDetail('BK20251004008')" title="View">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                            <button class="icon-button" onclick="event.stopPropagation(); editBooking('BK20251004008')" title="Edit">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <button class="page-button" id="prevPage" disabled>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+
+                <div class="page-numbers" id="pageNumbers">
+                    <button class="page-number active">1</button>
+                    <button class="page-number">2</button>
+                    <button class="page-number">3</button>
+                    <span>...</span>
+                    <button class="page-number">10</button>
+                </div>
+
+                <button class="page-button" id="nextPage">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+
+                <span class="page-info">Showing 1-8 of 8 bookings</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- Booking Detail Modal -->
+    <div class="modal-overlay" id="bookingDetailModal" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 class="modal-title">Booking Details</h3>
+                <button class="modal-close" onclick="closeBookingDetail()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="modal-body" id="bookingDetailContent">
+                <!-- Content loaded dynamically -->
+            </div>
+
+            <div class="modal-footer">
+                <button class="button-secondary" onclick="closeBookingDetail()">Close</button>
+                <button class="button-primary" onclick="saveBookingChanges()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/components.js"></script>
+    <script>
+        // Check authentication
+        if (!Auth.isAuthenticated()) {
+            window.location.href = 'login.html';
+        }
+
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('open');
+        });
+
+        // Filter functions
+        function applyFilters() {
+            Toast.show('Filters applied successfully', 'success');
+            // In production, this would filter the table based on selected criteria
+        }
+
+        function resetFilters() {
+            document.getElementById('dateFrom').value = '2025-10-04';
+            document.getElementById('dateTo').value = '2025-10-04';
+            document.getElementById('filterDoctor').value = '';
+            document.querySelectorAll('.checkbox-group input[type="checkbox"]').forEach(cb => cb.checked = true);
+            document.getElementById('searchInput').value = '';
+            Toast.show('Filters reset', 'info');
+        }
+
+        // Search with debounce
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const query = e.target.value;
+                if (query.length > 2) {
+                    console.log('Searching for:', query);
+                    // In production, this would perform API search
+                }
+            }, 300);
+        });
+
+        // Table sorting
+        let sortDirection = {};
+        function sortTable(columnIndex) {
+            const table = document.getElementById('bookingsTable');
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            sortDirection[columnIndex] = !sortDirection[columnIndex];
+            const ascending = sortDirection[columnIndex];
+
+            rows.sort((a, b) => {
+                const aText = a.cells[columnIndex].textContent.trim();
+                const bText = b.cells[columnIndex].textContent.trim();
+                return ascending ? aText.localeCompare(bText) : bText.localeCompare(aText);
+            });
+
+            rows.forEach(row => tbody.appendChild(row));
+            Toast.show('Table sorted', 'info');
+        }
+
+        // Booking detail modal
+        function openBookingDetail(bookingNumber) {
+            const modal = document.getElementById('bookingDetailModal');
+            const content = document.getElementById('bookingDetailContent');
+
+            // Sample booking detail - in production, fetch from API
+            content.innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                        <code style="font-size: 20px; font-weight: 700; color: var(--primary-500);">${bookingNumber}</code>
+                        <button class="button-ghost" style="padding: 8px 16px; height: auto;" onclick="copyToClipboard('${bookingNumber}')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                            Copy
+                        </button>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h4 style="margin-bottom: 16px; font-size: 16px; font-weight: 600;">Patient Information</h4>
+                    <div class="detail-row">
+                        <label>Name</label>
+                        <span>Budi Santoso</span>
+                    </div>
+                    <div class="detail-row">
+                        <label>Phone</label>
+                        <span>0812-3456-7890</span>
+                    </div>
+                    <div class="detail-row">
+                        <label>Email</label>
+                        <span>budi@example.com</span>
+                    </div>
+                    <div class="detail-row">
+                        <label>Complaint</label>
+                        <span>Sakit kepala berkepanjangan</span>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h4 style="margin-bottom: 16px; font-size: 16px; font-weight: 600;">Appointment Details</h4>
+                    <div class="detail-row">
+                        <label>Doctor</label>
+                        <span>Dr. Ahmad Surya</span>
+                    </div>
+                    <div class="detail-row">
+                        <label>Specialization</label>
+                        <span>Dokter Umum</span>
+                    </div>
+                    <div class="detail-row">
+                        <label>Date</label>
+                        <span>Jumat, 04 Oktober 2025</span>
+                    </div>
+                    <div class="detail-row">
+                        <label>Time</label>
+                        <span>10:00 WIB</span>
+                    </div>
+                    <div class="detail-row">
+                        <label>Type</label>
+                        <span class="badge badge-fast-track">Fast-Track</span>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h4 style="margin-bottom: 16px; font-size: 16px; font-weight: 600;">Payment Information</h4>
+                    <div class="detail-row">
+                        <label>Amount</label>
+                        <span>Rp 50.000</span>
+                    </div>
+                    <div class="detail-row">
+                        <label>Method</label>
+                        <span>QRIS</span>
+                    </div>
+                    <div class="detail-row">
+                        <label>Status</label>
+                        <span class="badge badge-paid">Paid</span>
+                    </div>
+                    <div class="detail-row">
+                        <label>Paid at</label>
+                        <span>04 Okt 2025, 09:45 WIB</span>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h4 style="margin-bottom: 16px; font-size: 16px; font-weight: 600;">Booking Status</h4>
+                    <div class="detail-row">
+                        <label>Current Status</label>
+                        <span class="badge badge-paid">Paid</span>
+                    </div>
+                    <div class="detail-row">
+                        <label>Created</label>
+                        <span>04 Okt 2025, 09:30 WIB</span>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600;">Update Status</label>
+                        <select class="filter-select" style="width: 100%;">
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="paid" selected>Paid</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                            <option value="no-show">No-Show</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600;">Admin Notes</label>
+                        <textarea class="text-input" rows="3" placeholder="Add notes (visible to admins only)" style="width: 100%; resize: vertical;"></textarea>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h4 style="margin-bottom: 16px; font-size: 16px; font-weight: 600;">Notifications Sent</h4>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <svg width="16" height="16" style="color: #10B981;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span style="flex: 1;">Confirmation (WhatsApp)</span>
+                            <span style="font-size: 12px; color: var(--neutral-600);">04 Okt, 09:31</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <svg width="16" height="16" style="color: #10B981;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span style="flex: 1;">H-1 Reminder</span>
+                            <span style="font-size: 12px; color: var(--neutral-600);">03 Okt, 08:00</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <svg width="16" height="16" style="color: var(--neutral-400);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            <span style="flex: 1; color: var(--neutral-600);">H-0 Reminder (pending)</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            modal.style.display = 'flex';
+        }
+
+        function closeBookingDetail() {
+            document.getElementById('bookingDetailModal').style.display = 'none';
+        }
+
+        function editBooking(bookingNumber) {
+            openBookingDetail(bookingNumber);
+        }
+
+        function saveBookingChanges() {
+            Toast.show('Booking updated successfully', 'success');
+            closeBookingDetail();
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                Toast.show('Booking number copied!', 'success');
+            });
+        }
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeBookingDetail();
+            }
+        });
+
+        // Close modal on backdrop click
+        document.getElementById('bookingDetailModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeBookingDetail();
+            }
+        });
+    </script>
+</body>
+</html>
