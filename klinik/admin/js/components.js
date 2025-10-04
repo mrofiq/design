@@ -6,6 +6,9 @@
 
 const Modal = {
   current: null,
+  focusableElements: null,
+  firstFocusable: null,
+  lastFocusable: null,
 
   open(modalId, options = {}) {
     const modal = document.getElementById(modalId);
@@ -14,6 +17,9 @@ const Modal = {
     this.current = modal;
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+
+    // Setup focus trap
+    this.setupFocusTrap(modal);
 
     // Close on overlay click
     const overlay = modal.querySelector('.modal-overlay');
@@ -40,10 +46,52 @@ const Modal = {
     };
     document.addEventListener('keydown', escHandler);
 
+    // Focus first element
+    setTimeout(() => {
+      if (this.firstFocusable) {
+        this.firstFocusable.focus();
+      }
+    }, 100);
+
     // Callback after open
     if (options.onOpen) {
       options.onOpen();
     }
+  },
+
+  setupFocusTrap(modal) {
+    // Get all focusable elements
+    const dialog = modal.querySelector('.modal-dialog');
+    if (!dialog) return;
+
+    const focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+    this.focusableElements = dialog.querySelectorAll(focusableSelectors);
+
+    if (this.focusableElements.length === 0) return;
+
+    this.firstFocusable = this.focusableElements[0];
+    this.lastFocusable = this.focusableElements[this.focusableElements.length - 1];
+
+    // Handle Tab key to trap focus
+    const trapFocus = (e) => {
+      if (e.key !== 'Tab') return;
+
+      if (e.shiftKey) {
+        // Shift + Tab
+        if (document.activeElement === this.firstFocusable) {
+          e.preventDefault();
+          this.lastFocusable.focus();
+        }
+      } else {
+        // Tab
+        if (document.activeElement === this.lastFocusable) {
+          e.preventDefault();
+          this.firstFocusable.focus();
+        }
+      }
+    };
+
+    dialog.addEventListener('keydown', trapFocus);
   },
 
   close(modalId) {
@@ -53,6 +101,9 @@ const Modal = {
     modal.style.display = 'none';
     document.body.style.overflow = '';
     this.current = null;
+    this.focusableElements = null;
+    this.firstFocusable = null;
+    this.lastFocusable = null;
   },
 
   closeAll() {
@@ -61,6 +112,9 @@ const Modal = {
     });
     document.body.style.overflow = '';
     this.current = null;
+    this.focusableElements = null;
+    this.firstFocusable = null;
+    this.lastFocusable = null;
   }
 };
 
@@ -602,6 +656,736 @@ const Confirm = {
 };
 
 // ============================================
+// BOOKING DETAIL MODAL
+// ============================================
+
+const BookingModal = {
+  currentBookingId: null,
+  originalStatus: null,
+  originalNotes: '',
+  hasChanges: false,
+
+  // Mock data - in production, this would come from API
+  getMockBookingData(bookingId) {
+    const mockData = {
+      'BK20251003001': {
+        id: 'BK20251003001',
+        patient: {
+          name: 'Budi Santoso',
+          phone: '0812-3456-7890',
+          email: 'budi@example.com',
+          complaint: 'Sakit kepala berkepanjangan'
+        },
+        appointment: {
+          doctor: 'Dr. Ahmad Surya',
+          specialization: 'Dokter Umum',
+          date: 'Senin, 3 Oktober 2025',
+          time: '10:00 WIB',
+          type: 'fast-track'
+        },
+        payment: {
+          amount: 50000,
+          method: 'QRIS',
+          status: 'paid',
+          paidAt: '2025-10-03T09:45:00'
+        },
+        status: 'paid',
+        createdAt: '2025-10-03T09:30:00',
+        notes: '',
+        notifications: [
+          { type: 'Confirmation (WhatsApp)', status: 'sent', timestamp: '2025-10-03T09:31:00' },
+          { type: 'H-1 Reminder', status: 'pending', timestamp: null },
+          { type: 'H-0 Reminder', status: 'pending', timestamp: null }
+        ]
+      },
+      'BK20251003002': {
+        id: 'BK20251003002',
+        patient: {
+          name: 'Siti Aminah',
+          phone: '0813-9876-5432',
+          email: 'siti@example.com',
+          complaint: 'Demam tinggi'
+        },
+        appointment: {
+          doctor: 'Dr. Ahmad Surya',
+          specialization: 'Dokter Umum',
+          date: 'Senin, 3 Oktober 2025',
+          time: '11:00 WIB',
+          type: 'regular'
+        },
+        payment: null,
+        status: 'confirmed',
+        createdAt: '2025-10-03T10:15:00',
+        notes: '',
+        notifications: [
+          { type: 'Confirmation (WhatsApp)', status: 'sent', timestamp: '2025-10-03T10:16:00' }
+        ]
+      },
+      'BK20251003003': {
+        id: 'BK20251003003',
+        patient: {
+          name: 'Rudi Hartono',
+          phone: '0821-1122-3344',
+          email: 'rudi@example.com',
+          complaint: 'Batuk dan pilek'
+        },
+        appointment: {
+          doctor: 'Dr. Sarah Wijaya',
+          specialization: 'Dokter Spesialis Paru',
+          date: 'Senin, 3 Oktober 2025',
+          time: '13:00 WIB',
+          type: 'fast-track'
+        },
+        payment: {
+          amount: 50000,
+          method: 'QRIS',
+          status: 'paid',
+          paidAt: '2025-10-03T12:30:00'
+        },
+        status: 'paid',
+        createdAt: '2025-10-03T12:25:00',
+        notes: 'Pasien memiliki riwayat asma',
+        notifications: [
+          { type: 'Confirmation (WhatsApp)', status: 'sent', timestamp: '2025-10-03T12:31:00' },
+          { type: 'Payment Confirmation', status: 'sent', timestamp: '2025-10-03T12:31:00' }
+        ]
+      }
+    };
+    return mockData[bookingId];
+  },
+
+  async open(bookingId) {
+    this.currentBookingId = bookingId;
+
+    // In production, fetch data from API
+    // const data = await API.get(`/bookings/${bookingId}`);
+    const data = this.getMockBookingData(bookingId);
+
+    if (!data) {
+      Toast.error('Booking not found');
+      return;
+    }
+
+    this.populateModal(data);
+
+    // Store original values for change detection
+    this.originalStatus = data.status;
+    this.originalNotes = data.notes || '';
+    this.hasChanges = false;
+
+    // Open modal
+    Modal.open('bookingDetailModal');
+
+    // Setup event listeners
+    this.setupEventListeners();
+  },
+
+  populateModal(data) {
+    // Booking Number
+    document.getElementById('modalBookingNumber').textContent = data.id;
+
+    // Patient Information
+    document.getElementById('patientName').textContent = data.patient.name;
+    document.getElementById('patientPhone').textContent = data.patient.phone;
+    document.getElementById('patientEmail').textContent = data.patient.email;
+    document.getElementById('patientComplaint').textContent = data.patient.complaint;
+
+    // Appointment Details
+    document.getElementById('doctorName').textContent = data.appointment.doctor;
+    document.getElementById('doctorSpecialization').textContent = data.appointment.specialization;
+    document.getElementById('appointmentDate').textContent = data.appointment.date;
+    document.getElementById('appointmentTime').textContent = data.appointment.time;
+
+    const typeHtml = data.appointment.type === 'fast-track'
+      ? '<span class="badge fast-track">Fast-Track</span>'
+      : '<span class="badge regular">Regular</span>';
+    document.getElementById('appointmentType').innerHTML = typeHtml;
+
+    // Payment Information (only for Fast-Track)
+    const paymentSection = document.getElementById('paymentSection');
+    if (data.payment) {
+      paymentSection.style.display = 'block';
+      document.getElementById('paymentAmount').textContent = Utils.formatCurrency(data.payment.amount);
+      document.getElementById('paymentMethod').textContent = data.payment.method;
+
+      const statusHtml = `<span class="badge ${data.payment.status}">${this.capitalize(data.payment.status)}</span>`;
+      document.getElementById('paymentStatus').innerHTML = statusHtml;
+      document.getElementById('paymentTimestamp').textContent = Utils.formatDateTime(data.payment.paidAt);
+    } else {
+      paymentSection.style.display = 'none';
+    }
+
+    // Booking Status
+    const statusHtml = `<span class="badge ${data.status}">${this.capitalize(data.status)}</span>`;
+    document.getElementById('currentStatus').innerHTML = statusHtml;
+    document.getElementById('createdTimestamp').textContent = Utils.formatDateTime(data.createdAt);
+
+    // Set dropdown to current status
+    const statusDropdown = document.getElementById('statusDropdown');
+    statusDropdown.value = data.status;
+
+    // Admin Notes
+    const notesTextarea = document.getElementById('adminNotes');
+    notesTextarea.value = data.notes || '';
+    document.getElementById('notesCharCount').textContent = (data.notes || '').length;
+
+    // Notifications
+    this.populateNotifications(data.notifications);
+  },
+
+  populateNotifications(notifications) {
+    const container = document.getElementById('notificationsList');
+
+    if (!notifications || notifications.length === 0) {
+      container.innerHTML = '<div class="detail-value" style="color: var(--text-tertiary);">No notifications sent yet</div>';
+      return;
+    }
+
+    const notificationsHtml = notifications.map(notif => {
+      let iconHtml, statusClass, timestampText;
+
+      if (notif.status === 'sent') {
+        iconHtml = `
+          <svg class="notification-icon sent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+        `;
+        statusClass = 'sent';
+        timestampText = `Sent: ${Utils.formatDateTime(notif.timestamp)}`;
+      } else if (notif.status === 'pending') {
+        iconHtml = `
+          <svg class="notification-icon pending" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        `;
+        statusClass = 'pending';
+        timestampText = 'Pending';
+      } else {
+        iconHtml = `
+          <svg class="notification-icon failed" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        `;
+        statusClass = 'failed';
+        timestampText = 'Failed';
+      }
+
+      const retryButton = notif.status === 'failed'
+        ? `<button class="button-secondary retry-button" onclick="BookingModal.retryNotification('${notif.type}')">Retry</button>`
+        : '';
+
+      return `
+        <div class="notification-item">
+          ${iconHtml}
+          <div class="notification-content">
+            <div class="notification-type">${notif.type}</div>
+            <div class="notification-timestamp">${timestampText}</div>
+            ${notif.error ? `<div class="notification-error">${notif.error}</div>` : ''}
+          </div>
+          ${retryButton}
+        </div>
+      `;
+    }).join('');
+
+    container.innerHTML = notificationsHtml;
+  },
+
+  setupEventListeners() {
+    // Copy booking number
+    const copyBtn = document.getElementById('copyBookingNumber');
+    copyBtn.onclick = () => {
+      const bookingNumber = document.getElementById('modalBookingNumber').textContent;
+      Utils.copyToClipboard(bookingNumber);
+    };
+
+    // Status dropdown change
+    const statusDropdown = document.getElementById('statusDropdown');
+    statusDropdown.onchange = () => {
+      this.checkForChanges();
+    };
+
+    // Admin notes change
+    const notesTextarea = document.getElementById('adminNotes');
+    notesTextarea.oninput = (e) => {
+      const charCount = e.target.value.length;
+      document.getElementById('notesCharCount').textContent = charCount;
+      this.checkForChanges();
+    };
+
+    // Close button
+    const closeBtn = document.getElementById('modalCloseButton');
+    closeBtn.onclick = () => {
+      if (this.hasChanges) {
+        Confirm.show(
+          'You have unsaved changes. Are you sure you want to close?',
+          () => Modal.close('bookingDetailModal'),
+          null
+        );
+      } else {
+        Modal.close('bookingDetailModal');
+      }
+    };
+
+    // Save changes button
+    const saveBtn = document.getElementById('saveChangesButton');
+    saveBtn.onclick = () => this.saveChanges();
+  },
+
+  checkForChanges() {
+    const currentStatus = document.getElementById('statusDropdown').value;
+    const currentNotes = document.getElementById('adminNotes').value;
+
+    this.hasChanges = (currentStatus !== this.originalStatus) || (currentNotes !== this.originalNotes);
+
+    // Enable/disable save button
+    const saveBtn = document.getElementById('saveChangesButton');
+    saveBtn.disabled = !this.hasChanges;
+  },
+
+  saveChanges() {
+    const newStatus = document.getElementById('statusDropdown').value;
+    const newNotes = document.getElementById('adminNotes').value;
+
+    // Confirm status change if different
+    if (newStatus !== this.originalStatus) {
+      Confirm.show(
+        `Are you sure you want to change the status to "${this.capitalize(newStatus)}"?`,
+        () => this.performSave(newStatus, newNotes),
+        null
+      );
+    } else {
+      this.performSave(newStatus, newNotes);
+    }
+  },
+
+  async performSave(status, notes) {
+    try {
+      Loading.show('.modal-dialog');
+
+      // In production, send to API
+      // await API.patch(`/bookings/${this.currentBookingId}`, { status, notes });
+
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Update original values
+      this.originalStatus = status;
+      this.originalNotes = notes;
+      this.hasChanges = false;
+
+      // Update save button state
+      document.getElementById('saveChangesButton').disabled = true;
+
+      // Update current status badge
+      const statusHtml = `<span class="badge ${status}">${this.capitalize(status)}</span>`;
+      document.getElementById('currentStatus').innerHTML = statusHtml;
+
+      Toast.success('Changes saved successfully');
+      Loading.hide('.modal-dialog');
+
+      // Optionally close modal and refresh table
+      setTimeout(() => {
+        Modal.close('bookingDetailModal');
+        // In production, refresh the bookings table
+        // window.location.reload();
+      }, 1000);
+
+    } catch (error) {
+      Loading.hide('.modal-dialog');
+      Toast.error('Failed to save changes');
+      console.error('Save error:', error);
+    }
+  },
+
+  retryNotification(type) {
+    Toast.info(`Retrying notification: ${type}...`);
+    // In production, call API to retry notification
+    // API.post(`/bookings/${this.currentBookingId}/notifications/retry`, { type });
+  },
+
+  capitalize(str) {
+    return str.split('-').map(word =>
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ');
+  }
+};
+
+// ============================================
+// EDIT SCHEDULE MODAL
+// ============================================
+
+const EditScheduleModal = {
+  currentDoctorId: null,
+  originalSchedule: {},
+
+  // Mock schedule data
+  getMockScheduleData(doctorId) {
+    const mockData = {
+      '1': {
+        doctorName: 'Dr. Ahmad Surya',
+        schedule: {
+          monday: { active: true, start: '09:00', end: '15:00', duration: 30 },
+          tuesday: { active: true, start: '09:00', end: '15:00', duration: 30 },
+          wednesday: { active: true, start: '09:00', end: '15:00', duration: 30 },
+          thursday: { active: true, start: '09:00', end: '15:00', duration: 30 },
+          friday: { active: true, start: '09:00', end: '15:00', duration: 30 },
+          saturday: { active: false, start: '09:00', end: '15:00', duration: 30 },
+          sunday: { active: false, start: '09:00', end: '15:00', duration: 30 }
+        }
+      },
+      '2': {
+        doctorName: 'Dr. Sarah Wijaya',
+        schedule: {
+          monday: { active: true, start: '08:00', end: '14:00', duration: 30 },
+          tuesday: { active: true, start: '08:00', end: '14:00', duration: 30 },
+          wednesday: { active: true, start: '08:00', end: '14:00', duration: 30 },
+          thursday: { active: true, start: '08:00', end: '14:00', duration: 30 },
+          friday: { active: true, start: '08:00', end: '14:00', duration: 30 },
+          saturday: { active: true, start: '09:00', end: '12:00', duration: 30 },
+          sunday: { active: false, start: '09:00', end: '15:00', duration: 30 }
+        }
+      }
+    };
+    return mockData[doctorId];
+  },
+
+  open(doctorId) {
+    this.currentDoctorId = doctorId || document.getElementById('doctorSelect')?.value || '1';
+
+    // Load schedule data
+    const data = this.getMockScheduleData(this.currentDoctorId);
+    if (!data) {
+      Toast.error('Schedule data not found');
+      return;
+    }
+
+    // Update doctor name
+    document.getElementById('scheduleModalDoctorName').textContent = data.doctorName;
+
+    // Load schedule for each day
+    this.loadSchedule(data.schedule);
+
+    // Store original schedule for change detection
+    this.originalSchedule = JSON.parse(JSON.stringify(data.schedule));
+
+    // Open modal
+    Modal.open('editScheduleModal');
+
+    // Setup event listeners
+    this.setupEventListeners();
+  },
+
+  loadSchedule(schedule) {
+    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+    days.forEach(day => {
+      const dayData = schedule[day];
+      const checkbox = document.querySelector(`input[type="checkbox"][data-day="${day}"]`);
+      const startSelect = document.querySelector(`select[data-field="start"][data-day="${day}"]`);
+      const endSelect = document.querySelector(`select[data-field="end"][data-day="${day}"]`);
+      const durationSelect = document.querySelector(`select[data-field="duration"][data-day="${day}"]`);
+      const daySection = checkbox.closest('.schedule-day-section');
+
+      // Set checkbox state
+      checkbox.checked = dayData.active;
+
+      // Set field values
+      startSelect.value = dayData.start;
+      endSelect.value = dayData.end;
+      durationSelect.value = dayData.duration;
+
+      // Update disabled state
+      this.updateDayState(day, dayData.active);
+    });
+  },
+
+  setupEventListeners() {
+    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+    // Day checkbox toggles
+    days.forEach(day => {
+      const checkbox = document.querySelector(`input[type="checkbox"][data-day="${day}"]`);
+      checkbox.addEventListener('change', (e) => {
+        this.updateDayState(day, e.target.checked);
+      });
+    });
+
+    // Copy to all days button
+    const copyBtn = document.getElementById('copyToAllDaysBtn');
+    copyBtn.onclick = () => this.copyToAllDays();
+
+    // Save button
+    const saveBtn = document.getElementById('saveScheduleBtn');
+    saveBtn.onclick = () => this.saveSchedule();
+
+    // Cancel button
+    const cancelBtn = document.getElementById('cancelScheduleBtn');
+    cancelBtn.onclick = () => Modal.close('editScheduleModal');
+  },
+
+  updateDayState(day, active) {
+    const startSelect = document.querySelector(`select[data-field="start"][data-day="${day}"]`);
+    const endSelect = document.querySelector(`select[data-field="end"][data-day="${day}"]`);
+    const durationSelect = document.querySelector(`select[data-field="duration"][data-day="${day}"]`);
+    const daySection = startSelect.closest('.schedule-day-section');
+
+    if (active) {
+      startSelect.disabled = false;
+      endSelect.disabled = false;
+      durationSelect.disabled = false;
+      daySection.classList.remove('disabled');
+    } else {
+      startSelect.disabled = true;
+      endSelect.disabled = true;
+      durationSelect.disabled = true;
+      daySection.classList.add('disabled');
+    }
+  },
+
+  copyToAllDays() {
+    // Get Monday's values
+    const mondayCheckbox = document.querySelector('input[type="checkbox"][data-day="monday"]');
+    const mondayStart = document.querySelector('select[data-field="start"][data-day="monday"]').value;
+    const mondayEnd = document.querySelector('select[data-field="end"][data-day="monday"]').value;
+    const mondayDuration = document.querySelector('select[data-field="duration"][data-day="monday"]').value;
+    const mondayActive = mondayCheckbox.checked;
+
+    const days = ['tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+    days.forEach(day => {
+      const checkbox = document.querySelector(`input[type="checkbox"][data-day="${day}"]`);
+      const startSelect = document.querySelector(`select[data-field="start"][data-day="${day}"]`);
+      const endSelect = document.querySelector(`select[data-field="end"][data-day="${day}"]`);
+      const durationSelect = document.querySelector(`select[data-field="duration"][data-day="${day}"]`);
+
+      checkbox.checked = mondayActive;
+      startSelect.value = mondayStart;
+      endSelect.value = mondayEnd;
+      durationSelect.value = mondayDuration;
+
+      this.updateDayState(day, mondayActive);
+    });
+
+    Toast.success('Monday\'s schedule copied to all other days');
+  },
+
+  async saveSchedule() {
+    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    const schedule = {};
+
+    // Collect schedule data
+    days.forEach(day => {
+      const checkbox = document.querySelector(`input[type="checkbox"][data-day="${day}"]`);
+      const startSelect = document.querySelector(`select[data-field="start"][data-day="${day}"]`);
+      const endSelect = document.querySelector(`select[data-field="end"][data-day="${day}"]`);
+      const durationSelect = document.querySelector(`select[data-field="duration"][data-day="${day}"]`);
+
+      schedule[day] = {
+        active: checkbox.checked,
+        start: startSelect.value,
+        end: endSelect.value,
+        duration: parseInt(durationSelect.value)
+      };
+    });
+
+    // Validate schedule
+    const activeDay = Object.values(schedule).some(day => day.active);
+    if (!activeDay) {
+      Toast.error('At least one day must be active');
+      return;
+    }
+
+    try {
+      Loading.show('.modal-dialog');
+
+      // In production, send to API
+      // await API.patch(`/doctors/${this.currentDoctorId}/schedule`, { schedule });
+
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      Toast.success('Schedule saved successfully');
+      Loading.hide('.modal-dialog');
+
+      // Close modal and refresh calendar
+      setTimeout(() => {
+        Modal.close('editScheduleModal');
+        // Trigger calendar refresh if needed
+        if (window.ScheduleCalendar && window.ScheduleCalendar.render) {
+          window.ScheduleCalendar.render();
+        }
+      }, 500);
+
+    } catch (error) {
+      Loading.hide('.modal-dialog');
+      Toast.error('Failed to save schedule');
+      console.error('Save error:', error);
+    }
+  }
+};
+
+// ============================================
+// ADD EXCEPTION MODAL
+// ============================================
+
+const AddExceptionModal = {
+  currentDoctorId: null,
+
+  open(doctorId) {
+    this.currentDoctorId = doctorId || document.getElementById('doctorSelect')?.value || '1';
+
+    // Get doctor name from select
+    const doctorSelect = document.getElementById('doctorSelect');
+    const doctorName = doctorSelect?.options[doctorSelect.selectedIndex]?.text || 'Dr. Ahmad Surya';
+
+    document.getElementById('exceptionModalDoctorName').textContent = doctorName;
+
+    // Reset form
+    this.resetForm();
+
+    // Set minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('exceptionDate').min = today;
+
+    // Open modal
+    Modal.open('addExceptionModal');
+
+    // Setup event listeners
+    this.setupEventListeners();
+  },
+
+  resetForm() {
+    // Reset radio buttons
+    document.querySelector('input[name="exceptionType"][value="holiday"]').checked = true;
+
+    // Reset date
+    document.getElementById('exceptionDate').value = '';
+
+    // Reset full day checkbox
+    document.getElementById('fullDayCheckbox').checked = true;
+
+    // Hide time fields
+    document.getElementById('timeFieldsContainer').style.display = 'none';
+
+    // Reset time fields
+    document.getElementById('exceptionStartTime').value = '';
+    document.getElementById('exceptionEndTime').value = '';
+
+    // Reset reason
+    document.getElementById('exceptionReason').value = '';
+    document.getElementById('reasonCharCount').textContent = '0';
+  },
+
+  setupEventListeners() {
+    // Full day checkbox toggle
+    const fullDayCheckbox = document.getElementById('fullDayCheckbox');
+    fullDayCheckbox.addEventListener('change', (e) => {
+      const timeFields = document.getElementById('timeFieldsContainer');
+      if (e.target.checked) {
+        timeFields.style.display = 'none';
+        document.getElementById('exceptionStartTime').value = '';
+        document.getElementById('exceptionEndTime').value = '';
+      } else {
+        timeFields.style.display = 'block';
+      }
+    });
+
+    // Reason character count
+    const reasonTextarea = document.getElementById('exceptionReason');
+    reasonTextarea.addEventListener('input', (e) => {
+      document.getElementById('reasonCharCount').textContent = e.target.value.length;
+    });
+
+    // Add exception button
+    const addBtn = document.getElementById('addExceptionBtn');
+    addBtn.onclick = () => this.addException();
+
+    // Cancel button
+    const cancelBtn = document.getElementById('cancelExceptionBtn');
+    cancelBtn.onclick = () => Modal.close('addExceptionModal');
+  },
+
+  async addException() {
+    // Get form values
+    const type = document.querySelector('input[name="exceptionType"]:checked').value;
+    const date = document.getElementById('exceptionDate').value;
+    const fullDay = document.getElementById('fullDayCheckbox').checked;
+    const startTime = document.getElementById('exceptionStartTime').value;
+    const endTime = document.getElementById('exceptionEndTime').value;
+    const reason = document.getElementById('exceptionReason').value.trim();
+
+    // Validation
+    if (!date) {
+      Toast.error('Please select a date');
+      return;
+    }
+
+    // Prevent past dates
+    const selectedDate = new Date(date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (selectedDate < today) {
+      Toast.error('Cannot add exception for past dates');
+      return;
+    }
+
+    if (!fullDay && (!startTime || !endTime)) {
+      Toast.error('Please specify start and end time');
+      return;
+    }
+
+    if (!fullDay && startTime >= endTime) {
+      Toast.error('End time must be after start time');
+      return;
+    }
+
+    if (!reason) {
+      Toast.error('Please provide a reason');
+      return;
+    }
+
+    const exceptionData = {
+      doctorId: this.currentDoctorId,
+      type,
+      date,
+      fullDay,
+      startTime: fullDay ? null : startTime,
+      endTime: fullDay ? null : endTime,
+      reason
+    };
+
+    try {
+      Loading.show('.modal-dialog');
+
+      // In production, send to API
+      // await API.post('/schedule/exceptions', exceptionData);
+
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      const typeLabel = type === 'holiday' ? 'Holiday' : type === 'leave' ? 'Leave' : 'Block Time';
+      Toast.success(`${typeLabel} exception added successfully`);
+      Loading.hide('.modal-dialog');
+
+      // Close modal and refresh calendar
+      setTimeout(() => {
+        Modal.close('addExceptionModal');
+        // Trigger calendar refresh if needed
+        if (window.ScheduleCalendar && window.ScheduleCalendar.render) {
+          window.ScheduleCalendar.render();
+        }
+      }, 500);
+
+    } catch (error) {
+      Loading.hide('.modal-dialog');
+      Toast.error('Failed to add exception');
+      console.error('Add exception error:', error);
+    }
+  }
+};
+
+// ============================================
 // EXPORT
 // ============================================
 
@@ -616,3 +1400,6 @@ window.FileUpload = FileUpload;
 window.StatAnimation = StatAnimation;
 window.ScheduleCalendar = ScheduleCalendar;
 window.Confirm = Confirm;
+window.BookingModal = BookingModal;
+window.EditScheduleModal = EditScheduleModal;
+window.AddExceptionModal = AddExceptionModal;

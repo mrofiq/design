@@ -4,16 +4,14 @@
    SIDEBAR NAVIGATION
    ============================================ */
 .sidebar {
-  position: fixed;
-  left: 0;
-  top: 0;
   width: var(--sidebar-width);
   height: 100vh;
   background: var(--bg-primary);
   border-right: 1px solid var(--border-light);
   display: flex;
   flex-direction: column;
-  z-index: var(--z-fixed);
+  position: sticky;
+  top: 0;
   transition: transform var(--transition-base);
 }
 
@@ -627,6 +625,8 @@
   flex-direction: column;
   overflow: hidden;
   animation: slideUp var(--transition-slow) forwards;
+  position: relative;
+  z-index: var(--z-modal);
 }
 
 @keyframes slideUp {
@@ -732,6 +732,107 @@
   font-size: var(--text-md);
   font-weight: var(--font-medium);
   color: var(--text-primary);
+}
+
+/* Booking Number Display in Modal */
+.booking-number-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) 0;
+  margin-bottom: var(--space-5);
+  border-bottom: 2px solid var(--border-light);
+}
+
+.booking-number-display {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--primary-500);
+  letter-spacing: 0.5px;
+}
+
+/* Notifications List */
+.notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+}
+
+.notification-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.notification-icon.sent {
+  color: var(--success-500);
+}
+
+.notification-icon.pending {
+  color: var(--text-tertiary);
+}
+
+.notification-icon.failed {
+  color: var(--error-500);
+}
+
+.notification-content {
+  flex: 1;
+}
+
+.notification-type {
+  font-size: var(--text-md);
+  font-weight: var(--font-medium);
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.notification-timestamp {
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+}
+
+.notification-error {
+  font-size: var(--text-sm);
+  color: var(--error-500);
+  margin-top: var(--space-1);
+}
+
+.notification-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.retry-button {
+  padding: 4px 12px;
+  font-size: var(--text-sm);
+  height: 28px;
+  border-radius: var(--radius-sm);
+}
+
+/* Modal State Changes Detection */
+.button-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.button-primary:disabled:hover {
+  background: var(--primary-500);
+  transform: none;
 }
 
 /* ============================================
@@ -1100,6 +1201,155 @@
 .appointment-info .appointment-time {
   font-size: var(--text-xs);
   color: var(--text-tertiary);
+}
+
+/* ============================================
+   RADIO BUTTONS
+   ============================================ */
+.radio-group {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+  position: relative;
+  padding: var(--space-2) 0;
+}
+
+.radio-label input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.radio-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-dark);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.radio-custom::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+  background: var(--primary-500);
+  transform: scale(0);
+  transition: transform var(--transition-base);
+}
+
+.radio-label input[type="radio"]:checked + .radio-custom {
+  border-color: var(--primary-500);
+}
+
+.radio-label input[type="radio"]:checked + .radio-custom::after {
+  transform: scale(1);
+}
+
+.radio-label:hover .radio-custom {
+  border-color: var(--primary-500);
+}
+
+/* ============================================
+   SCHEDULE DAY SECTIONS
+   ============================================ */
+.schedule-day-section {
+  margin-bottom: var(--space-5);
+  padding: var(--space-4);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+}
+
+.day-header-row {
+  margin-bottom: var(--space-3);
+}
+
+.schedule-day-checkbox {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+}
+
+.schedule-day-checkbox .day-name {
+  color: var(--text-primary);
+}
+
+.schedule-time-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.schedule-time-row .form-field {
+  margin-bottom: 0;
+}
+
+.schedule-time-row .filter-select {
+  height: 44px;
+}
+
+/* Disabled state styling */
+.schedule-day-section.disabled .schedule-time-row {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ============================================
+   TIME PICKER INPUTS
+   ============================================ */
+input[type="time"],
+input[type="date"] {
+  height: 56px;
+  padding: var(--space-4);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  font-size: var(--text-md);
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  transition: all var(--transition-base);
+}
+
+input[type="time"]:focus,
+input[type="date"]:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 3px rgba(0, 206, 209, 0.1);
+}
+
+input[type="time"]:disabled,
+input[type="date"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================
+   MODAL RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  .schedule-time-row {
+    grid-template-columns: 1fr;
+  }
+
+  .radio-group {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
 }
 
 /* ============================================
