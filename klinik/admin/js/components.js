@@ -1386,6 +1386,281 @@ const AddExceptionModal = {
 };
 
 // ============================================
+// MONTH CALENDAR
+// ============================================
+
+const MonthCalendar = {
+  currentDate: new Date(2025, 9, 15), // October 15, 2025 (month is 0-indexed)
+  selectedDoctor: null,
+  currentView: 'week', // 'week' or 'month'
+
+  // Mock data for month view - date status
+  getMockMonthData() {
+    return {
+      '2025-10-01': { booked: 2, available: 4 },
+      '2025-10-02': { booked: 3, available: 3 },
+      '2025-10-03': { booked: 5, available: 1 },
+      '2025-10-06': { booked: 4, available: 2 },
+      '2025-10-07': { booked: 3, available: 3 },
+      '2025-10-08': { booked: 2, available: 4 },
+      '2025-10-09': { booked: 1, available: 5 },
+      '2025-10-10': { booked: 4, available: 2 },
+      '2025-10-13': { booked: 3, available: 3 },
+      '2025-10-14': { booked: 5, available: 1 },
+      '2025-10-15': { booked: 6, available: 0 },
+      '2025-10-16': { booked: 3, available: 3 },
+      '2025-10-17': { booked: 2, available: 4 },
+      '2025-10-18': { blocked: true },
+      '2025-10-19': { blocked: true },
+      '2025-10-20': { booked: 4, available: 2 },
+      '2025-10-21': { booked: 3, available: 3 },
+      '2025-10-22': { booked: 2, available: 4 },
+      '2025-10-23': { booked: 5, available: 1 },
+      '2025-10-24': { booked: 4, available: 2 },
+      '2025-10-27': { booked: 3, available: 3 },
+      '2025-10-28': { booked: 2, available: 4 },
+      '2025-10-29': { booked: 4, available: 2 },
+      '2025-10-30': { booked: 3, available: 3 },
+      '2025-10-31': { booked: 1, available: 5 }
+    };
+  },
+
+  init(options = {}) {
+    this.options = options;
+    this.setupViewToggle();
+    this.setupNavigation();
+
+    // Set initial doctor
+    const doctorSelect = document.getElementById('doctorSelect');
+    if (doctorSelect) {
+      this.selectedDoctor = doctorSelect.value;
+    }
+  },
+
+  setupViewToggle() {
+    const toggleButtons = document.querySelectorAll('.view-toggle button');
+
+    toggleButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const btnText = e.target.textContent.trim();
+
+        // Update active state
+        toggleButtons.forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+
+        // Switch view
+        if (btnText === 'Week View') {
+          this.switchToWeekView();
+        } else if (btnText === 'Month View') {
+          this.switchToMonthView();
+        }
+      });
+    });
+  },
+
+  setupNavigation() {
+    // Month navigation
+    const prevBtn = document.getElementById('prevMonth');
+    const nextBtn = document.getElementById('nextMonth');
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => this.changeMonth(-1));
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => this.changeMonth(1));
+    }
+  },
+
+  switchToWeekView() {
+    this.currentView = 'week';
+    document.getElementById('weekViewCalendar').style.display = 'block';
+    document.getElementById('monthViewCalendar').style.display = 'none';
+  },
+
+  switchToMonthView() {
+    this.currentView = 'month';
+    document.getElementById('weekViewCalendar').style.display = 'none';
+    document.getElementById('monthViewCalendar').style.display = 'block';
+    this.render();
+  },
+
+  changeMonth(direction) {
+    const newDate = new Date(this.currentDate);
+    newDate.setMonth(newDate.getMonth() + direction);
+    this.currentDate = newDate;
+    this.render();
+  },
+
+  render() {
+    const year = this.currentDate.getFullYear();
+    const month = this.currentDate.getMonth();
+
+    // Update header
+    this.updateHeader(year, month);
+
+    // Generate calendar
+    const container = document.getElementById('monthGrid');
+    if (!container) return;
+
+    container.innerHTML = this.generateCalendar(year, month);
+
+    // Attach click handlers
+    this.attachDateClickHandlers();
+  },
+
+  updateHeader(year, month) {
+    const monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    const headerTitle = document.getElementById('monthTitle');
+    if (headerTitle) {
+      headerTitle.textContent = `${monthNames[month]} ${year}`;
+    }
+  },
+
+  generateCalendar(year, month) {
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDayOfMonth = new Date(year, month, 1).getDay(); // 0 = Sunday
+    const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+    let html = '';
+
+    // Day names header
+    html += '<div class="month-header">';
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    dayNames.forEach(day => {
+      html += `<div class="month-day-name">${day}</div>`;
+    });
+    html += '</div>';
+
+    // Calendar grid
+    html += '<div class="month-grid">';
+
+    const today = new Date();
+    const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
+    const todayDate = today.getDate();
+
+    let dayCount = 1;
+    let nextMonthDay = 1;
+
+    // Total cells: always show 6 weeks (42 cells)
+    for (let i = 0; i < 42; i++) {
+      let dateNumber, dateString, cellClass, isOtherMonth;
+
+      if (i < firstDayOfMonth) {
+        // Previous month dates
+        dateNumber = daysInPrevMonth - firstDayOfMonth + i + 1;
+        const prevMonth = month === 0 ? 11 : month - 1;
+        const prevYear = month === 0 ? year - 1 : year;
+        dateString = `${prevYear}-${String(prevMonth + 1).padStart(2, '0')}-${String(dateNumber).padStart(2, '0')}`;
+        cellClass = 'date-cell other-month';
+        isOtherMonth = true;
+      } else if (dayCount <= daysInMonth) {
+        // Current month dates
+        dateNumber = dayCount;
+        dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(dateNumber).padStart(2, '0')}`;
+        cellClass = 'date-cell';
+        isOtherMonth = false;
+
+        // Highlight current day
+        if (isCurrentMonth && dateNumber === todayDate) {
+          cellClass += ' current-day';
+        }
+
+        dayCount++;
+      } else {
+        // Next month dates
+        dateNumber = nextMonthDay;
+        const nextMonth = month === 11 ? 0 : month + 1;
+        const nextYear = month === 11 ? year + 1 : year;
+        dateString = `${nextYear}-${String(nextMonth + 1).padStart(2, '0')}-${String(dateNumber).padStart(2, '0')}`;
+        cellClass = 'date-cell other-month';
+        isOtherMonth = true;
+        nextMonthDay++;
+      }
+
+      // Get status for this date
+      const status = this.getDateStatus(dateString);
+      const dotsHtml = this.generateStatusDots(status);
+
+      html += `
+        <div class="${cellClass}" data-date="${dateString}">
+          <div class="date-number">${dateNumber}</div>
+          <div class="status-dots-container">${dotsHtml}</div>
+        </div>
+      `;
+    }
+
+    html += '</div>';
+
+    return html;
+  },
+
+  getDateStatus(dateString) {
+    const monthData = this.getMockMonthData();
+    return monthData[dateString] || { available: 0, booked: 0 };
+  },
+
+  generateStatusDots(status) {
+    const dots = [];
+
+    if (status.blocked) {
+      dots.push('<div class="status-dot dot-blocked"></div>');
+    } else {
+      if (status.available > 0) {
+        dots.push('<div class="status-dot dot-available"></div>');
+      }
+      if (status.booked > 0) {
+        dots.push('<div class="status-dot dot-booked"></div>');
+      }
+    }
+
+    return dots.join('');
+  },
+
+  attachDateClickHandlers() {
+    const dateCells = document.querySelectorAll('.date-cell');
+
+    dateCells.forEach(cell => {
+      cell.addEventListener('click', (e) => {
+        const dateString = cell.getAttribute('data-date');
+        this.handleDateClick(dateString);
+      });
+    });
+  },
+
+  handleDateClick(dateString) {
+    // Parse the date
+    const [year, month, day] = dateString.split('-').map(Number);
+    const clickedDate = new Date(year, month - 1, day);
+
+    // Set the current date to the clicked date
+    this.currentDate = clickedDate;
+
+    // Switch to week view
+    this.switchToWeekView();
+
+    // Update week calendar to show the week containing this date
+    if (window.ScheduleCalendar && window.ScheduleCalendar.currentDate) {
+      window.ScheduleCalendar.currentDate = clickedDate;
+      window.ScheduleCalendar.render();
+    }
+
+    // Update toggle buttons
+    const toggleButtons = document.querySelectorAll('.view-toggle button');
+    toggleButtons.forEach(btn => {
+      btn.classList.remove('active');
+      if (btn.textContent.trim() === 'Week View') {
+        btn.classList.add('active');
+      }
+    });
+  }
+};
+
+// ============================================
 // EXPORT
 // ============================================
 
@@ -1399,6 +1674,7 @@ window.PasswordToggle = PasswordToggle;
 window.FileUpload = FileUpload;
 window.StatAnimation = StatAnimation;
 window.ScheduleCalendar = ScheduleCalendar;
+window.MonthCalendar = MonthCalendar;
 window.Confirm = Confirm;
 window.BookingModal = BookingModal;
 window.EditScheduleModal = EditScheduleModal;

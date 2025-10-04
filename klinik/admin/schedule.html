@@ -63,7 +63,8 @@
         </div>
       </div>
 
-      <div class="schedule-calendar">
+      <!-- Week View Calendar -->
+      <div class="schedule-calendar" id="weekViewCalendar">
         <div class="calendar-header">
           <button id="prevWeek" class="calendar-nav">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
@@ -89,6 +90,18 @@
               </tr>
             </thead>
             <tbody>
+              <!-- 08:00 -->
+              <tr>
+                <td style="padding: 8px; text-align: right; color: var(--text-tertiary); font-size: 12px; border: 1px solid var(--border-light);">08:00</td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"><small style="color: var(--error-500);">Blocked</small></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"><small style="color: var(--error-500);">Holiday</small></td>
+              </tr>
+              <!-- 09:00 -->
               <tr>
                 <td style="padding: 8px; text-align: right; color: var(--text-tertiary); font-size: 12px; border: 1px solid var(--border-light);">09:00</td>
                 <td style="padding: 8px; border: 1px solid var(--border-light); background: #E0F7F7; cursor: pointer;"><div style="padding: 4px; border-radius: 6px; border: 2px solid var(--primary-500);"><strong style="font-size: 13px;">Budi S.</strong><br><small style="color: var(--text-tertiary);">09:00-10:00</small></div></td>
@@ -96,9 +109,10 @@
                 <td style="padding: 8px; border: 1px solid var(--border-light); background: #E0F7F7;"><div style="padding: 4px; border-radius: 6px; border: 2px solid var(--primary-500);"><strong>Siti A.</strong><br><small style="color: var(--text-tertiary);">09:00-10:00</small></div></td>
                 <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
                 <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
-                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"><small style="color: var(--error-500);">Blocked</small></td>
-                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"><small style="color: var(--error-500);">Holiday</small></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"></td>
               </tr>
+              <!-- 10:00 -->
               <tr>
                 <td style="padding: 8px; text-align: right; color: var(--text-tertiary); font-size: 12px; border: 1px solid var(--border-light);">10:00</td>
                 <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
@@ -109,6 +123,7 @@
                 <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"></td>
                 <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"></td>
               </tr>
+              <!-- 11:00 -->
               <tr>
                 <td style="padding: 8px; text-align: right; color: var(--text-tertiary); font-size: 12px; border: 1px solid var(--border-light);">11:00</td>
                 <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
@@ -119,8 +134,91 @@
                 <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"></td>
                 <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"></td>
               </tr>
+              <!-- 12:00 -->
+              <tr>
+                <td style="padding: 8px; text-align: right; color: var(--text-tertiary); font-size: 12px; border: 1px solid var(--border-light);">12:00</td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"></td>
+              </tr>
+              <!-- 13:00 -->
+              <tr>
+                <td style="padding: 8px; text-align: right; color: var(--text-tertiary); font-size: 12px; border: 1px solid var(--border-light);">13:00</td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: #E0F7F7;"><div style="padding: 4px; border-radius: 6px; border: 2px solid var(--primary-500);"><strong>Ani W.</strong><br><small style="color: var(--text-tertiary);">13:00-14:00</small></div></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"></td>
+              </tr>
+              <!-- 14:00 -->
+              <tr>
+                <td style="padding: 8px; text-align: right; color: var(--text-tertiary); font-size: 12px; border: 1px solid var(--border-light);">14:00</td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: #E0F7F7;"><div style="padding: 4px; border-radius: 6px; border: 2px solid var(--primary-500);"><strong>Eko P.</strong><br><small style="color: var(--text-tertiary);">14:00-15:00</small></div></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"></td>
+              </tr>
+              <!-- 15:00 -->
+              <tr>
+                <td style="padding: 8px; text-align: right; color: var(--text-tertiary); font-size: 12px; border: 1px solid var(--border-light);">15:00</td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: #E0F7F7;"><div style="padding: 4px; border-radius: 6px; border: 2px solid var(--primary-500);"><strong>Fitri N.</strong><br><small style="color: var(--text-tertiary);">15:00-16:00</small></div></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"></td>
+              </tr>
+              <!-- 16:00 -->
+              <tr>
+                <td style="padding: 8px; text-align: right; color: var(--text-tertiary); font-size: 12px; border: 1px solid var(--border-light);">16:00</td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"></td>
+              </tr>
+              <!-- 17:00 -->
+              <tr>
+                <td style="padding: 8px; text-align: right; color: var(--text-tertiary); font-size: 12px; border: 1px solid var(--border-light);">17:00</td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"></td>
+                <td style="padding: 8px; border: 1px solid var(--border-light); background: var(--error-100);"></td>
+              </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- Month View Calendar -->
+      <div class="schedule-calendar month-calendar" id="monthViewCalendar" style="display: none;">
+        <div class="calendar-header">
+          <button id="prevMonth" class="calendar-nav">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <h3 id="monthTitle">October 2025</h3>
+          <button id="nextMonth" class="calendar-nav">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+
+        <div id="monthGrid" class="month-grid-container">
+          <!-- Month calendar will be rendered here by JavaScript -->
         </div>
       </div>
     </main>
@@ -611,9 +709,14 @@
   <script src="js/components.js"></script>
   <script>
     Auth.requireAuth();
+
+    // Initialize Week Calendar
     ScheduleCalendar.init({
       onRender: (weekDates) => console.log('Week:', weekDates)
     });
+
+    // Initialize Month Calendar
+    MonthCalendar.init();
 
     // Wire up modal buttons
     document.getElementById('editScheduleButton').addEventListener('click', () => {
