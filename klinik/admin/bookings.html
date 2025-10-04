@@ -70,6 +70,22 @@
         </div>
       </div>
 
+      <!-- Quick Actions -->
+      <div style="display: flex; gap: var(--space-3); margin-bottom: var(--space-6);">
+        <button class="button-primary" id="newBookingBtn">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          New Booking
+        </button>
+        <a href="schedule.html" class="button-secondary" style="text-decoration: none;">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+          Manage Schedule
+        </a>
+      </div>
+
       <form class="filter-panel" id="bookingFilters">
         <div class="filter-group">
           <label>Date Range</label>
@@ -140,7 +156,8 @@
               <td><span class="badge fast-track">Fast-Track</span></td>
               <td><span class="badge paid">Paid</span></td>
               <td class="actions">
-                <button class="icon-button" title="View"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></button>
+                <button class="icon-button view-btn" title="View"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></button>
+                <button class="icon-button edit-btn" title="Edit"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
               </td>
             </tr>
             <tr>
@@ -153,7 +170,8 @@
               <td><span class="badge regular">Regular</span></td>
               <td><span class="badge confirmed">Confirmed</span></td>
               <td class="actions">
-                <button class="icon-button"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></button>
+                <button class="icon-button view-btn" title="View"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></button>
+                <button class="icon-button edit-btn" title="Edit"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
               </td>
             </tr>
             <tr class="fast-track">
@@ -166,7 +184,8 @@
               <td><span class="badge fast-track">Fast-Track</span></td>
               <td><span class="badge paid">Paid</span></td>
               <td class="actions">
-                <button class="icon-button"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></button>
+                <button class="icon-button view-btn" title="View"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></button>
+                <button class="icon-button edit-btn" title="Edit"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
               </td>
             </tr>
           </tbody>
@@ -314,6 +333,141 @@
     </div>
   </div>
 
+  <!-- New Booking Modal -->
+  <div class="modal-overlay" id="newBookingModal" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Create New Booking</h3>
+        <button class="modal-close" aria-label="Close">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form id="newBookingForm">
+          <!-- Patient Information Section -->
+          <div class="detail-section">
+            <h4 class="section-title">Patient Information</h4>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Patient Name <span class="required">*</span></label>
+                <input type="text" class="text-input" id="patientNameInput" name="patient_name" required placeholder="Enter patient name">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Phone Number <span class="required">*</span></label>
+                <input type="tel" class="text-input" id="patientPhoneInput" name="patient_phone" required placeholder="0812-xxxx-xxxx">
+                <span class="field-hint">Format: 0812-xxxx-xxxx</span>
+              </div>
+              <div class="form-field">
+                <label>Email</label>
+                <input type="email" class="text-input" id="patientEmailInput" name="patient_email" placeholder="patient@example.com">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Complaint/Reason <span class="required">*</span></label>
+                <textarea class="text-area" id="patientComplaintInput" name="patient_complaint" required maxlength="200" placeholder="Describe complaint or reason for visit"></textarea>
+                <span class="field-hint" style="text-align: right;">
+                  <span id="complaintCharCount">0</span>/200
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Appointment Section -->
+          <div class="detail-section">
+            <h4 class="section-title">Appointment Details</h4>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Doctor <span class="required">*</span></label>
+                <select class="filter-select" id="doctorSelectInput" name="doctor_id" required style="width: 100%; height: 56px;">
+                  <option value="">Select Doctor</option>
+                  <option value="1">Dr. Ahmad Surya - Dokter Umum</option>
+                  <option value="2">Dr. Sarah Wijaya - Spesialis Paru</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Date <span class="required">*</span></label>
+                <input type="date" class="text-input" id="appointmentDateInput" name="appointment_date" required>
+              </div>
+              <div class="form-field">
+                <label>Time Slot <span class="required">*</span></label>
+                <select class="filter-select" id="timeSlotInput" name="time_slot" required disabled style="width: 100%; height: 56px;">
+                  <option value="">Select date & doctor first</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Booking Type <span class="required">*</span></label>
+                <div class="radio-group">
+                  <label class="radio-label">
+                    <input type="radio" name="booking_type" value="regular" checked>
+                    <span class="radio-custom"></span>
+                    <span>Regular</span>
+                  </label>
+                  <label class="radio-label">
+                    <input type="radio" name="booking_type" value="fast-track">
+                    <span class="radio-custom"></span>
+                    <span>Fast-Track (+Rp 50,000)</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Section (shown only for Fast-Track) -->
+          <div class="detail-section" id="paymentSectionNew" style="display: none;">
+            <h4 class="section-title">Payment Information</h4>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Amount</label>
+                <input type="text" class="text-input" value="Rp 50,000" disabled>
+              </div>
+              <div class="form-field">
+                <label>Payment Method <span class="required">*</span></label>
+                <select class="filter-select" id="paymentMethodInput" name="payment_method" style="width: 100%; height: 56px;">
+                  <option value="">Select Method</option>
+                  <option value="qris">QRIS</option>
+                  <option value="bank_transfer">Transfer Bank</option>
+                  <option value="cash">Cash</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Payment Status <span class="required">*</span></label>
+                <div class="radio-group">
+                  <label class="radio-label">
+                    <input type="radio" name="payment_status" value="pending" checked>
+                    <span class="radio-custom"></span>
+                    <span>Pending</span>
+                  </label>
+                  <label class="radio-label">
+                    <input type="radio" name="payment_status" value="paid">
+                    <span class="radio-custom"></span>
+                    <span>Paid</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="button-secondary" id="cancelNewBookingBtn">Cancel</button>
+        <button class="button-primary" id="createBookingBtn">Create Booking</button>
+      </div>
+    </div>
+  </div>
+
   <script src="js/main.js"></script>
   <script src="js/components.js"></script>
   <script>
@@ -345,8 +499,8 @@
           BookingModal.open(bookingNumber);
         });
 
-        // Also add click handler to view icon buttons
-        const viewBtn = row.querySelector('.icon-button');
+        // Add click handler to view icon buttons
+        const viewBtn = row.querySelector('.view-btn');
         if (viewBtn) {
           viewBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -354,7 +508,25 @@
             BookingModal.open(bookingNumber);
           });
         }
+
+        // Add click handler to edit icon buttons
+        const editBtn = row.querySelector('.edit-btn');
+        if (editBtn) {
+          editBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const bookingNumber = row.querySelector('.booking-number').textContent;
+            BookingModal.open(bookingNumber);
+          });
+        }
       });
+
+      // New Booking button handler
+      const newBookingBtn = document.getElementById('newBookingBtn');
+      if (newBookingBtn) {
+        newBookingBtn.addEventListener('click', () => {
+          NewBookingModal.open();
+        });
+      }
     });
   </script>
 </body>

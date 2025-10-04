@@ -1661,6 +1661,283 @@ const MonthCalendar = {
 };
 
 // ============================================
+// NEW BOOKING MODAL
+// ============================================
+
+const NewBookingModal = {
+  // Mock data for doctors
+  getMockDoctors() {
+    return [
+      { id: '1', name: 'Dr. Ahmad Surya', specialization: 'Dokter Umum' },
+      { id: '2', name: 'Dr. Sarah Wijaya', specialization: 'Spesialis Paru' }
+    ];
+  },
+
+  // Mock data for available time slots
+  getMockTimeSlots(doctorId, date) {
+    // Simulate available slots based on doctor and date
+    const slots = [
+      '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+      '13:00', '13:30', '14:00', '14:30', '15:00', '15:30'
+    ];
+
+    // Randomly mark some as unavailable (for demo)
+    const availableSlots = slots.filter((slot, index) => {
+      // Make every 3rd slot unavailable for demo
+      return index % 3 !== 0;
+    });
+
+    return availableSlots;
+  },
+
+  open() {
+    // Reset form
+    this.resetForm();
+
+    // Set minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('appointmentDateInput').min = today;
+    document.getElementById('appointmentDateInput').value = today;
+
+    // Open modal
+    Modal.open('newBookingModal');
+
+    // Setup event listeners
+    this.setupEventListeners();
+
+    // Load initial time slots for today if doctor is selected
+    const doctorSelect = document.getElementById('doctorSelectInput');
+    if (doctorSelect.value) {
+      this.loadAvailableSlots(doctorSelect.value, today);
+    }
+  },
+
+  resetForm() {
+    const form = document.getElementById('newBookingForm');
+    if (form) {
+      form.reset();
+    }
+
+    // Reset character count
+    document.getElementById('complaintCharCount').textContent = '0';
+
+    // Hide payment section
+    document.getElementById('paymentSectionNew').style.display = 'none';
+
+    // Disable time slot dropdown
+    const timeSlotSelect = document.getElementById('timeSlotInput');
+    timeSlotSelect.disabled = true;
+    timeSlotSelect.innerHTML = '<option value="">Select date & doctor first</option>';
+  },
+
+  setupEventListeners() {
+    // Complaint character count
+    const complaintTextarea = document.getElementById('patientComplaintInput');
+    complaintTextarea.oninput = (e) => {
+      document.getElementById('complaintCharCount').textContent = e.target.value.length;
+    };
+
+    // Doctor selection change
+    const doctorSelect = document.getElementById('doctorSelectInput');
+    doctorSelect.onchange = () => {
+      const date = document.getElementById('appointmentDateInput').value;
+      if (date && doctorSelect.value) {
+        this.loadAvailableSlots(doctorSelect.value, date);
+      }
+    };
+
+    // Date selection change
+    const dateInput = document.getElementById('appointmentDateInput');
+    dateInput.onchange = () => {
+      const doctorId = document.getElementById('doctorSelectInput').value;
+      if (doctorId && dateInput.value) {
+        this.loadAvailableSlots(doctorId, dateInput.value);
+      }
+    };
+
+    // Booking type change
+    const bookingTypeRadios = document.querySelectorAll('input[name="booking_type"]');
+    bookingTypeRadios.forEach(radio => {
+      radio.onchange = () => this.handleBookingTypeChange();
+    });
+
+    // Cancel button
+    const cancelBtn = document.getElementById('cancelNewBookingBtn');
+    cancelBtn.onclick = () => {
+      Modal.close('newBookingModal');
+    };
+
+    // Create booking button
+    const createBtn = document.getElementById('createBookingBtn');
+    createBtn.onclick = () => this.createBooking();
+  },
+
+  loadAvailableSlots(doctorId, date) {
+    const timeSlotSelect = document.getElementById('timeSlotInput');
+
+    // Get available slots (in production, this would be an API call)
+    const slots = this.getMockTimeSlots(doctorId, date);
+
+    // Populate dropdown
+    timeSlotSelect.innerHTML = '<option value="">Select time slot</option>';
+    slots.forEach(slot => {
+      const option = document.createElement('option');
+      option.value = slot;
+      option.textContent = slot;
+      timeSlotSelect.appendChild(option);
+    });
+
+    // Enable dropdown
+    timeSlotSelect.disabled = false;
+  },
+
+  handleBookingTypeChange() {
+    const bookingType = document.querySelector('input[name="booking_type"]:checked').value;
+    const paymentSection = document.getElementById('paymentSectionNew');
+
+    if (bookingType === 'fast-track') {
+      paymentSection.style.display = 'block';
+      // Make payment fields required
+      document.getElementById('paymentMethodInput').required = true;
+    } else {
+      paymentSection.style.display = 'none';
+      // Remove required from payment fields
+      document.getElementById('paymentMethodInput').required = false;
+    }
+  },
+
+  validateForm() {
+    const form = document.getElementById('newBookingForm');
+
+    // Check required fields
+    const patientName = document.getElementById('patientNameInput').value.trim();
+    const patientPhone = document.getElementById('patientPhoneInput').value.trim();
+    const patientComplaint = document.getElementById('patientComplaintInput').value.trim();
+    const doctorId = document.getElementById('doctorSelectInput').value;
+    const appointmentDate = document.getElementById('appointmentDateInput').value;
+    const timeSlot = document.getElementById('timeSlotInput').value;
+    const bookingType = document.querySelector('input[name="booking_type"]:checked').value;
+
+    if (!patientName) {
+      Toast.error('Patient name is required');
+      return false;
+    }
+
+    if (!patientPhone) {
+      Toast.error('Phone number is required');
+      return false;
+    }
+
+    // Validate phone format
+    if (!Utils.isValidPhone(patientPhone)) {
+      Toast.error('Invalid phone number format. Use format: 0812-xxxx-xxxx');
+      return false;
+    }
+
+    if (!patientComplaint) {
+      Toast.error('Complaint/reason is required');
+      return false;
+    }
+
+    if (!doctorId) {
+      Toast.error('Please select a doctor');
+      return false;
+    }
+
+    if (!appointmentDate) {
+      Toast.error('Please select an appointment date');
+      return false;
+    }
+
+    // Check if date is not in the past
+    const selectedDate = new Date(appointmentDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (selectedDate < today) {
+      Toast.error('Cannot book appointments in the past');
+      return false;
+    }
+
+    if (!timeSlot) {
+      Toast.error('Please select a time slot');
+      return false;
+    }
+
+    // Validate fast-track payment
+    if (bookingType === 'fast-track') {
+      const paymentMethod = document.getElementById('paymentMethodInput').value;
+      if (!paymentMethod) {
+        Toast.error('Payment method is required for Fast-Track booking');
+        return false;
+      }
+    }
+
+    return true;
+  },
+
+  async createBooking() {
+    // Validate form
+    if (!this.validateForm()) {
+      return;
+    }
+
+    try {
+      Loading.show('.modal-dialog');
+
+      // Collect form data
+      const bookingData = {
+        bookingNumber: Utils.generateBookingNumber(),
+        patient: {
+          name: document.getElementById('patientNameInput').value.trim(),
+          phone: document.getElementById('patientPhoneInput').value.trim(),
+          email: document.getElementById('patientEmailInput').value.trim() || null,
+          complaint: document.getElementById('patientComplaintInput').value.trim()
+        },
+        appointment: {
+          doctorId: document.getElementById('doctorSelectInput').value,
+          doctorName: document.getElementById('doctorSelectInput').selectedOptions[0].text,
+          date: document.getElementById('appointmentDateInput').value,
+          timeSlot: document.getElementById('timeSlotInput').value,
+          type: document.querySelector('input[name="booking_type"]:checked').value
+        },
+        payment: null
+      };
+
+      // Add payment info if fast-track
+      if (bookingData.appointment.type === 'fast-track') {
+        bookingData.payment = {
+          amount: 50000,
+          method: document.getElementById('paymentMethodInput').value,
+          status: document.querySelector('input[name="payment_status"]:checked').value
+        };
+      }
+
+      // In production, send to API
+      // await API.post('/bookings', bookingData);
+
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 800));
+
+      Toast.success(`Booking created successfully! Booking number: ${bookingData.bookingNumber}`);
+      Loading.hide('.modal-dialog');
+
+      // Close modal
+      setTimeout(() => {
+        Modal.close('newBookingModal');
+        // In production, refresh the bookings table
+        // window.location.reload();
+      }, 1500);
+
+    } catch (error) {
+      Loading.hide('.modal-dialog');
+      Toast.error('Failed to create booking. Please try again.');
+      console.error('Create booking error:', error);
+    }
+  }
+};
+
+// ============================================
 // EXPORT
 // ============================================
 
@@ -1679,3 +1956,4 @@ window.Confirm = Confirm;
 window.BookingModal = BookingModal;
 window.EditScheduleModal = EditScheduleModal;
 window.AddExceptionModal = AddExceptionModal;
+window.NewBookingModal = NewBookingModal;
