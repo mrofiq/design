@@ -2386,6 +2386,7 @@ UI:
 ### Toast Notifications
 
 **Component Structure**
+{% raw %}
 ```javascript
 <Toast
   type="success" | "error" | "warning" | "info"
@@ -2395,6 +2396,7 @@ UI:
   action={{ label: "Undo", onClick: () => {} }}  // optional
 />
 ```
+{% endraw %}
 
 **Styling**
 ```
