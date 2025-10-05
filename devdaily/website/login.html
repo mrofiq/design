@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - DevDaily</title>
+
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+
+  <style>
+    .login-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #F5F5FF 0%, #FAFAFA 100%);
+      padding: var(--space-6);
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--neutral-0);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      padding: var(--space-8);
+      animation: scaleIn 400ms ease-out;
+    }
+
+    .login-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-8);
+    }
+
+    .login-logo-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--primary-600);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .login-logo-text {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-bold);
+      color: var(--neutral-900);
+    }
+
+    .login-title {
+      text-align: center;
+      margin-bottom: var(--space-2);
+    }
+
+    .login-subtitle {
+      text-align: center;
+      color: var(--neutral-500);
+      margin-bottom: var(--space-8);
+    }
+
+    .divider-text {
+      position: relative;
+      text-align: center;
+      margin: var(--space-6) 0;
+    }
+
+    .divider-text::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--neutral-200);
+    }
+
+    .divider-text span {
+      position: relative;
+      background: var(--neutral-0);
+      padding: 0 var(--space-3);
+      font-size: var(--text-sm);
+      color: var(--neutral-400);
+    }
+
+    .password-strength {
+      margin-top: var(--space-2);
+      display: none;
+    }
+
+    .password-strength.active {
+      display: block;
+    }
+
+    .strength-bar {
+      height: 4px;
+      background: var(--neutral-200);
+      border-radius: var(--radius-full);
+      margin-bottom: var(--space-2);
+      overflow: hidden;
+    }
+
+    .strength-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--error-600);
+      border-radius: var(--radius-full);
+      transition: all 300ms ease-out;
+    }
+
+    .strength-fill.weak {
+      width: 33%;
+      background: var(--error-600);
+    }
+
+    .strength-fill.medium {
+      width: 66%;
+      background: var(--warning-600);
+    }
+
+    .strength-fill.strong {
+      width: 100%;
+      background: var(--success-600);
+    }
+
+    .strength-text {
+      font-size: var(--text-xs);
+      color: var(--neutral-500);
+    }
+
+    .input-with-icon {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: var(--space-3);
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      color: var(--neutral-400);
+      pointer-events: none;
+    }
+
+    .input-with-icon .input {
+      padding-left: 40px;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: var(--space-3);
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--neutral-400);
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .password-toggle:hover {
+      color: var(--neutral-600);
+    }
+  </style>
+</head>
+<body>
+  <div class="toast-container" id="toastContainer"></div>
+
+  <div class="login-container">
+    <div class="login-card">
+
+      <!-- Logo -->
+      <div class="login-logo">
+        <div class="login-logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 3v18h18"/>
+            <path d="m19 9-5 5-4-4-3 3"/>
+          </svg>
+        </div>
+        <span class="login-logo-text">DevDaily</span>
+      </div>
+
+      <!-- Title -->
+      <h1 class="login-title text-2xl font-semibold">Welcome back</h1>
+      <p class="login-subtitle text-sm">Sign in to continue to your dashboard</p>
+
+      <!-- Login Form -->
+      <form id="loginForm" class="flex flex-col gap-4">
+
+        <!-- Email Field -->
+        <div class="form-group">
+          <label for="email" class="form-label required">Email</label>
+          <div class="input-with-icon">
+            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+            </svg>
+            <input
+              type="email"
+              id="email"
+              class="input"
+              placeholder="john@example.com"
+              required
+              autocomplete="email"
+            >
+          </div>
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group">
+          <div class="flex items-center justify-between mb-2">
+            <label for="password" class="form-label required" style="margin: 0;">Password</label>
+            <a href="#" class="text-xs text-primary">Forgot password?</a>
+          </div>
+          <div class="input-with-icon">
+            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <input
+              type="password"
+              id="password"
+              class="input"
+              placeholder="Enter your password"
+              required
+              autocomplete="current-password"
+            >
+            <button type="button" class="password-toggle" id="togglePassword">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Remember Me -->
+        <div class="flex items-center gap-2">
+          <input type="checkbox" id="remember" class="checkbox">
+          <label for="remember" class="text-sm text-neutral-600">Remember me for 30 days</label>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary w-full" id="submitBtn">
+          Sign In
+        </button>
+
+      </form>
+
+      <!-- Divider -->
+      <div class="divider-text">
+        <span>OR</span>
+      </div>
+
+      <!-- Microsoft SSO -->
+      <button type="button" class="btn btn-secondary w-full" onclick="loginWithMicrosoft()">
+        <svg width="18" height="18" viewBox="0 0 21 21" fill="none">
+          <rect x="1" y="1" width="9" height="9" fill="#F25022"/>
+          <rect x="1" y="11" width="9" height="9" fill="#00A4EF"/>
+          <rect x="11" y="1" width="9" height="9" fill="#7FBA00"/>
+          <rect x="11" y="11" width="9" height="9" fill="#FFB900"/>
+        </svg>
+        Sign in with Microsoft
+      </button>
+
+      <!-- Register Link -->
+      <div class="text-center mt-6 text-sm text-neutral-600">
+        Don't have an account?
+        <a href="#" class="text-primary font-medium" onclick="showRegister()">Sign up</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Register Modal -->
+  <div id="registerModal" class="modal-backdrop" style="display: none;">
+    <div class="modal" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Create Account</h3>
+        <button type="button" class="modal-close" onclick="closeModal('registerModal')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18"></path>
+            <path d="m6 6 12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form id="registerForm" class="flex flex-col gap-4">
+
+          <!-- Name -->
+          <div class="form-group">
+            <label for="registerName" class="form-label required">Full Name</label>
+            <input
+              type="text"
+              id="registerName"
+              class="input"
+              placeholder="John Doe"
+              required
+            >
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label for="registerEmail" class="form-label required">Email</label>
+            <input
+              type="email"
+              id="registerEmail"
+              class="input"
+              placeholder="john@example.com"
+              required
+            >
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label for="registerPassword" class="form-label required">Password</label>
+            <input
+              type="password"
+              id="registerPassword"
+              class="input"
+              placeholder="Min 8 characters"
+              required
+            >
+            <div class="password-strength" id="passwordStrength">
+              <div class="strength-bar">
+                <div class="strength-fill" id="strengthFill"></div>
+              </div>
+              <div class="strength-text" id="strengthText">Password must be at least 8 characters</div>
+            </div>
+          </div>
+
+          <!-- Terms -->
+          <div class="flex items-start gap-2">
+            <input type="checkbox" id="terms" class="checkbox" required>
+            <label for="terms" class="text-sm text-neutral-600">
+              I agree to the <a href="#" class="text-primary">Terms of Service</a> and <a href="#" class="text-primary">Privacy Policy</a>
+            </label>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('registerModal')">Cancel</button>
+        <button type="submit" form="registerForm" class="btn btn-primary" id="registerBtn">
+          Create Account
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script src="js/animations.js"></script>
+
+  <script>
+    // Login form handling
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const submitBtn = document.getElementById('submitBtn');
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      // Validate
+      if (!DevDaily.validateEmail(email)) {
+        DevDaily.showFieldError('email', 'Please enter a valid email address');
+        return;
+      }
+
+      DevDaily.clearFieldError('email');
+
+      // Show loading
+      submitBtn.classList.add('loading');
+      submitBtn.disabled = true;
+
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // Success
+      submitBtn.classList.remove('loading');
+      DevDaily.setButtonSuccess(submitBtn, 'Success!', 1000);
+
+      showToast('Login successful!', 'Redirecting to dashboard...', 'success');
+
+      // Redirect
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 1500);
+    });
+
+    // Password toggle
+    document.getElementById('togglePassword').addEventListener('click', function() {
+      const passwordInput = document.getElementById('password');
+      const type = passwordInput.type === 'password' ? 'text' : 'password';
+      passwordInput.type = type;
+    });
+
+    // Register form
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const registerBtn = document.getElementById('registerBtn');
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+
+      // Validate email
+      if (!DevDaily.validateEmail(email)) {
+        DevDaily.showFieldError('registerEmail', 'Please enter a valid email');
+        return;
+      }
+
+      // Validate password
+      const passwordValidation = DevDaily.validatePassword(password);
+      if (!passwordValidation.valid) {
+        DevDaily.showFieldError('registerPassword', 'Password does not meet requirements');
+        return;
+      }
+
+      // Show loading
+      registerBtn.classList.add('loading');
+      registerBtn.disabled = true;
+
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      registerBtn.classList.remove('loading');
+      registerBtn.disabled = false;
+
+      showToast('Account created!', 'Please check your email to verify your account', 'success');
+
+      setTimeout(() => {
+        closeModal('registerModal');
+      }, 1500);
+    });
+
+    // Password strength indicator
+    document.getElementById('registerPassword').addEventListener('input', function(e) {
+      const password = e.target.value;
+      const strengthDiv = document.getElementById('passwordStrength');
+      const strengthFill = document.getElementById('strengthFill');
+      const strengthText = document.getElementById('strengthText');
+
+      if (password.length === 0) {
+        strengthDiv.classList.remove('active');
+        return;
+      }
+
+      strengthDiv.classList.add('active');
+
+      const validation = DevDaily.validatePassword(password);
+      let strength = 0;
+      let strengthLabel = 'Weak';
+      let strengthClass = 'weak';
+
+      if (validation.minLength) strength++;
+      if (validation.hasUpperCase) strength++;
+      if (validation.hasNumber) strength++;
+      if (validation.hasSpecialChar) strength++;
+
+      if (strength <= 2) {
+        strengthLabel = 'Weak';
+        strengthClass = 'weak';
+      } else if (strength === 3) {
+        strengthLabel = 'Medium';
+        strengthClass = 'medium';
+      } else {
+        strengthLabel = 'Strong';
+        strengthClass = 'strong';
+      }
+
+      strengthFill.className = 'strength-fill ' + strengthClass;
+      strengthText.textContent = `Password strength: ${strengthLabel}`;
+    });
+
+    // Show register modal
+    function showRegister() {
+      event.preventDefault();
+      openModal('registerModal');
+    }
+
+    // Microsoft SSO
+    function loginWithMicrosoft() {
+      showToast('Microsoft SSO', 'Redirecting to Microsoft login...', 'info');
+      // In production, would redirect to Microsoft OAuth
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 2000);
+    }
+
+    // Real-time email validation
+    document.getElementById('email').addEventListener('blur', function(e) {
+      const email = e.target.value;
+      if (email && !DevDaily.validateEmail(email)) {
+        DevDaily.showFieldError('email', 'Please enter a valid email address');
+      } else if (email) {
+        DevDaily.clearFieldError('email');
+        DevDaily.showFieldSuccess('email');
+      }
+    });
+  </script>
+</body>
+</html>

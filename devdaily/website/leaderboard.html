@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard - DevDaily</title>
+
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+</head>
+<body>
+  <div class="toast-container" id="toastContainer"></div>
+
+  <div class="app-layout">
+
+    <!-- Navigation Header -->
+    <header class="nav-header">
+      <div class="nav-container">
+        <a href="index.html" class="nav-logo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 3v18h18"/>
+            <path d="m19 9-5 5-4-4-3 3"/>
+          </svg>
+          <span class="nav-logo-text">DevDaily</span>
+        </a>
+
+        <div class="nav-search">
+          <svg class="nav-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input type="text" placeholder="Search...">
+        </div>
+
+        <div class="nav-actions">
+          <button class="notification-btn" aria-label="Notifications">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span class="notification-badge">3</span>
+          </button>
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=John" alt="John Doe" class="avatar">
+        </div>
+      </div>
+    </header>
+
+    <div class="app-content">
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <nav class="sidebar-nav">
+          <a href="index.html" class="nav-item">
+            <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span class="nav-label">Dashboard</span>
+          </a>
+          <a href="daily-report.html" class="nav-item">
+            <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            <span class="nav-label">Daily Report</span>
+            <span class="nav-badge">Due</span>
+          </a>
+          <a href="my-progress.html" class="nav-item">
+            <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="m19 9-5 5-4-4-3 3"></path></svg>
+            <span class="nav-label">My Progress</span>
+          </a>
+          <a href="leaderboard.html" class="nav-item active">
+            <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
+            <span class="nav-label">Leaderboard</span>
+          </a>
+          <div class="nav-divider"></div>
+          <div class="nav-section">
+            <div class="nav-section-label">Management</div>
+            <a href="team-management.html" class="nav-item">
+              <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+              <span class="nav-label">Team</span>
+            </a>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="mb-6">
+          <h1 class="text-3xl font-semibold mb-1">Leaderboard</h1>
+          <p class="text-neutral-500 text-sm">See how you rank against your peers</p>
+        </div>
+
+        <!-- Tabs: Individual vs Team -->
+        <div class="tabs mb-6">
+          <div class="tabs-list">
+            <button class="tab active" data-tab="individual" onclick="switchLeaderboardTab('individual')">
+              Individual
+            </button>
+            <button class="tab" data-tab="team" onclick="switchLeaderboardTab('team')">
+              Team
+            </button>
+          </div>
+        </div>
+
+        <!-- Period Selection -->
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex gap-2">
+            <button class="btn btn-sm btn-primary" onclick="switchPeriod('daily')">Daily</button>
+            <button class="btn btn-sm btn-secondary" onclick="switchPeriod('quarterly')">Quarterly</button>
+            <button class="btn btn-sm btn-secondary" onclick="switchPeriod('yearly')">Yearly</button>
+          </div>
+          <div class="text-sm text-neutral-500">
+            Last updated: <span id="lastUpdated">Just now</span>
+          </div>
+        </div>
+
+        <!-- Individual Leaderboard -->
+        <div id="individualLeaderboard" class="tab-content">
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width: 60px;">Rank</th>
+                  <th>Name</th>
+                  <th style="width: 120px;">Points</th>
+                  <th style="width: 100px;">Trend</th>
+                  <th style="width: 100px;">Activity</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <span style="font-size: 1.5rem;">🥇</span>
+                  </td>
+                  <td>
+                    <div class="flex items-center gap-3">
+                      <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah" alt="Sarah Chen" class="avatar" style="width: 32px; height: 32px;">
+                      <span class="font-medium">Sarah Chen</span>
+                    </div>
+                  </td>
+                  <td class="font-semibold">287</td>
+                  <td>
+                    <span class="text-success flex items-center gap-1">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                      ↑3
+                    </span>
+                  </td>
+                  <td><span class="badge badge-success">High</span></td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <span style="font-size: 1.5rem;">🥈</span>
+                  </td>
+                  <td>
+                    <div class="flex items-center gap-3">
+                      <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Mike" alt="Mike Johnson" class="avatar" style="width: 32px; height: 32px;">
+                      <span class="font-medium">Mike Johnson</span>
+                    </div>
+                  </td>
+                  <td class="font-semibold">265</td>
+                  <td>
+                    <span class="text-error flex items-center gap-1">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                      ↓1
+                    </span>
+                  </td>
+                  <td><span class="badge badge-success">High</span></td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <span style="font-size: 1.5rem;">🥉</span>
+                  </td>
+                  <td>
+                    <div class="flex items-center gap-3">
+                      <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alex" alt="Alex Wong" class="avatar" style="width: 32px; height: 32px;">
+                      <span class="font-medium">Alex Wong</span>
+                    </div>
+                  </td>
+                  <td class="font-semibold">243</td>
+                  <td>
+                    <span class="text-neutral-500">→</span>
+                  </td>
+                  <td><span class="badge badge-warning">Med</span></td>
+                </tr>
+
+                <tr class="highlighted">
+                  <td><span class="font-semibold">4</span></td>
+                  <td>
+                    <div class="flex items-center gap-3">
+                      <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=John" alt="John Doe" class="avatar" style="width: 32px; height: 32px;">
+                      <span class="font-medium">You (John Doe)</span>
+                    </div>
+                  </td>
+                  <td class="font-semibold">198</td>
+                  <td>
+                    <span class="text-success flex items-center gap-1">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                      ↑2
+                    </span>
+                  </td>
+                  <td><span class="badge badge-warning">Med</span></td>
+                </tr>
+
+                <tr>
+                  <td><span class="font-semibold">5</span></td>
+                  <td>
+                    <div class="flex items-center gap-3">
+                      <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Emma" alt="Emma Davis" class="avatar" style="width: 32px; height: 32px;">
+                      <span class="font-medium">Emma Davis</span>
+                    </div>
+                  </td>
+                  <td class="font-semibold">187</td>
+                  <td>
+                    <span class="text-error flex items-center gap-1">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                      ↓2
+                    </span>
+                  </td>
+                  <td><span class="badge badge-neutral">Low</span></td>
+                </tr>
+
+                <tr>
+                  <td><span class="font-semibold">6</span></td>
+                  <td>
+                    <div class="flex items-center gap-3">
+                      <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=James" alt="James Wilson" class="avatar" style="width: 32px; height: 32px;">
+                      <span class="font-medium">James Wilson</span>
+                    </div>
+                  </td>
+                  <td class="font-semibold">165</td>
+                  <td>
+                    <span class="text-success flex items-center gap-1">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                      ↑1
+                    </span>
+                  </td>
+                  <td><span class="badge badge-warning">Med</span></td>
+                </tr>
+
+                <tr>
+                  <td><span class="font-semibold">7</span></td>
+                  <td>
+                    <div class="flex items-center gap-3">
+                      <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Lisa" alt="Lisa Anderson" class="avatar" style="width: 32px; height: 32px;">
+                      <span class="font-medium">Lisa Anderson</span>
+                    </div>
+                  </td>
+                  <td class="font-semibold">152</td>
+                  <td><span class="text-neutral-500">→</span></td>
+                  <td><span class="badge badge-neutral">Low</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Team Leaderboard -->
+        <div id="teamLeaderboard" class="tab-content hidden">
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width: 60px;">Rank</th>
+                  <th>Team</th>
+                  <th style="width: 120px;">Points</th>
+                  <th style="width: 100px;">Members</th>
+                  <th style="width: 120px;">On-Time %</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span style="font-size: 1.5rem;">🥇</span></td>
+                  <td><span class="font-medium">Backend Squad</span></td>
+                  <td class="font-semibold">1,245</td>
+                  <td>8</td>
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <div class="progress" style="flex: 1; height: 6px;">
+                        <div class="progress-bar success" style="width: 92%;"></div>
+                      </div>
+                      <span class="text-sm font-medium">92%</span>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td><span style="font-size: 1.5rem;">🥈</span></td>
+                  <td><span class="font-medium">Frontend Team</span></td>
+                  <td class="font-semibold">1,187</td>
+                  <td>6</td>
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <div class="progress" style="flex: 1; height: 6px;">
+                        <div class="progress-bar success" style="width: 88%;"></div>
+                      </div>
+                      <span class="text-sm font-medium">88%</span>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td><span style="font-size: 1.5rem;">🥉</span></td>
+                  <td><span class="font-medium">DevOps Crew</span></td>
+                  <td class="font-semibold">998</td>
+                  <td>5</td>
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <div class="progress" style="flex: 1; height: 6px;">
+                        <div class="progress-bar success" style="width: 85%;"></div>
+                      </div>
+                      <span class="text-sm font-medium">85%</span>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr class="highlighted">
+                  <td><span class="font-semibold">4</span></td>
+                  <td><span class="font-medium">Your Team (API Squad)</span></td>
+                  <td class="font-semibold">876</td>
+                  <td>7</td>
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <div class="progress" style="flex: 1; height: 6px;">
+                        <div class="progress-bar warning" style="width: 79%;"></div>
+                      </div>
+                      <span class="text-sm font-medium">79%</span>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td><span class="font-semibold">5</span></td>
+                  <td><span class="font-medium">Mobile Team</span></td>
+                  <td class="font-semibold">743</td>
+                  <td>4</td>
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <div class="progress" style="flex: 1; height: 6px;">
+                        <div class="progress-bar warning" style="width: 71%;"></div>
+                      </div>
+                      <span class="text-sm font-medium">71%</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script src="js/animations.js"></script>
+
+  <script>
+    let currentPeriod = 'daily';
+    let currentTab = 'individual';
+
+    function switchLeaderboardTab(tab) {
+      currentTab = tab;
+
+      // Update tab buttons
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+
+      // Show/hide content
+      document.getElementById('individualLeaderboard').classList.toggle('hidden', tab !== 'individual');
+      document.getElementById('teamLeaderboard').classList.toggle('hidden', tab !== 'team');
+    }
+
+    function switchPeriod(period) {
+      currentPeriod = period;
+
+      // Update button styles
+      document.querySelectorAll('[onclick^="switchPeriod"]').forEach(btn => {
+        btn.classList.remove('btn-primary');
+        btn.classList.add('btn-secondary');
+      });
+
+      event.target.classList.remove('btn-secondary');
+      event.target.classList.add('btn-primary');
+
+      // Show toast
+      showToast('Period updated', `Showing ${period} rankings`, 'info', 2000);
+
+      // In real app, would fetch new data here
+    }
+
+    // Update "last updated" time
+    setInterval(() => {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      document.getElementById('lastUpdated').textContent = timeStr;
+    }, 60000);
+  </script>
+</body>
+</html>
