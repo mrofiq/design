@@ -1,0 +1,1711 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Feedback CMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif']
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.2s ease-out',
+                        'slide-in': 'slideIn 0.3s ease-out',
+                        'lift': 'lift 0.15s ease-out'
+                    },
+                    backdropBlur: {
+                        'sm': '4px'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes lift {
+            from { transform: translateY(0); }
+            to { transform: translateY(-2px); }
+        }
+
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Custom scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Hidden scrollbar with auto-hide indicator */
+        .hidden-scrollbar {
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
+        }
+
+        .hidden-scrollbar::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
+        }
+
+        .scroll-container {
+            position: relative;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            background: rgba(59, 130, 246, 0.3);
+            border-radius: 2px;
+            opacity: 0;
+            transition: opacity 0.2s ease-out;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .scroll-indicator.visible {
+            opacity: 1;
+        }
+
+        .scroll-thumb {
+            width: 100%;
+            background: rgba(59, 130, 246, 0.7);
+            border-radius: 2px;
+            transition: background-color 0.2s ease-out;
+        }
+
+        .scroll-container:hover .scroll-indicator.visible {
+            opacity: 1;
+        }
+
+        .scroll-container:hover .scroll-thumb {
+            background: rgba(59, 130, 246, 0.9);
+        }
+
+        /* Focus management */
+        .focus-visible:focus {
+            outline: 2px solid #2563eb;
+            outline-offset: 2px;
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="h-full bg-slate-50 font-sans">
+    <!-- Skip to main content for screen readers -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-lg z-50">
+        Skip to main content
+    </a>
+
+    <!-- Header Section -->
+    <header class="sticky top-0 z-40 glass-morphism border-b border-gray-200 shadow-sm" role="banner">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Title -->
+                <h1 class="text-2xl font-semibold text-gray-900 tracking-tight">
+                    Chatbot Feedback
+                </h1>
+
+                <!-- Search and Actions -->
+                <div class="flex items-center space-x-4">
+                    <!-- Enhanced Search -->
+                    <div class="relative hidden sm:block">
+                        <label for="search-input" class="sr-only">Search feedback</label>
+                        <input
+                            type="search"
+                            id="search-input"
+                            placeholder="Search feedback..."
+                            class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg
+                                   focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                                   transition-all duration-200 ease-out bg-white/80
+                                   focus:bg-white focus:w-72"
+                            aria-label="Search feedback entries"
+                        >
+                        <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+
+                    <!-- Filter Chips -->
+                    <div class="flex space-x-2">
+                        <button class="px-3 py-1.5 text-sm font-medium text-gray-700
+                                       bg-gray-100 rounded-full hover:bg-gray-200
+                                       transition-colors duration-150 focus:ring-2 focus:ring-blue-500"
+                                aria-label="Filter by last 7 days">
+                            Last 7 days
+                        </button>
+                        <button class="px-3 py-1.5 text-sm font-medium text-gray-700
+                                       bg-gray-100 rounded-full hover:bg-gray-200
+                                       transition-colors duration-150 focus:ring-2 focus:ring-blue-500"
+                                aria-label="Show all statuses">
+                            All Status
+                        </button>
+                    </div>
+
+                    <!-- Export Button -->
+                    <button class="hidden lg:inline-flex items-center px-4 py-2 text-sm font-medium
+                                   text-gray-700 bg-white border border-gray-300 rounded-lg
+                                   hover:bg-gray-50 transition-colors duration-150 focus:ring-2 focus:ring-blue-500"
+                            aria-label="Export feedback data">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Export
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Layout Container -->
+    <div class="flex h-[calc(100vh-4rem)] overflow-hidden max-w-7xl mx-auto">
+        <!-- Account for header height (4rem = 64px) -->
+        <!-- Left Panel - Feedback List -->
+        <aside class="w-full lg:w-80 bg-slate-50/50 border-r border-gray-200 flex flex-col lg:flex-none
+                      transition-transform duration-300 ease-out"
+               id="feedback-list"
+               role="complementary"
+               aria-label="Feedback list">
+
+            <!-- Mobile Header -->
+            <div class="lg:hidden bg-white border-b border-gray-200 p-4">
+                <h2 class="text-lg font-semibold text-gray-900">Feedback List</h2>
+            </div>
+
+            <!-- List Container -->
+            <div class="flex-1 overflow-y-auto px-4 py-6 space-y-3 hidden-scrollbar scroll-container" role="list" id="feedback-list-container">
+                <!-- Scroll Indicator -->
+                <div class="scroll-indicator" id="scroll-indicator">
+                    <div class="scroll-thumb" id="scroll-thumb"></div>
+                </div>
+                <!-- Feedback Card 1 - Active -->
+                <article class="group bg-white rounded-xl border-2 border-blue-500 bg-blue-50/50
+                              hover:shadow-md transition-all duration-200 ease-out cursor-pointer
+                              focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2
+                              animate-fade-in feedback-card active"
+                        role="listitem"
+                        tabindex="0"
+                        data-feedback-id="1"
+                        aria-selected="true"
+                        onclick="selectFeedback(1)"
+                        onkeydown="handleCardKeydown(event, 1)">
+
+                    <!-- Card Content -->
+                    <div class="p-6">
+                        <!-- Status Indicator -->
+                        <div class="flex items-start justify-between mb-3">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                         bg-blue-100 text-blue-800" aria-label="Status: New">
+                                New
+                            </span>
+                            <time class="text-sm text-gray-500" datetime="2024-09-27T14:30:00" id="timestamp-1">
+                                2 hours ago
+                            </time>
+                        </div>
+
+                        <!-- Feedback Preview -->
+                        <p class="text-gray-900 font-medium leading-relaxed mb-3 line-clamp-3">
+                            The chatbot didn't understand my question about product pricing.
+                            It kept redirecting me to the wrong department and after 3 attempts...
+                        </p>
+
+                        <!-- Tags -->
+                        <div class="flex flex-wrap gap-1.5 mb-3">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-700">
+                                Bug
+                            </span>
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-700">
+                                UX Issue
+                            </span>
+                        </div>
+
+                        <!-- Metadata -->
+                        <div class="flex items-center justify-between text-sm text-gray-500">
+                            <span class="font-mono" aria-label="Feedback ID">#UAT-2024-0927-001</span>
+                            <span aria-label="User ID">User: guest_user_123</span>
+                        </div>
+                    </div>
+
+                    <!-- Active Border Accent -->
+                    <div class="h-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-b-xl"></div>
+                </article>
+
+                <!-- Feedback Card 2 -->
+                <article class="group bg-white rounded-xl border border-gray-200
+                              hover:border-blue-300 hover:shadow-md hover:animate-lift
+                              transition-all duration-200 ease-out cursor-pointer
+                              focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2
+                              animate-fade-in feedback-card"
+                        role="listitem"
+                        tabindex="0"
+                        data-feedback-id="2"
+                        aria-selected="false"
+                        onclick="selectFeedback(2)"
+                        onkeydown="handleCardKeydown(event, 2)">
+
+                    <div class="p-6">
+                        <div class="flex items-start justify-between mb-3">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                         bg-amber-100 text-amber-800" aria-label="Status: In Progress">
+                                In Progress
+                            </span>
+                            <time class="text-sm text-gray-500" datetime="2024-09-27T10:15:00" id="timestamp-2">
+                                6 hours ago
+                            </time>
+                        </div>
+
+                        <p class="text-gray-900 font-medium leading-relaxed mb-3 line-clamp-3">
+                            Great experience overall! The chatbot was helpful and understood my questions
+                            about shipping policies. Only minor issue was the delay in responses...
+                        </p>
+
+                        <!-- Tags -->
+                        <div class="flex flex-wrap gap-1.5 mb-3">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-700">
+                                Positive
+                            </span>
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-700">
+                                Performance
+                            </span>
+                        </div>
+
+                        <div class="flex items-center justify-between text-sm text-gray-500">
+                            <span class="font-mono" aria-label="Feedback ID">#UAT-2024-0927-002</span>
+                            <span aria-label="User ID">User: beta_tester_456</span>
+                        </div>
+                    </div>
+
+                    <!-- Hover Border Accent -->
+                    <div class="h-1 bg-gradient-to-r from-blue-500 to-purple-600
+                              opacity-0 group-hover:opacity-100 transition-opacity duration-200
+                              rounded-b-xl"></div>
+                </article>
+
+                <!-- Feedback Card 3 -->
+                <article class="group bg-white rounded-xl border border-gray-200
+                              hover:border-blue-300 hover:shadow-md hover:animate-lift
+                              transition-all duration-200 ease-out cursor-pointer
+                              focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2
+                              animate-fade-in feedback-card"
+                        role="listitem"
+                        tabindex="0"
+                        data-feedback-id="3"
+                        aria-selected="false"
+                        onclick="selectFeedback(3)"
+                        onkeydown="handleCardKeydown(event, 3)">
+
+                    <div class="p-6">
+                        <div class="flex items-start justify-between mb-3">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                         bg-green-100 text-green-800" aria-label="Status: Resolved">
+                                Resolved
+                            </span>
+                            <time class="text-sm text-gray-500" datetime="2024-09-26T16:45:00" id="timestamp-3">
+                                1 day ago
+                            </time>
+                        </div>
+
+                        <p class="text-gray-900 font-medium leading-relaxed mb-3 line-clamp-3">
+                            The chatbot interface needs better visual feedback. When I typed my question,
+                            it wasn't clear if the bot was processing or if there was a connection issue...
+                        </p>
+
+                        <!-- Tags -->
+                        <div class="flex flex-wrap gap-1.5 mb-3">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-700">
+                                Enhancement
+                            </span>
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-700">
+                                UX Issue
+                            </span>
+                        </div>
+
+                        <div class="flex items-center justify-between text-sm text-gray-500">
+                            <span class="font-mono" aria-label="Feedback ID">#UAT-2024-0926-003</span>
+                            <span aria-label="User ID">User: qa_reviewer_789</span>
+                        </div>
+                    </div>
+
+                    <div class="h-1 bg-gradient-to-r from-blue-500 to-purple-600
+                              opacity-0 group-hover:opacity-100 transition-opacity duration-200
+                              rounded-b-xl"></div>
+                </article>
+
+                <!-- Feedback Card 4 -->
+                <article class="group bg-white rounded-xl border border-gray-200
+                              hover:border-blue-300 hover:shadow-md hover:animate-lift
+                              transition-all duration-200 ease-out cursor-pointer
+                              focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2
+                              animate-fade-in feedback-card"
+                        role="listitem"
+                        tabindex="0"
+                        data-feedback-id="4"
+                        aria-selected="false"
+                        onclick="selectFeedback(4)"
+                        onkeydown="handleCardKeydown(event, 4)">
+
+                    <div class="p-6">
+                        <div class="flex items-start justify-between mb-3">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                         bg-red-100 text-red-800" aria-label="Status: Critical">
+                                Critical
+                            </span>
+                            <time class="text-sm text-gray-500" datetime="2024-09-26T09:20:00" id="timestamp-4">
+                                2 days ago
+                            </time>
+                        </div>
+
+                        <p class="text-gray-900 font-medium leading-relaxed mb-3 line-clamp-3">
+                            Security concern: The chatbot accidentally revealed sensitive information
+                            about other users during our conversation. This needs immediate attention...
+                        </p>
+
+                        <!-- Tags -->
+                        <div class="flex flex-wrap gap-1.5 mb-3">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-700">
+                                Critical
+                            </span>
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-700">
+                                Security
+                            </span>
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-700">
+                                Data Leak
+                            </span>
+                        </div>
+
+                        <div class="flex items-center justify-between text-sm text-gray-500">
+                            <span class="font-mono" aria-label="Feedback ID">#UAT-2024-0926-004</span>
+                            <span aria-label="User ID">User: security_audit_001</span>
+                        </div>
+                    </div>
+
+                    <div class="h-1 bg-gradient-to-r from-blue-500 to-purple-600
+                              opacity-0 group-hover:opacity-100 transition-opacity duration-200
+                              rounded-b-xl"></div>
+                </article>
+            </div>
+        </aside>
+
+        <!-- Right Panel - Detail & History -->
+        <main class="flex-1 flex flex-col bg-white overflow-hidden" id="main-content" role="main">
+            <!-- Feedback Detail Section -->
+            <section class="p-4 lg:p-8 bg-gradient-to-r from-blue-50/50 to-indigo-50/50 border-b border-gray-200
+                           glass-morphism"
+                     aria-label="Feedback details"
+                     id="feedback-detail">
+                <div class="max-w-4xl">
+                    <!-- Mobile Back Button -->
+                    <button class="lg:hidden mb-4 inline-flex items-center text-sm text-gray-600 hover:text-gray-900
+                                   transition-colors duration-150 focus:ring-2 focus:ring-blue-500 rounded-lg p-1"
+                            onclick="showFeedbackList()"
+                            aria-label="Back to feedback list">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Back to list
+                    </button>
+
+                    <!-- Feedback Header -->
+                    <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-6 space-y-4 lg:space-y-0">
+                        <div>
+                            <h2 class="text-xl font-semibold text-gray-900 mb-2">
+                                Feedback Details
+                            </h2>
+                            <div class="flex flex-wrap items-center gap-2 lg:gap-4 text-sm text-gray-600">
+                                <span class="font-mono" id="feedback-id-display">#UAT-2024-0927-001</span>
+                                <span class="hidden lg:inline">•</span>
+                                <time id="feedback-date-display">September 27, 2024 at 2:30 PM</time>
+                                <span class="hidden lg:inline">•</span>
+                                <span id="feedback-ip-display">IP: 192.168.1.100</span>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex space-x-3">
+                            <button class="px-4 py-2 text-sm font-medium text-gray-700 bg-white
+                                           border border-gray-300 rounded-lg hover:bg-gray-50
+                                           transition-colors duration-150 focus:ring-2 focus:ring-blue-500"
+                                    aria-label="Export this feedback">
+                                <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                Export
+                            </button>
+                            <button class="px-4 py-2 text-sm font-medium text-white bg-blue-600
+                                           rounded-lg hover:bg-blue-700 transition-colors duration-150
+                                           focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                    aria-label="Add tag to this feedback"
+                                    onclick="openAddTagModal()">
+                                <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.997 1.997 0 013 12V7a4 4 0 014-4z" />
+                                </svg>
+                                Add Tag
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Feedback Content -->
+                    <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                        <div class="prose max-w-none">
+                            <p class="text-gray-900 leading-relaxed mb-4" id="feedback-content-display">
+                                The chatbot didn't understand my question about product pricing.
+                                It kept redirecting me to the wrong department and after 3 attempts,
+                                I still couldn't get the information I needed. The interface was
+                                confusing and the responses felt robotic.
+                            </p>
+
+                            <!-- Tags in Detail Panel -->
+                            <div class="flex flex-wrap gap-2 pt-2 border-t border-gray-100" id="feedback-tags-display">
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-sm font-medium bg-red-100 text-red-700">
+                                    Bug
+                                </span>
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-sm font-medium bg-yellow-100 text-yellow-700">
+                                    UX Issue
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chat History Section -->
+            <section class="flex-1 p-4 lg:p-8 overflow-y-auto custom-scrollbar"
+                     aria-label="Conversation history"
+                     id="chat-history">
+                <h3 class="text-lg font-semibold text-gray-900 mb-6">Conversation History</h3>
+
+                <div class="max-w-4xl space-y-6" id="chat-messages">
+                    <!-- User Message -->
+                    <div class="flex justify-end animate-fade-in">
+                        <div class="max-w-md lg:max-w-lg">
+                            <div class="bg-blue-600 text-white rounded-2xl rounded-br-md px-4 py-3 shadow-sm">
+                                <p class="text-sm">Hi, I need information about your pricing plans.</p>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1 text-right">2:28 PM</p>
+                        </div>
+                    </div>
+
+                    <!-- Bot Message -->
+                    <div class="flex justify-start animate-fade-in">
+                        <div class="max-w-md lg:max-w-lg">
+                            <div class="bg-gray-100 text-gray-900 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
+                                <p class="text-sm">I'd be happy to help! Let me connect you with our sales team.</p>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">2:28 PM</p>
+                        </div>
+                    </div>
+
+                    <!-- User Message -->
+                    <div class="flex justify-end animate-fade-in">
+                        <div class="max-w-md lg:max-w-lg">
+                            <div class="bg-blue-600 text-white rounded-2xl rounded-br-md px-4 py-3 shadow-sm">
+                                <p class="text-sm">Wait, I just want to see the pricing information on your website. Can you help me find it?</p>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1 text-right">2:29 PM</p>
+                        </div>
+                    </div>
+
+                    <!-- Bot Message -->
+                    <div class="flex justify-start animate-fade-in">
+                        <div class="max-w-md lg:max-w-lg">
+                            <div class="bg-gray-100 text-gray-900 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
+                                <p class="text-sm">I understand you're looking for pricing information. Let me transfer you to our technical support team who can assist you better.</p>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">2:29 PM</p>
+                        </div>
+                    </div>
+
+                    <!-- User Message -->
+                    <div class="flex justify-end animate-fade-in">
+                        <div class="max-w-md lg:max-w-lg">
+                            <div class="bg-blue-600 text-white rounded-2xl rounded-br-md px-4 py-3 shadow-sm">
+                                <p class="text-sm">This is frustrating. I don't need technical support, I just want to see your prices! Why can't you understand that?</p>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1 text-right">2:30 PM</p>
+                        </div>
+                    </div>
+
+                    <!-- Bot Message -->
+                    <div class="flex justify-start animate-fade-in">
+                        <div class="max-w-md lg:max-w-lg">
+                            <div class="bg-gray-100 text-gray-900 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
+                                <p class="text-sm">I apologize for the confusion. Please hold while I connect you with the appropriate department.</p>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">2:30 PM</p>
+                        </div>
+                    </div>
+
+                    <!-- System Message -->
+                    <div class="flex justify-center animate-fade-in">
+                        <div class="max-w-md">
+                            <div class="bg-gray-50 text-gray-600 rounded-lg px-4 py-2 text-center border border-gray-200">
+                                <p class="text-xs">User ended conversation</p>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1 text-center">2:30 PM</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Loading States (Hidden by default) -->
+    <div id="loading-skeleton" class="hidden p-6 space-y-4">
+        <div class="animate-pulse space-y-4">
+            <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+            <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+            <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+        </div>
+    </div>
+
+    <!-- Add Tag Modal -->
+    <div id="add-tag-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden" aria-hidden="true">
+        <div class="relative top-20 mx-auto p-5 border w-[500px] max-w-[90vw] shadow-lg rounded-xl bg-white">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">Add Tag</h3>
+                <button type="button"
+                        class="text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-1"
+                        onclick="closeAddTagModal()"
+                        aria-label="Close modal">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="space-y-4">
+                <!-- Existing Tags Section -->
+                <div id="existing-tags-section">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Select from existing tags
+                    </label>
+                    <div id="existing-tags-container" class="flex flex-wrap gap-2 max-h-32 overflow-y-auto p-2">
+                        <!-- Existing tags will be populated here -->
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">Click a tag to add it to this feedback</p>
+                </div>
+
+                <!-- Divider -->
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white text-gray-500">or create new tag</span>
+                    </div>
+                </div>
+
+                <!-- Create New Tag Section -->
+                <div id="create-new-tag-section">
+                    <!-- Tag Name Input -->
+                    <div>
+                        <label for="tag-name-input" class="block text-sm font-medium text-gray-700 mb-2">
+                            New Tag Name
+                        </label>
+                        <input type="text"
+                               id="tag-name-input"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="Enter new tag name..."
+                               maxlength="20">
+                    </div>
+
+                    <!-- Color Selection -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Tag Color
+                        </label>
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button"
+                                class="w-8 h-8 rounded-full bg-red-500 hover:ring-2 hover:ring-red-300 focus:ring-2 focus:ring-red-300 tag-color-option"
+                                data-color="red"
+                                aria-label="Red color">
+                        </button>
+                        <button type="button"
+                                class="w-8 h-8 rounded-full bg-yellow-500 hover:ring-2 hover:ring-yellow-300 focus:ring-2 focus:ring-yellow-300 tag-color-option"
+                                data-color="yellow"
+                                aria-label="Yellow color">
+                        </button>
+                        <button type="button"
+                                class="w-8 h-8 rounded-full bg-green-500 hover:ring-2 hover:ring-green-300 focus:ring-2 focus:ring-green-300 tag-color-option"
+                                data-color="green"
+                                aria-label="Green color">
+                        </button>
+                        <button type="button"
+                                class="w-8 h-8 rounded-full bg-blue-500 hover:ring-2 hover:ring-blue-300 focus:ring-2 focus:ring-blue-300 tag-color-option selected"
+                                data-color="blue"
+                                aria-label="Blue color">
+                        </button>
+                        <button type="button"
+                                class="w-8 h-8 rounded-full bg-purple-500 hover:ring-2 hover:ring-purple-300 focus:ring-2 focus:ring-purple-300 tag-color-option"
+                                data-color="purple"
+                                aria-label="Purple color">
+                        </button>
+                        <button type="button"
+                                class="w-8 h-8 rounded-full bg-orange-500 hover:ring-2 hover:ring-orange-300 focus:ring-2 focus:ring-orange-300 tag-color-option"
+                                data-color="orange"
+                                aria-label="Orange color">
+                        </button>
+                        </div>
+                    </div>
+
+                    <!-- Preview -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Preview
+                        </label>
+                        <div id="tag-preview" class="inline-flex items-center px-2.5 py-1 rounded-md text-sm font-medium bg-blue-100 text-blue-700">
+                            New Tag
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="flex justify-end space-x-3 mt-6">
+                <button type="button"
+                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors duration-150"
+                        onclick="closeAddTagModal()">
+                    Cancel
+                </button>
+                <button type="button"
+                        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-150"
+                        onclick="addNewTag()"
+                        id="add-tag-confirm-btn">
+                    Add Tag
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample feedback data
+        const today = new Date();
+        const todayStr = today.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1);
+        const yesterdayStr = yesterday.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        const feedbackData = {
+            1: {
+                id: "#UAT-2024-0927-001",
+                date: `${todayStr} at 2:30 PM`,
+                ip: "192.168.1.100",
+                status: "New",
+                content: "The chatbot didn't understand my question about product pricing. It kept redirecting me to the wrong department and after 3 attempts, I still couldn't get the information I needed. The interface was confusing and the responses felt robotic.",
+                user: "guest_user_123",
+                tags: [
+                    { name: "Bug", color: "red" },
+                    { name: "UX Issue", color: "yellow" }
+                ],
+                messages: [
+                    { type: 'user', content: 'Hi, I need information about your pricing plans.', time: '2:28 PM' },
+                    { type: 'bot', content: "I'd be happy to help! Let me connect you with our sales team.", time: '2:28 PM' },
+                    { type: 'user', content: 'Wait, I just want to see the pricing information on your website. Can you help me find it?', time: '2:29 PM' },
+                    { type: 'bot', content: 'I understand you\'re looking for pricing information. Let me transfer you to our technical support team who can assist you better.', time: '2:29 PM' },
+                    { type: 'user', content: 'This is frustrating. I don\'t need technical support, I just want to see your prices! Why can\'t you understand that?', time: '2:30 PM' },
+                    { type: 'bot', content: 'I apologize for the confusion. Please hold while I connect you with the appropriate department.', time: '2:30 PM' },
+                    { type: 'system', content: 'User ended conversation', time: '2:30 PM' }
+                ]
+            },
+            2: {
+                id: "#UAT-2024-0927-002",
+                date: `${todayStr} at 10:15 AM`,
+                ip: "192.168.1.205",
+                status: "In Progress",
+                content: "Great experience overall! The chatbot was helpful and understood my questions about shipping policies. Only minor issue was the delay in responses during peak hours. Would be nice to have faster response times.",
+                user: "beta_tester_456",
+                tags: [
+                    { name: "Positive", color: "green" },
+                    { name: "Performance", color: "blue" }
+                ],
+                messages: [
+                    { type: 'user', content: 'Hello! Can you tell me about your shipping policies?', time: '10:15 AM' },
+                    { type: 'bot', content: 'Of course! We offer several shipping options including standard, expedited, and overnight delivery.', time: '10:15 AM' },
+                    { type: 'user', content: 'What are the costs for each option?', time: '10:16 AM' },
+                    { type: 'bot', content: 'Standard shipping is free for orders over $50, expedited is $9.99, and overnight is $19.99.', time: '10:17 AM' },
+                    { type: 'user', content: 'Perfect! That\'s exactly what I needed to know. Thank you!', time: '10:17 AM' },
+                    { type: 'bot', content: 'You\'re welcome! Is there anything else I can help you with today?', time: '10:18 AM' }
+                ]
+            },
+            3: {
+                id: "#UAT-2024-0926-003",
+                date: `${yesterdayStr} at 4:45 PM`,
+                ip: "192.168.1.150",
+                status: "Resolved",
+                content: "The chatbot interface needs better visual feedback. When I typed my question, it wasn't clear if the bot was processing or if there was a connection issue. Adding typing indicators would help.",
+                user: "qa_reviewer_789",
+                tags: [
+                    { name: "Enhancement", color: "purple" },
+                    { name: "UX Issue", color: "yellow" }
+                ],
+                messages: [
+                    { type: 'user', content: 'Testing the interface response times...', time: 'Sep 26, 16:45' },
+                    { type: 'bot', content: 'Hello! How can I assist you today?', time: 'Sep 26, 16:46' },
+                    { type: 'user', content: 'I notice there\'s no visual indication when you\'re processing my message.', time: 'Sep 26, 16:46' },
+                    { type: 'bot', content: 'Thank you for that feedback! Visual indicators are important for user experience.', time: 'Sep 26, 16:47' },
+                    { type: 'user', content: 'Yes, it would be helpful to see typing indicators or processing states.', time: 'Sep 26, 16:47' }
+                ]
+            },
+            4: {
+                id: "#UAT-2024-0926-004",
+                date: `${yesterdayStr} at 9:20 AM`,
+                ip: "192.168.1.100",
+                status: "Critical",
+                content: "Security concern: The chatbot accidentally revealed sensitive information about other users during our conversation. This needs immediate attention as it appears to be a data leakage issue.",
+                user: "security_audit_001",
+                tags: [
+                    { name: "Critical", color: "red" },
+                    { name: "Security", color: "orange" },
+                    { name: "Data Leak", color: "red" }
+                ],
+                messages: [
+                    { type: 'user', content: 'I need to check my account status.', time: 'Sep 26, 09:20' },
+                    { type: 'bot', content: 'I can help you with that. Can you provide your account number?', time: 'Sep 26, 09:20' },
+                    { type: 'user', content: 'My account number is 12345.', time: 'Sep 26, 09:21' },
+                    { type: 'bot', content: 'I see information for John Smith (account 67890) and Sarah Johnson (account 11111)...', time: 'Sep 26, 09:21' },
+                    { type: 'user', content: 'Wait, those aren\'t my account details. You\'re showing me other users\' information!', time: 'Sep 26, 09:22' },
+                    { type: 'bot', content: 'I apologize for the error. Let me disconnect this session immediately.', time: 'Sep 26, 09:22' },
+                    { type: 'system', content: 'Session terminated by system', time: 'Sep 26, 09:22' }
+                ]
+            }
+        };
+
+        let currentFeedbackId = 1;
+        let isMobile = window.innerWidth < 1024;
+
+        // Update mobile state on resize
+        window.addEventListener('resize', () => {
+            isMobile = window.innerWidth < 1024;
+        });
+
+        // Initialize the application
+        function initApp() {
+            selectFeedback(currentFeedbackId);
+            setupKeyboardNavigation();
+            setupSearchFunctionality();
+            setupScrollIndicator();
+            updateFeedbackCardTimestamps();
+            setupAddTagModal();
+        }
+
+        // Generate tag HTML based on color
+        function generateTagHTML(tag, size = 'sm') {
+            const colorMap = {
+                red: 'bg-red-100 text-red-700',
+                yellow: 'bg-yellow-100 text-yellow-700',
+                green: 'bg-green-100 text-green-700',
+                blue: 'bg-blue-100 text-blue-700',
+                purple: 'bg-purple-100 text-purple-700',
+                orange: 'bg-orange-100 text-orange-700'
+            };
+
+            const sizeMap = {
+                xs: 'px-2 py-0.5 text-xs',
+                sm: 'px-2.5 py-1 text-sm'
+            };
+
+            const colorClass = colorMap[tag.color] || 'bg-gray-100 text-gray-700';
+            const sizeClass = sizeMap[size] || sizeMap.sm;
+
+            return `<span class="inline-flex items-center ${sizeClass} rounded-md font-medium ${colorClass}">
+                ${tag.name}
+            </span>`;
+        }
+
+        // Select and display feedback
+        function selectFeedback(feedbackId) {
+            currentFeedbackId = feedbackId;
+            const feedback = feedbackData[feedbackId];
+
+            if (!feedback) return;
+
+            // Update active state in list
+            document.querySelectorAll('.feedback-card').forEach(card => {
+                card.classList.remove('active', 'border-blue-500', 'bg-blue-50/50');
+                card.classList.add('border-gray-200');
+                card.setAttribute('aria-selected', 'false');
+            });
+
+            const activeCard = document.querySelector(`[data-feedback-id="${feedbackId}"]`);
+            if (activeCard) {
+                activeCard.classList.add('active', 'border-blue-500', 'bg-blue-50/50');
+                activeCard.classList.remove('border-gray-200');
+                activeCard.setAttribute('aria-selected', 'true');
+            }
+
+            // Update detail panel
+            document.getElementById('feedback-id-display').textContent = feedback.id;
+            document.getElementById('feedback-date-display').textContent = feedback.date;
+            document.getElementById('feedback-ip-display').textContent = `IP: ${feedback.ip}`;
+            document.getElementById('feedback-content-display').textContent = feedback.content;
+
+            // Update tags in detail panel
+            const tagsContainer = document.getElementById('feedback-tags-display');
+            if (tagsContainer && feedback.tags) {
+                tagsContainer.innerHTML = feedback.tags.map(tag => generateTagHTML(tag, 'sm')).join('');
+            }
+
+            // Update chat history
+            updateChatHistory(feedback.messages);
+
+            // On mobile, show detail panel
+            if (isMobile) {
+                showFeedbackDetail();
+            }
+
+            // Announce to screen readers
+            announceToScreenReader(`Selected feedback ${feedback.id}`);
+        }
+
+        // Format timestamp based on age
+        function formatMessageTime(timeString, messageDate = null) {
+            const now = new Date();
+
+            // If timeString already contains date (e.g., "Sep 26, 09:20"), return as-is
+            if (timeString.includes(',') || timeString.includes('Sep') || timeString.includes('Jan') ||
+                timeString.includes('Feb') || timeString.includes('Mar') || timeString.includes('Apr') ||
+                timeString.includes('May') || timeString.includes('Jun') || timeString.includes('Jul') ||
+                timeString.includes('Aug') || timeString.includes('Oct') || timeString.includes('Nov') ||
+                timeString.includes('Dec')) {
+                return timeString;
+            }
+
+            // If no date provided, assume today for time-only strings
+            if (!messageDate) {
+                const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+                if (timeString.includes('AM') || timeString.includes('PM')) {
+                    const [time, period] = timeString.split(' ');
+                    const [hours, minutes] = time.split(':');
+                    let hour24 = parseInt(hours);
+
+                    if (period === 'PM' && hour24 !== 12) hour24 += 12;
+                    if (period === 'AM' && hour24 === 12) hour24 = 0;
+
+                    messageDate = new Date(today);
+                    messageDate.setHours(hour24, parseInt(minutes), 0, 0);
+                } else {
+                    // Already in 24-hour format
+                    const [hours, minutes] = timeString.split(':');
+                    messageDate = new Date(today);
+                    messageDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+                }
+            }
+
+            // Calculate time difference in milliseconds
+            const timeDiff = now - messageDate;
+            const hoursDiff = timeDiff / (1000 * 60 * 60);
+
+            // If message is older than 1 hour, show date and 24-hour time
+            if (hoursDiff > 1) {
+                const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                const messageDay = new Date(messageDate.getFullYear(), messageDate.getMonth(), messageDate.getDate());
+
+                if (messageDay.getTime() === today.getTime()) {
+                    // Same day but more than 1 hour ago - show "Today, HH:MM"
+                    const timeOptions = {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                    };
+                    const timeString = messageDate.toLocaleTimeString('en-US', timeOptions);
+                    return `Today, ${timeString}`;
+                } else {
+                    // Different day - show date and 24-hour time
+                    const options = {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                    };
+
+                    // If it's from a different year, include year
+                    if (messageDate.getFullYear() !== now.getFullYear()) {
+                        options.year = 'numeric';
+                    }
+
+                    return messageDate.toLocaleDateString('en-US', options);
+                }
+            }
+
+            // Otherwise, show original time format
+            return timeString;
+        }
+
+        // Update chat history display
+        function updateChatHistory(messages) {
+            const chatContainer = document.getElementById('chat-messages');
+            chatContainer.innerHTML = '';
+
+            // Get the base date for this conversation from the feedback data
+            const feedback = feedbackData[currentFeedbackId];
+            const conversationDate = feedback ? new Date(feedback.date) : new Date();
+
+            messages.forEach((message, index) => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'animate-fade-in';
+                messageDiv.style.animationDelay = `${index * 0.1}s`;
+
+                // Create a message date based on conversation date and time
+                let messageDate = new Date(conversationDate);
+                if (message.time.includes(':')) {
+                    const [time, period] = message.time.split(' ');
+                    const [hours, minutes] = time.split(':');
+                    let hour24 = parseInt(hours);
+
+                    if (period === 'PM' && hour24 !== 12) hour24 += 12;
+                    if (period === 'AM' && hour24 === 12) hour24 = 0;
+
+                    messageDate.setHours(hour24, parseInt(minutes), 0, 0);
+                }
+
+                const formattedTime = formatMessageTime(message.time, messageDate);
+
+                if (message.type === 'user') {
+                    messageDiv.innerHTML = `
+                        <div class="flex justify-end">
+                            <div class="max-w-md lg:max-w-lg">
+                                <div class="bg-blue-600 text-white rounded-2xl rounded-br-md px-4 py-3 shadow-sm">
+                                    <p class="text-sm">${message.content}</p>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1 text-right">${formattedTime}</p>
+                            </div>
+                        </div>
+                    `;
+                } else if (message.type === 'bot') {
+                    messageDiv.innerHTML = `
+                        <div class="flex justify-start">
+                            <div class="max-w-md lg:max-w-lg">
+                                <div class="bg-gray-100 text-gray-900 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
+                                    <p class="text-sm">${message.content}</p>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">${formattedTime}</p>
+                            </div>
+                        </div>
+                    `;
+                } else if (message.type === 'system') {
+                    messageDiv.innerHTML = `
+                        <div class="flex justify-center">
+                            <div class="max-w-md">
+                                <div class="bg-gray-50 text-gray-600 rounded-lg px-4 py-2 text-center border border-gray-200">
+                                    <p class="text-xs">${message.content}</p>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1 text-center">${formattedTime}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                chatContainer.appendChild(messageDiv);
+            });
+
+            // Smooth scroll to bottom
+            setTimeout(() => {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 300);
+        }
+
+        // Mobile navigation functions
+        function showFeedbackDetail() {
+            if (isMobile) {
+                document.getElementById('feedback-list').style.transform = 'translateX(-100%)';
+                document.getElementById('main-content').style.transform = 'translateX(0)';
+            }
+        }
+
+        function showFeedbackList() {
+            if (isMobile) {
+                document.getElementById('feedback-list').style.transform = 'translateX(0)';
+                document.getElementById('main-content').style.transform = 'translateX(100%)';
+            }
+        }
+
+        // Keyboard navigation
+        function setupKeyboardNavigation() {
+            document.addEventListener('keydown', (e) => {
+                if (e.target.matches('input, textarea, select')) return;
+
+                switch (e.key) {
+                    case 'ArrowDown':
+                        e.preventDefault();
+                        navigateToFeedback('next');
+                        break;
+                    case 'ArrowUp':
+                        e.preventDefault();
+                        navigateToFeedback('prev');
+                        break;
+                    case 'Escape':
+                        if (isMobile) showFeedbackList();
+                        break;
+                    case '/':
+                        e.preventDefault();
+                        document.getElementById('search-input').focus();
+                        break;
+                }
+            });
+        }
+
+        function handleCardKeydown(event, feedbackId) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                selectFeedback(feedbackId);
+            }
+        }
+
+        function navigateToFeedback(direction) {
+            const feedbackIds = Object.keys(feedbackData).map(Number);
+            const currentIndex = feedbackIds.indexOf(currentFeedbackId);
+            let newIndex;
+
+            if (direction === 'next') {
+                newIndex = (currentIndex + 1) % feedbackIds.length;
+            } else {
+                newIndex = currentIndex === 0 ? feedbackIds.length - 1 : currentIndex - 1;
+            }
+
+            const newFeedbackId = feedbackIds[newIndex];
+            selectFeedback(newFeedbackId);
+
+            // Focus the selected card
+            const selectedCard = document.querySelector(`[data-feedback-id="${newFeedbackId}"]`);
+            if (selectedCard) {
+                selectedCard.focus();
+                selectedCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        // Search functionality
+        function setupSearchFunctionality() {
+            const searchInput = document.getElementById('search-input');
+            let searchTimeout;
+
+            searchInput.addEventListener('input', (e) => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    performSearch(e.target.value);
+                }, 300);
+            });
+
+            searchInput.addEventListener('focus', () => {
+                searchInput.classList.add('w-72');
+            });
+
+            searchInput.addEventListener('blur', () => {
+                if (!searchInput.value) {
+                    searchInput.classList.remove('w-72');
+                }
+            });
+        }
+
+        function performSearch(query) {
+            const cards = document.querySelectorAll('.feedback-card');
+
+            if (!query.trim()) {
+                cards.forEach(card => {
+                    card.style.display = 'block';
+                    card.classList.remove('opacity-50');
+                });
+                return;
+            }
+
+            cards.forEach(card => {
+                const content = card.textContent.toLowerCase();
+                const matches = content.includes(query.toLowerCase());
+
+                if (matches) {
+                    card.style.display = 'block';
+                    card.classList.remove('opacity-50');
+                } else {
+                    card.style.display = 'none';
+                    card.classList.add('opacity-50');
+                }
+            });
+
+            announceToScreenReader(`Search completed. ${document.querySelectorAll('.feedback-card:not([style*="display: none"])').length} results found.`);
+        }
+
+        // Accessibility announcements
+        function announceToScreenReader(message) {
+            const announcement = document.createElement('div');
+            announcement.setAttribute('aria-live', 'polite');
+            announcement.setAttribute('aria-atomic', 'true');
+            announcement.className = 'sr-only';
+            announcement.textContent = message;
+
+            document.body.appendChild(announcement);
+
+            setTimeout(() => {
+                document.body.removeChild(announcement);
+            }, 1000);
+        }
+
+        // Initialize app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initApp);
+
+        // Handle responsive behavior
+        window.addEventListener('resize', () => {
+            const wasMobile = isMobile;
+            isMobile = window.innerWidth < 1024;
+
+            // Reset mobile transformations when switching to desktop
+            if (wasMobile && !isMobile) {
+                document.getElementById('feedback-list').style.transform = '';
+                document.getElementById('main-content').style.transform = '';
+            }
+        });
+
+        // Add smooth scrolling for chat history
+        function scrollChatToBottom() {
+            const chatHistory = document.getElementById('chat-history');
+            chatHistory.scrollTo({
+                top: chatHistory.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+
+        // Performance optimization: Lazy load feedback cards
+        function loadMoreFeedback() {
+            // Simulate loading more feedback cards
+            // This would connect to your actual API
+            console.log('Loading more feedback...');
+        }
+
+        // Intersection Observer for infinite scroll
+        const observerOptions = {
+            root: null,
+            rootMargin: '100px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Load more content when near bottom
+                    loadMoreFeedback();
+                }
+            });
+        }, observerOptions);
+
+        // Error handling for failed operations
+        function handleError(operation, error) {
+            console.error(`Error in ${operation}:`, error);
+            announceToScreenReader(`Error occurred during ${operation}. Please try again.`);
+        }
+
+        // Export functionality
+        function exportFeedback(feedbackId = null) {
+            try {
+                const dataToExport = feedbackId ? [feedbackData[feedbackId]] : Object.values(feedbackData);
+                const jsonData = JSON.stringify(dataToExport, null, 2);
+
+                const blob = new Blob([jsonData], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `feedback-export-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                URL.revokeObjectURL(url);
+                announceToScreenReader('Feedback exported successfully');
+            } catch (error) {
+                handleError('export', error);
+            }
+        }
+
+        // Setup scroll indicator for left panel
+        function setupScrollIndicator() {
+            const container = document.getElementById('feedback-list-container');
+            const indicator = document.getElementById('scroll-indicator');
+            const thumb = document.getElementById('scroll-thumb');
+            let hideTimeout;
+
+            if (!container || !indicator || !thumb) return;
+
+            function updateScrollIndicator() {
+                const { scrollTop, scrollHeight, clientHeight } = container;
+                const scrollPercentage = scrollTop / (scrollHeight - clientHeight);
+                const indicatorHeight = (clientHeight / scrollHeight) * clientHeight;
+                const thumbPosition = scrollPercentage * (clientHeight - indicatorHeight);
+
+                // Only show indicator if content is scrollable
+                if (scrollHeight > clientHeight) {
+                    indicator.style.height = `${clientHeight}px`;
+                    thumb.style.height = `${indicatorHeight}px`;
+                    thumb.style.transform = `translateY(${thumbPosition}px)`;
+
+                    // Show indicator
+                    indicator.classList.add('visible');
+
+                    // Auto-hide after 2 seconds
+                    clearTimeout(hideTimeout);
+                    hideTimeout = setTimeout(() => {
+                        indicator.classList.remove('visible');
+                    }, 2000);
+                } else {
+                    indicator.classList.remove('visible');
+                }
+            }
+
+            // Show indicator on scroll
+            container.addEventListener('scroll', () => {
+                updateScrollIndicator();
+            });
+
+            // Show indicator on hover
+            container.addEventListener('mouseenter', () => {
+                if (container.scrollHeight > container.clientHeight) {
+                    indicator.classList.add('visible');
+                    clearTimeout(hideTimeout);
+                }
+            });
+
+            // Hide indicator when not hovering (unless actively scrolling)
+            container.addEventListener('mouseleave', () => {
+                clearTimeout(hideTimeout);
+                hideTimeout = setTimeout(() => {
+                    indicator.classList.remove('visible');
+                }, 1000);
+            });
+
+            // Initial update
+            updateScrollIndicator();
+
+            // Update on window resize
+            window.addEventListener('resize', updateScrollIndicator);
+        }
+
+        // Add Tag Modal Functions
+        let selectedTagColor = 'blue';
+
+        function openAddTagModal() {
+            const modal = document.getElementById('add-tag-modal');
+            const input = document.getElementById('tag-name-input');
+
+            // Reset modal
+            input.value = '';
+            selectedTagColor = 'blue';
+            updateColorSelection();
+            updateTagPreview();
+
+            // Populate existing tags
+            populateExistingTags();
+
+            // Show modal
+            modal.classList.remove('hidden');
+            modal.setAttribute('aria-hidden', 'false');
+
+            // Focus on first focusable element (existing tags if available)
+            setTimeout(() => {
+                const existingTagsContainer = document.getElementById('existing-tags-container');
+                const firstTag = existingTagsContainer.querySelector('button');
+                if (firstTag) {
+                    firstTag.focus();
+                } else {
+                    input.focus();
+                }
+            }, 100);
+
+            // Trap focus in modal
+            setupModalFocusTrap();
+
+            announceToScreenReader('Add tag dialog opened');
+        }
+
+        function closeAddTagModal() {
+            const modal = document.getElementById('add-tag-modal');
+            modal.classList.add('hidden');
+            modal.setAttribute('aria-hidden', 'true');
+
+            announceToScreenReader('Add tag dialog closed');
+        }
+
+        function setupModalFocusTrap() {
+            const modal = document.getElementById('add-tag-modal');
+            const focusableElements = modal.querySelectorAll(
+                'button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            const firstElement = focusableElements[0];
+            const lastElement = focusableElements[focusableElements.length - 1];
+
+            modal.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeAddTagModal();
+                }
+
+                if (e.key === 'Tab') {
+                    if (e.shiftKey) {
+                        if (document.activeElement === firstElement) {
+                            lastElement.focus();
+                            e.preventDefault();
+                        }
+                    } else {
+                        if (document.activeElement === lastElement) {
+                            firstElement.focus();
+                            e.preventDefault();
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateColorSelection() {
+            document.querySelectorAll('.tag-color-option').forEach(button => {
+                button.classList.remove('selected', 'ring-2');
+                if (button.dataset.color === selectedTagColor) {
+                    button.classList.add('selected', 'ring-2');
+                }
+            });
+        }
+
+        function updateTagPreview() {
+            const preview = document.getElementById('tag-preview');
+            const input = document.getElementById('tag-name-input');
+            const tagName = input.value.trim() || 'New Tag';
+
+            const colorMap = {
+                red: 'bg-red-100 text-red-700',
+                yellow: 'bg-yellow-100 text-yellow-700',
+                green: 'bg-green-100 text-green-700',
+                blue: 'bg-blue-100 text-blue-700',
+                purple: 'bg-purple-100 text-purple-700',
+                orange: 'bg-orange-100 text-orange-700'
+            };
+
+            preview.className = `inline-flex items-center px-2.5 py-1 rounded-md text-sm font-medium ${colorMap[selectedTagColor]}`;
+            preview.textContent = tagName;
+        }
+
+        function populateExistingTags() {
+            const container = document.getElementById('existing-tags-container');
+            const currentFeedback = feedbackData[currentFeedbackId];
+
+            // Get all unique tags from all feedback
+            const allTags = new Map();
+            Object.values(feedbackData).forEach(feedback => {
+                if (feedback.tags) {
+                    feedback.tags.forEach(tag => {
+                        const key = tag.name.toLowerCase();
+                        if (!allTags.has(key)) {
+                            allTags.set(key, tag);
+                        }
+                    });
+                }
+            });
+
+            // Filter out tags already on current feedback
+            const availableTags = Array.from(allTags.values()).filter(tag => {
+                return !currentFeedback.tags.some(existingTag =>
+                    existingTag.name.toLowerCase() === tag.name.toLowerCase()
+                );
+            });
+
+            if (availableTags.length === 0) {
+                container.innerHTML = '<p class="text-sm text-gray-500 italic">No existing tags available</p>';
+                return;
+            }
+
+            // Clear container
+            container.innerHTML = '';
+
+            // Create clickable tag buttons using DOM methods
+            availableTags.forEach(tag => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = `inline-flex items-center px-2.5 py-1 rounded-md text-sm font-medium border-0 outline-none hover:ring-2 hover:ring-blue-300 focus:ring-2 focus:ring-blue-500 transition-all duration-150 existing-tag-btn ${getTagColorClasses(tag.color)}`;
+                button.textContent = tag.name;
+                button.setAttribute('data-tag-name', tag.name);
+                button.setAttribute('data-tag-color', tag.color);
+                button.setAttribute('aria-label', `Add ${tag.name} tag`);
+                button.onclick = () => addExistingTag(tag.name, tag.color);
+
+                container.appendChild(button);
+            });
+        }
+
+        function getTagColorClasses(color) {
+            const colorMap = {
+                red: 'bg-red-100 text-red-700',
+                yellow: 'bg-yellow-100 text-yellow-700',
+                green: 'bg-green-100 text-green-700',
+                blue: 'bg-blue-100 text-blue-700',
+                purple: 'bg-purple-100 text-purple-700',
+                orange: 'bg-orange-100 text-orange-700'
+            };
+            return colorMap[color] || 'bg-gray-100 text-gray-700';
+        }
+
+        function addExistingTag(tagName, tagColor) {
+            const feedback = feedbackData[currentFeedbackId];
+            if (feedback) {
+                // Check if tag already exists (shouldn't happen but safety check)
+                const existingTag = feedback.tags.find(tag =>
+                    tag.name.toLowerCase() === tagName.toLowerCase()
+                );
+
+                if (existingTag) {
+                    announceToScreenReader('Tag already exists on this feedback');
+                    return;
+                }
+
+                // Add existing tag
+                const newTag = { name: tagName, color: tagColor };
+                feedback.tags.push(newTag);
+
+                // Update UI
+                updateFeedbackTags(currentFeedbackId);
+
+                closeAddTagModal();
+                announceToScreenReader(`Tag "${tagName}" added successfully`);
+            }
+        }
+
+        function addNewTag() {
+            const input = document.getElementById('tag-name-input');
+            const tagName = input.value.trim();
+
+            if (!tagName) {
+                announceToScreenReader('Please enter a tag name');
+                input.focus();
+                return;
+            }
+
+            if (tagName.length > 20) {
+                announceToScreenReader('Tag name must be 20 characters or less');
+                input.focus();
+                return;
+            }
+
+            // Add tag to current feedback
+            const feedback = feedbackData[currentFeedbackId];
+            if (feedback) {
+                // Check if tag already exists
+                const existingTag = feedback.tags.find(tag =>
+                    tag.name.toLowerCase() === tagName.toLowerCase()
+                );
+
+                if (existingTag) {
+                    announceToScreenReader('Tag already exists');
+                    input.focus();
+                    return;
+                }
+
+                // Add new tag
+                const newTag = { name: tagName, color: selectedTagColor };
+                feedback.tags.push(newTag);
+
+                // Update UI
+                updateFeedbackTags(currentFeedbackId);
+
+                closeAddTagModal();
+                announceToScreenReader(`Tag "${tagName}" added successfully`);
+            }
+        }
+
+        function updateFeedbackTags(feedbackId) {
+            const feedback = feedbackData[feedbackId];
+            if (!feedback || !feedback.tags) return;
+
+            // Update detail panel tags
+            const tagsContainer = document.getElementById('feedback-tags-display');
+            if (tagsContainer) {
+                tagsContainer.innerHTML = feedback.tags.map(tag => generateTagHTML(tag, 'sm')).join('');
+            }
+
+            // Update left panel card tags
+            const card = document.querySelector(`[data-feedback-id="${feedbackId}"]`);
+            if (card) {
+                const cardTagsContainer = card.querySelector('.flex.flex-wrap.gap-1\\.5');
+                if (cardTagsContainer) {
+                    cardTagsContainer.innerHTML = feedback.tags.map(tag => generateTagHTML(tag, 'xs')).join('');
+                }
+            }
+        }
+
+        function setupAddTagModal() {
+            // Color selection event listeners
+            document.querySelectorAll('.tag-color-option').forEach(button => {
+                button.addEventListener('click', () => {
+                    selectedTagColor = button.dataset.color;
+                    updateColorSelection();
+                    updateTagPreview();
+                });
+            });
+
+            // Input event listener for live preview
+            const input = document.getElementById('tag-name-input');
+            input.addEventListener('input', updateTagPreview);
+
+            // Enter key to submit
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addNewTag();
+                }
+            });
+
+            // Click outside modal to close
+            document.getElementById('add-tag-modal').addEventListener('click', (e) => {
+                if (e.target.id === 'add-tag-modal') {
+                    closeAddTagModal();
+                }
+            });
+        }
+
+        // Update feedback card timestamps based on age
+        function updateFeedbackCardTimestamps() {
+            Object.keys(feedbackData).forEach(feedbackId => {
+                const feedback = feedbackData[feedbackId];
+                const timestampElement = document.getElementById(`timestamp-${feedbackId}`);
+
+                if (timestampElement && feedback.date) {
+                    // Parse the date string more reliably
+                    let feedbackDate;
+                    try {
+                        // Handle "September 27, 2024 at 2:30 PM" format
+                        if (feedback.date.includes(' at ')) {
+                            feedbackDate = new Date(feedback.date.replace(' at ', ' '));
+                        } else {
+                            feedbackDate = new Date(feedback.date);
+                        }
+
+                        // Check if date is valid
+                        if (isNaN(feedbackDate.getTime())) {
+                            console.error('Invalid date for feedback', feedbackId, feedback.date);
+                            return;
+                        }
+
+                        const now = new Date();
+                        const timeDiff = now - feedbackDate;
+                        const hoursDiff = timeDiff / (1000 * 60 * 60);
+
+                        let displayText = '';
+                        let ariaLabel = '';
+
+                        if (hoursDiff < 1) {
+                            const minutesDiff = Math.floor(timeDiff / (1000 * 60));
+                            displayText = minutesDiff > 0 ? `${minutesDiff} minutes ago` : 'Just now';
+                            ariaLabel = `Submitted ${displayText}`;
+                        } else if (hoursDiff < 24) {
+                            const hours = Math.floor(hoursDiff);
+                            displayText = `${hours} ${hours === 1 ? 'hour' : 'hours'} ago`;
+                            ariaLabel = `Submitted ${hours} ${hours === 1 ? 'hour' : 'hours'} ago`;
+                        } else {
+                            // For entries older than 24 hours, show date and 24-hour time
+                            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                            const feedbackDay = new Date(feedbackDate.getFullYear(), feedbackDate.getMonth(), feedbackDate.getDate());
+
+                            if (feedbackDay.getTime() === today.getTime()) {
+                                // Same day but more than 24 hours ago - show "Today, HH:MM"
+                                const timeOptions = {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: false
+                                };
+                                const timeString = feedbackDate.toLocaleTimeString('en-US', timeOptions);
+                                displayText = `Today, ${timeString}`;
+                                ariaLabel = `Submitted today at ${timeString}`;
+                            } else {
+                                // Different day - show date and 24-hour time
+                                const options = {
+                                    month: 'short',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: false
+                                };
+
+                                // If it's from a different year, include year
+                                if (feedbackDate.getFullYear() !== now.getFullYear()) {
+                                    options.year = 'numeric';
+                                }
+
+                                displayText = feedbackDate.toLocaleDateString('en-US', options);
+                                ariaLabel = `Submitted on ${displayText}`;
+                            }
+                        }
+
+                        timestampElement.textContent = displayText;
+                        timestampElement.setAttribute('aria-label', ariaLabel);
+
+                    } catch (error) {
+                        console.error('Error parsing date for feedback', feedbackId, error);
+                        timestampElement.textContent = 'Unknown time';
+                        timestampElement.setAttribute('aria-label', 'Submission time unknown');
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
