@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Makmur — Smart TV Display Flows</title>
+  <meta name="description" content="Smart TV Display design flows for Makmur mosque platform. Flow A (Default) and Flow B (Prayer Mode) state machine.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Lora', 'serif'],
+            sans: ['Raleway', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#F0FDFA', 100: '#CCFBF1', 200: '#99F6E4',
+              300: '#5EEAD4', 400: '#2DD4BF', 500: '#14B8A6',
+              600: '#0D9488', 700: '#0F766E', 800: '#115E59',
+              900: '#134E4A', 950: '#0a2e2b',
+            },
+            gold: { DEFAULT: '#D4A574', light: '#F5E6D3', dark: '#B8865A' },
+          },
+          aspectRatio: { 'tv': '16 / 9' },
+        },
+      },
+    }
+  </script>
+
+  <style>
+    /* ========== GLOBAL ========== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ========== ANIMATIONS ========== */
+    @keyframes ticker {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-200%); }
+    }
+    .ticker-anim { animation: ticker 28s linear infinite; }
+
+    @keyframes gentle-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .pulse-soft { animation: gentle-pulse 2.5s ease-in-out infinite; }
+
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.03); opacity: 0.85; }
+    }
+    .breathe { animation: breathe 4s ease-in-out infinite; }
+
+    @keyframes countdown-tick {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(0.98); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .countdown { animation: countdown-tick 1s ease-in-out infinite; }
+
+    @keyframes poster-fade {
+      0%, 45% { opacity: 1; }
+      50%, 95% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes slide-up {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .slide-up { animation: slide-up 0.6s ease-out forwards; }
+
+    @keyframes glow-ring {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(212, 165, 116, 0.4); }
+      50% { box-shadow: 0 0 0 16px rgba(212, 165, 116, 0); }
+    }
+    .glow-ring { animation: glow-ring 2.5s ease-in-out infinite; }
+
+    /* ========== ISLAMIC GEOMETRIC ========== */
+    .geo-bg {
+      background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='rgba(212,165,116,0.15)' stroke-width='0.8'%3E%3Cpath d='M40 0L80 40L40 80L0 40Z'/%3E%3Ccircle cx='40' cy='40' r='16'/%3E%3Cpath d='M40 24L56 40L40 56L24 40Z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .geo-bg-subtle {
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg stroke='rgba(255,255,255,0.04)' stroke-width='0.6'%3E%3Cpath d='M30 0L60 30L30 60L0 30Z'/%3E%3Ccircle cx='30' cy='30' r='12'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    /* ========== TV SCREEN FRAME ========== */
+    .tv-frame {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 0 2px #2a2a2a;
+    }
+    .tv-screen {
+      border-radius: 6px;
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      position: relative;
+    }
+
+    /* ========== STATE TABS ========== */
+    .state-tab {
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .state-tab:hover { background-color: #F0FDFA; }
+    .state-tab.active {
+      background: #0F766E;
+      color: white;
+    }
+    .state-tab.active .tab-badge { background: rgba(255,255,255,0.2); color: white; }
+
+    /* ========== FLOW LABEL ========== */
+    .flow-badge-a {
+      background: #CCFBF1;
+      color: #0F766E;
+      border: 1px solid #99F6E4;
+    }
+    .flow-badge-b {
+      background: #FEF3C7;
+      color: #92400E;
+      border: 1px solid #FDE68A;
+    }
+    .flow-badge-obs {
+      background: #FEE2E2;
+      color: #991B1B;
+      border: 1px solid #FECACA;
+    }
+
+    /* ========== POSTER FADE ========== */
+    .poster-1 { animation: poster-fade 8s ease-in-out infinite 0s; }
+    .poster-2 { animation: poster-fade 8s ease-in-out infinite 4s; }
+  </style>
+</head>
+
+<body class="font-sans bg-slate-100 text-slate-800 min-h-screen antialiased">
+
+  <!-- ========== PAGE HEADER ========== -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-screen-2xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-2 text-brand-700 hover:text-brand-600 transition-colors duration-200 cursor-pointer" aria-label="Kembali ke landing page">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+        </a>
+        <div class="w-px h-5 bg-slate-200" aria-hidden="true"></div>
+        <svg class="w-7 h-7 text-brand-700" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M16 2C16 2 10 8 10 12V14H8V12C8 12 4 14 4 18V28H12V22C12 19.8 13.8 18 16 18C18.2 18 20 19.8 20 22V28H28V18C28 14 24 12 24 12V14H22V12C22 8 16 2 16 2Z" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="16" cy="10" r="2" fill="currentColor"/>
+        </svg>
+        <span class="font-serif font-bold text-lg text-brand-800">Makmur</span>
+        <span class="text-slate-300 hidden sm:inline" aria-hidden="true">/</span>
+        <span class="text-slate-600 text-sm font-medium hidden sm:inline">Smart TV Display</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-xs font-medium text-slate-500 hidden md:inline">Prayer Flow State Machine</span>
+        <a href="index.html" class="text-sm font-medium text-brand-700 hover:text-brand-600 border border-brand-200 hover:border-brand-400 px-4 py-2 rounded-lg transition-all duration-200 cursor-pointer">
+          Lihat Landing Page
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-screen-2xl mx-auto px-4 sm:px-6 py-10 space-y-16">
+
+    <!-- ========== INTRO ========== -->
+    <section aria-labelledby="intro-heading">
+      <div class="max-w-3xl">
+        <h1 id="intro-heading" class="font-serif text-3xl sm:text-4xl font-bold text-slate-900">Smart TV Display</h1>
+        <p class="mt-3 text-lg text-slate-500 leading-relaxed">
+          Tampilan full-screen untuk Smart TV masjid dengan real-time updates via Phoenix LiveView.
+          Dua flow bergantian berdasarkan waktu sholat secara otomatis.
+        </p>
+      </div>
+
+      <!-- State machine diagram -->
+      <div class="mt-8 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <h2 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-5">Prayer Flow State Machine</h2>
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-0 overflow-x-auto pb-2">
+          <!-- Flow A -->
+          <div class="flex-shrink-0 bg-brand-50 border-2 border-brand-200 rounded-xl px-4 py-3 text-center min-w-[140px]">
+            <span class="inline-block text-xs font-bold text-brand-600 bg-brand-100 px-2 py-0.5 rounded-full mb-1">FLOW A</span>
+            <p class="text-sm font-semibold text-slate-900">Default Mode</p>
+            <p class="text-xs text-slate-500 mt-0.5">Normal operation</p>
+          </div>
+          <!-- Arrow -->
+          <div class="sm:flex items-center gap-1 px-2 hidden">
+            <div class="h-px w-8 bg-amber-300"></div>
+            <div class="text-xs text-amber-600 font-medium whitespace-nowrap">T-5 min</div>
+            <svg class="w-4 h-4 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </div>
+          <!-- Pre-Adhan -->
+          <div class="flex-shrink-0 bg-amber-50 border-2 border-amber-200 rounded-xl px-4 py-3 text-center min-w-[140px]">
+            <span class="inline-block text-xs font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full mb-1">FLOW B — 1</span>
+            <p class="text-sm font-semibold text-slate-900">Pre-Adhan</p>
+            <p class="text-xs text-slate-500 mt-0.5">Bersiap sholat</p>
+          </div>
+          <!-- Arrow -->
+          <div class="sm:flex items-center gap-1 px-2 hidden">
+            <div class="h-px w-8 bg-orange-300"></div>
+            <div class="text-xs text-orange-600 font-medium whitespace-nowrap">Adhan</div>
+            <svg class="w-4 h-4 text-orange-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </div>
+          <!-- Adhan/Iqamah -->
+          <div class="flex-shrink-0 bg-orange-50 border-2 border-orange-200 rounded-xl px-4 py-3 text-center min-w-[140px]">
+            <span class="inline-block text-xs font-bold text-orange-700 bg-orange-100 px-2 py-0.5 rounded-full mb-1">FLOW B — 2</span>
+            <p class="text-sm font-semibold text-slate-900">Adhan / Iqamah</p>
+            <p class="text-xs text-slate-500 mt-0.5">Countdown iqamah</p>
+          </div>
+          <!-- Arrow -->
+          <div class="sm:flex items-center gap-1 px-2 hidden">
+            <div class="h-px w-8 bg-emerald-300"></div>
+            <div class="text-xs text-emerald-600 font-medium whitespace-nowrap">Iqamah</div>
+            <svg class="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </div>
+          <!-- Prayer In Progress -->
+          <div class="flex-shrink-0 bg-emerald-50 border-2 border-emerald-200 rounded-xl px-4 py-3 text-center min-w-[140px]">
+            <span class="inline-block text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full mb-1">FLOW B — 3</span>
+            <p class="text-sm font-semibold text-slate-900">Prayer In Progress</p>
+            <p class="text-xs text-slate-500 mt-0.5">Sedang berlangsung</p>
+          </div>
+          <!-- Return arrow -->
+          <div class="sm:flex items-center gap-1 px-2 hidden">
+            <div class="h-px w-8 bg-brand-300"></div>
+            <div class="text-xs text-brand-600 font-medium whitespace-nowrap">+15 min</div>
+            <svg class="w-4 h-4 text-brand-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </div>
+          <!-- Return to Flow A -->
+          <div class="sm:block hidden flex-shrink-0 text-xs text-slate-500 italic pt-3">→ Flow A</div>
+        </div>
+        <!-- Obituary special -->
+        <div class="mt-4 flex items-center gap-3 pt-4 border-t border-slate-100">
+          <div class="flex-shrink-0 bg-red-50 border-2 border-red-200 rounded-xl px-4 py-2.5 text-center min-w-[140px]">
+            <span class="inline-block text-xs font-bold text-red-700 bg-red-100 px-2 py-0.5 rounded-full mb-1">URGENT</span>
+            <p class="text-sm font-semibold text-slate-900">Obituary Overlay</p>
+          </div>
+          <p class="text-xs text-slate-500">Dapat terpicu kapan saja dari Flow A maupun B. Overlay penuh layar atas tampilan aktif.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========== FLOW A: DEFAULT MODE ========== -->
+    <section id="flow-a" aria-labelledby="flow-a-heading">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="flow-badge-a text-xs font-bold px-3 py-1.5 rounded-full">FLOW A — Default Mode</span>
+        <h2 id="flow-a-heading" class="font-serif text-2xl font-bold text-slate-900">Normal Operation Between Prayers</h2>
+      </div>
+      <p class="text-slate-500 mb-6 max-w-2xl">Full layout aktif — sidebar jadwal sholat, poster berputar otomatis, running text ticker, dan info tanggal/waktu. Ini adalah tampilan utama yang berjalan sepanjang hari di antara waktu-waktu sholat.</p>
+
+      <!-- TV Frame -->
+      <div class="tv-frame max-w-5xl">
+        <div class="tv-screen bg-gradient-to-br from-brand-900 via-[#0a3a35] to-[#083530] geo-bg-subtle">
+
+          <!-- ===== FLOW A CONTENT ===== -->
+          <div class="absolute inset-0 flex flex-col h-full">
+
+            <!-- TOP BAR: Mosque name + Date/Time -->
+            <div class="flex items-center justify-between px-8 pt-5 pb-4 border-b border-white/5">
+              <div class="flex items-center gap-3">
+                <!-- Mosque icon -->
+                <div class="w-9 h-9 bg-gold/20 rounded-lg flex items-center justify-center border border-gold/30">
+                  <svg class="w-5 h-5 text-gold" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M16 2C16 2 10 8 10 12V14H8V12C8 12 4 14 4 18V28H12V22C12 19.8 13.8 18 16 18C18.2 18 20 19.8 20 22V28H28V18C28 14 24 12 24 12V14H22V12C22 8 16 2 16 2Z" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="1.5"/>
+                    <circle cx="16" cy="10" r="1.5" fill="currentColor"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-white font-serif font-semibold text-base leading-none">Masjid Al-Ikhlas</p>
+                  <p class="text-white/40 text-xs mt-0.5">Jl. Raya Kebayoran No. 12, Jakarta Selatan</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="text-white font-serif font-bold text-4xl leading-none tabular-nums">13:42</p>
+                <div class="flex items-center justify-end gap-3 mt-1">
+                  <p class="text-white/50 text-xs">Rabu, 11 Maret 2026</p>
+                  <span class="text-white/30 text-xs" aria-hidden="true">|</span>
+                  <p class="text-gold text-xs font-medium">12 Ramadan 1447 H</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- MAIN BODY: Sidebar + Content -->
+            <div class="flex flex-1 gap-0 overflow-hidden">
+
+              <!-- LEFT SIDEBAR: Prayer Times -->
+              <div class="w-[30%] flex-shrink-0 border-r border-white/5 px-5 py-4 flex flex-col justify-between">
+                <div>
+                  <p class="text-white/40 text-xs font-semibold uppercase tracking-widest mb-3">Jadwal Sholat</p>
+
+                  <!-- Subuh -->
+                  <div class="flex items-center justify-between py-2 border-b border-white/5">
+                    <div class="flex items-center gap-2">
+                      <div class="w-1.5 h-1.5 rounded-full bg-white/20" aria-hidden="true"></div>
+                      <span class="text-white/60 text-sm">Subuh</span>
+                    </div>
+                    <div class="text-right">
+                      <p class="text-white/70 text-sm font-semibold tabular-nums">04:38</p>
+                      <p class="text-white/25 text-xs tabular-nums">Iqamah 04:50</p>
+                    </div>
+                  </div>
+
+                  <!-- Dzuhur - NEXT PASSED -->
+                  <div class="flex items-center justify-between py-2 border-b border-white/5 bg-white/5 rounded-lg px-2 -mx-2 mb-1">
+                    <div class="flex items-center gap-2">
+                      <div class="w-1.5 h-1.5 rounded-full bg-brand-400" aria-hidden="true"></div>
+                      <span class="text-brand-300 text-sm font-medium">Dzuhur</span>
+                    </div>
+                    <div class="text-right">
+                      <p class="text-brand-300 text-sm font-bold tabular-nums">12:10</p>
+                      <p class="text-white/30 text-xs tabular-nums">Iqamah 12:20</p>
+                    </div>
+                  </div>
+
+                  <!-- Ashar - NEXT UP -->
+                  <div class="flex items-center justify-between py-2 border-b border-white/5 bg-gold/10 rounded-lg px-2 -mx-2 mb-1 border border-gold/20">
+                    <div class="flex items-center gap-2">
+                      <div class="w-2 h-2 rounded-full bg-gold pulse-soft" aria-hidden="true"></div>
+                      <span class="text-gold text-sm font-semibold">Ashar</span>
+                    </div>
+                    <div class="text-right">
+                      <p class="text-gold font-bold text-sm tabular-nums">15:22</p>
+                      <p class="text-gold/50 text-xs tabular-nums">Iqamah 15:32</p>
+                    </div>
+                  </div>
+
+                  <!-- Maghrib -->
+                  <div class="flex items-center justify-between py-2 border-b border-white/5">
+                    <div class="flex items-center gap-2">
+                      <div class="w-1.5 h-1.5 rounded-full bg-white/20" aria-hidden="true"></div>
+                      <span class="text-white/60 text-sm">Maghrib</span>
+                    </div>
+                    <div class="text-right">
+                      <p class="text-white/70 text-sm font-semibold tabular-nums">17:58</p>
+                      <p class="text-white/25 text-xs tabular-nums">Iqamah 18:05</p>
+                    </div>
+                  </div>
+
+                  <!-- Isya -->
+                  <div class="flex items-center justify-between py-2">
+                    <div class="flex items-center gap-2">
+                      <div class="w-1.5 h-1.5 rounded-full bg-white/20" aria-hidden="true"></div>
+                      <span class="text-white/60 text-sm">Isya</span>
+                    </div>
+                    <div class="text-right">
+                      <p class="text-white/70 text-sm font-semibold tabular-nums">19:10</p>
+                      <p class="text-white/25 text-xs tabular-nums">Iqamah 19:20</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Next prayer countdown -->
+                <div class="bg-gold/10 border border-gold/20 rounded-xl p-3 mt-2">
+                  <p class="text-gold/70 text-xs uppercase tracking-wider">Menuju Ashar</p>
+                  <p class="text-gold font-serif font-bold text-2xl tabular-nums mt-0.5">01:40:07</p>
+                </div>
+              </div>
+
+              <!-- RIGHT: Rotating Poster Area -->
+              <div class="flex-1 flex flex-col">
+                <!-- Poster area -->
+                <div class="flex-1 relative overflow-hidden">
+                  <!-- Poster 1 -->
+                  <div class="absolute inset-0 poster-1 flex items-center justify-center">
+                    <div class="w-full h-full bg-gradient-to-br from-brand-800/80 to-emerald-900/80 flex flex-col items-center justify-center p-6">
+                      <p class="text-white/40 text-xs uppercase tracking-widest mb-3">Agenda Mendatang</p>
+                      <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-5 w-full max-w-xs text-center border border-white/10">
+                        <p class="text-gold text-xs font-semibold uppercase tracking-wider">Kajian Rutin</p>
+                        <p class="text-white font-serif font-bold text-xl mt-1 leading-snug">Fiqih Puasa Ramadan</p>
+                        <p class="text-white/60 text-sm mt-2">Ba'da Maghrib — Setiap Hari</p>
+                        <div class="mt-3 flex items-center justify-center gap-2 text-brand-300">
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                          <p class="text-sm">Ust. Ahmad Fauzi, Lc.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Poster 2 -->
+                  <div class="absolute inset-0 poster-2 flex items-center justify-center">
+                    <div class="w-full h-full bg-gradient-to-br from-emerald-900/80 to-brand-900/80 flex flex-col items-center justify-center p-6">
+                      <p class="text-white/40 text-xs uppercase tracking-widest mb-3">Pengumuman</p>
+                      <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-5 w-full max-w-xs text-center border border-white/10">
+                        <p class="text-emerald-400 text-xs font-semibold uppercase tracking-wider">Buka Puasa Bersama</p>
+                        <p class="text-white font-serif font-bold text-xl mt-1 leading-snug">Terbuka untuk Umum</p>
+                        <p class="text-white/60 text-sm mt-2">Setiap hari Ramadan mulai 17:30 WIB</p>
+                        <p class="text-white/40 text-xs mt-2">Di halaman masjid — Gratis</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Slide indicator dots -->
+                  <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2" aria-hidden="true">
+                    <div class="w-1.5 h-1.5 rounded-full bg-white/60 poster-1"></div>
+                    <div class="w-1.5 h-1.5 rounded-full bg-white/20 poster-2"></div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- BOTTOM TICKER -->
+            <div class="border-t border-white/5 bg-black/20 px-0 py-2 flex items-center overflow-hidden">
+              <div class="flex-shrink-0 bg-gold px-4 py-1.5 text-xs font-bold text-white uppercase tracking-wider mr-0">
+                Pengumuman
+              </div>
+              <div class="flex-1 overflow-hidden">
+                <p class="text-white/70 text-sm whitespace-nowrap ticker-anim pl-6">
+                  Kajian Ba'da Maghrib: Fiqih Puasa Ramadan bersama Ust. Ahmad Fauzi &nbsp;&nbsp;&mdash;&nbsp;&nbsp;
+                  Buka Puasa Bersama setiap hari mulai pukul 17:30 di halaman masjid &nbsp;&nbsp;&mdash;&nbsp;&nbsp;
+                  Pendaftaran Zakat Fitrah dibuka mulai 20 Ramadan &nbsp;&nbsp;&mdash;&nbsp;&nbsp;
+                  Sholat Tarawih ba'da Isya — 23 rakaat &nbsp;&nbsp;&mdash;&nbsp;&nbsp;
+                  Donasi Renovasi Masjid — Rekening BRI: 1234-5678-9012
+                </p>
+              </div>
+            </div>
+
+          </div><!-- end flow a content -->
+        </div><!-- end tv-screen -->
+      </div><!-- end tv-frame -->
+
+      <!-- Annotations -->
+      <div class="mt-4 grid sm:grid-cols-3 gap-3 max-w-5xl">
+        <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+          <p class="text-xs font-semibold text-brand-700 uppercase tracking-wider mb-1">Sidebar Jadwal</p>
+          <p class="text-xs text-slate-500">5 waktu sholat dengan iqamah. Sholat berikutnya di-highlight dengan gold. Countdown timer di bagian bawah sidebar.</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+          <p class="text-xs font-semibold text-brand-700 uppercase tracking-wider mb-1">Poster Berputar</p>
+          <p class="text-xs text-slate-500">Poster acara/pengumuman berganti otomatis setiap N detik (configurable). Fade transition antar poster.</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+          <p class="text-xs font-semibold text-brand-700 uppercase tracking-wider mb-1">Running Text</p>
+          <p class="text-xs text-slate-500">Ticker berjalan dari kanan ke kiri di bagian bawah. Berisi semua pengumuman aktif dari admin.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========== FLOW B — STATE 1: PRE-ADHAN ========== -->
+    <section id="flow-b1" aria-labelledby="flow-b1-heading">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="flow-badge-b text-xs font-bold px-3 py-1.5 rounded-full">FLOW B — State 1</span>
+        <h2 id="flow-b1-heading" class="font-serif text-2xl font-bold text-slate-900">Pre-Adhan Preparation</h2>
+        <span class="text-xs text-slate-400 font-medium bg-slate-100 px-2 py-1 rounded-lg">T-5 menit sebelum adzan</span>
+      </div>
+      <p class="text-slate-500 mb-6 max-w-2xl">Layar beralih dari Flow A ke tampilan persiapan 5 menit sebelum adzan. Pesan "Bersiap untuk Sholat", countdown menuju adzan, branding masjid. Background di-dim.</p>
+
+      <!-- TV Frame -->
+      <div class="tv-frame max-w-5xl">
+        <div class="tv-screen bg-gradient-to-br from-[#0c1a18] via-[#0a1f1c] to-[#071510] geo-bg">
+
+          <!-- Dimmed overlay -->
+          <div class="absolute inset-0 bg-black/30" aria-hidden="true"></div>
+
+          <!-- Content -->
+          <div class="absolute inset-0 flex flex-col items-center justify-center px-8 py-8">
+
+            <!-- Top: Mosque + Date -->
+            <div class="absolute top-6 left-8 right-8 flex items-start justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 bg-gold/20 rounded-lg flex items-center justify-center border border-gold/30">
+                  <svg class="w-4 h-4 text-gold" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M16 2C16 2 10 8 10 12V14H8V12C8 12 4 14 4 18V28H12V22C12 19.8 13.8 18 16 18C18.2 18 20 19.8 20 22V28H28V18C28 14 24 12 24 12V14H22V12C22 8 16 2 16 2Z" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="1.5"/>
+                    <circle cx="16" cy="10" r="1.5" fill="currentColor"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-white/80 font-serif font-semibold text-sm">Masjid Al-Ikhlas</p>
+                  <p class="text-white/30 text-xs">Jakarta Selatan</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="text-white/60 font-serif font-bold text-2xl tabular-nums">12:05</p>
+                <p class="text-gold/70 text-xs mt-0.5">12 Ramadan 1447 H</p>
+              </div>
+            </div>
+
+            <!-- Center: Preparation message -->
+            <div class="text-center slide-up">
+              <!-- Icon -->
+              <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gold/10 border-2 border-gold/30 mb-5 glow-ring">
+                <svg class="w-8 h-8 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                </svg>
+              </div>
+
+              <p class="text-brand-300/80 text-sm font-medium uppercase tracking-widest mb-2">Persiapkan Diri Anda</p>
+              <h2 class="text-white font-serif text-5xl font-bold leading-tight">Bersiap untuk</h2>
+              <h2 class="text-gold font-serif text-5xl font-bold leading-tight">Sholat Dzuhur</h2>
+
+              <!-- Countdown to Adhan -->
+              <div class="mt-8 flex flex-col items-center">
+                <p class="text-white/40 text-xs uppercase tracking-widest mb-2">Adzan dalam</p>
+                <div class="flex items-center gap-2">
+                  <div class="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 border border-white/10 min-w-[64px] text-center countdown">
+                    <p class="text-white font-serif font-bold text-4xl tabular-nums leading-none">04</p>
+                    <p class="text-white/40 text-xs mt-1">Menit</p>
+                  </div>
+                  <p class="text-white/30 font-bold text-3xl pulse-soft">:</p>
+                  <div class="bg-white/10 backdrop-blur-sm rounded-xl px-5 py-3 border border-white/10 min-w-[64px] text-center countdown">
+                    <p class="text-white font-serif font-bold text-4xl tabular-nums leading-none">52</p>
+                    <p class="text-white/40 text-xs mt-1">Detik</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Prayer info chips -->
+              <div class="mt-6 flex items-center justify-center gap-4">
+                <div class="bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2 text-center border border-white/10">
+                  <p class="text-white/50 text-xs mb-0.5">Adzan</p>
+                  <p class="text-white font-serif font-semibold text-lg tabular-nums">12:10</p>
+                </div>
+                <svg class="w-4 h-4 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                <div class="bg-gold/15 backdrop-blur-sm rounded-lg px-4 py-2 text-center border border-gold/25">
+                  <p class="text-gold/60 text-xs mb-0.5">Iqamah</p>
+                  <p class="text-gold font-serif font-semibold text-lg tabular-nums">12:20</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom: Subtle reminder -->
+            <div class="absolute bottom-5 left-8 right-8 text-center">
+              <p class="text-white/25 text-xs tracking-wider">Matikan ponsel. Rapikan shaf. Niatkan hati.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Annotations -->
+      <div class="mt-4 grid sm:grid-cols-3 gap-3 max-w-5xl">
+        <div class="bg-amber-50 rounded-xl p-4 border border-amber-200">
+          <p class="text-xs font-semibold text-amber-700 uppercase tracking-wider mb-1">Trigger</p>
+          <p class="text-xs text-slate-600">LiveView server clock mendeteksi T-5 menit dari waktu adzan. State machine push ke semua klien.</p>
+        </div>
+        <div class="bg-amber-50 rounded-xl p-4 border border-amber-200">
+          <p class="text-xs font-semibold text-amber-700 uppercase tracking-wider mb-1">Elemen Utama</p>
+          <p class="text-xs text-slate-600">Countdown menit:detik, nama sholat, waktu adzan + iqamah. Dimmed background. Tidak ada ticker/poster.</p>
+        </div>
+        <div class="bg-amber-50 rounded-xl p-4 border border-amber-200">
+          <p class="text-xs font-semibold text-amber-700 uppercase tracking-wider mb-1">Mood</p>
+          <p class="text-xs text-slate-600">Tenang dan penuh perhatian. Warna gelap namun bercahaya. Pesan spiritual singkat di bawah.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========== FLOW B — STATE 2: ADHAN / IQAMAH COUNTDOWN ========== -->
+    <section id="flow-b2" aria-labelledby="flow-b2-heading">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="flow-badge-b text-xs font-bold px-3 py-1.5 rounded-full">FLOW B — State 2</span>
+        <h2 id="flow-b2-heading" class="font-serif text-2xl font-bold text-slate-900">Adhan / Iqamah Countdown</h2>
+        <span class="text-xs text-slate-400 font-medium bg-slate-100 px-2 py-1 rounded-lg">T+0 (waktu adzan) sampai iqamah</span>
+      </div>
+      <p class="text-slate-500 mb-6 max-w-2xl">Tepat saat adzan, tampilan berganti ke countdown menuju iqamah. Nama sholat besar dan mencolok. Timer besar. Mood lebih intens namun tetap tenang.</p>
+
+      <!-- TV Frame -->
+      <div class="tv-frame max-w-5xl">
+        <div class="tv-screen bg-gradient-to-br from-[#071a15] via-[#062115] to-[#031008] geo-bg">
+
+          <!-- Subtle vignette -->
+          <div class="absolute inset-0 bg-radial-gradient" style="background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%);" aria-hidden="true"></div>
+
+          <!-- Content -->
+          <div class="absolute inset-0 flex flex-col">
+
+            <!-- Top bar minimal -->
+            <div class="flex items-center justify-between px-8 pt-5 pb-2">
+              <p class="text-white/40 font-serif font-semibold text-sm">Masjid Al-Ikhlas</p>
+              <div class="flex items-center gap-3">
+                <p class="text-white/30 text-xs tabular-nums">12 Ramadan 1447 H</p>
+                <p class="text-white/50 font-serif font-bold text-lg tabular-nums">12:10</p>
+              </div>
+            </div>
+
+            <!-- Main: Prayer name + Countdown -->
+            <div class="flex-1 flex flex-col items-center justify-center text-center px-8">
+
+              <!-- ADHAN badge -->
+              <div class="inline-flex items-center gap-2 bg-gold/20 border border-gold/30 rounded-full px-5 py-2 mb-6 slide-up">
+                <span class="w-2 h-2 rounded-full bg-gold pulse-soft" aria-hidden="true"></span>
+                <p class="text-gold text-sm font-semibold uppercase tracking-widest">Adzan Berkumandang</p>
+              </div>
+
+              <!-- Prayer Name — HUGE -->
+              <h2 class="text-white font-serif font-bold breathe" style="font-size: clamp(3.5rem, 8vw, 7rem); line-height: 1;">Dzuhur</h2>
+
+              <!-- Iqamah label + time -->
+              <div class="mt-6 flex items-center gap-4">
+                <div class="h-px w-16 bg-white/10" aria-hidden="true"></div>
+                <div class="text-center">
+                  <p class="text-white/40 text-xs uppercase tracking-widest">Iqamah Pukul</p>
+                  <p class="text-brand-300 font-serif font-bold text-3xl tabular-nums">12:20</p>
+                </div>
+                <div class="h-px w-16 bg-white/10" aria-hidden="true"></div>
+              </div>
+
+              <!-- Countdown to Iqamah — LARGE -->
+              <div class="mt-8">
+                <p class="text-white/30 text-xs uppercase tracking-widest mb-3">Iqamah dalam</p>
+                <div class="flex items-end justify-center gap-3">
+                  <div class="text-center">
+                    <div class="bg-white/5 border border-white/10 rounded-2xl px-6 py-4 countdown">
+                      <p class="text-white font-serif font-bold tabular-nums" style="font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1;">09</p>
+                    </div>
+                    <p class="text-white/30 text-xs mt-2 uppercase tracking-wider">Menit</p>
+                  </div>
+                  <p class="text-white/20 font-bold text-5xl mb-8 pulse-soft">:</p>
+                  <div class="text-center">
+                    <div class="bg-white/5 border border-white/10 rounded-2xl px-6 py-4 countdown">
+                      <p class="text-white font-serif font-bold tabular-nums" style="font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1;">34</p>
+                    </div>
+                    <p class="text-white/30 text-xs mt-2 uppercase tracking-wider">Detik</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom: Reminder text -->
+            <div class="px-8 pb-6 text-center">
+              <p class="text-white/20 text-xs tracking-widest uppercase">Luruskan dan rapatkan shaf Anda</p>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Annotations -->
+      <div class="mt-4 grid sm:grid-cols-3 gap-3 max-w-5xl">
+        <div class="bg-orange-50 rounded-xl p-4 border border-orange-200">
+          <p class="text-xs font-semibold text-orange-700 uppercase tracking-wider mb-1">Trigger</p>
+          <p class="text-xs text-slate-600">Server clock mencapai T+0 (waktu adzan). LiveView otomatis push state change ke semua TV yang terhubung.</p>
+        </div>
+        <div class="bg-orange-50 rounded-xl p-4 border border-orange-200">
+          <p class="text-xs font-semibold text-orange-700 uppercase tracking-wider mb-1">Elemen Utama</p>
+          <p class="text-xs text-slate-600">Nama sholat sangat besar, waktu iqamah jelas, countdown detik ke iqamah. Tidak ada poster atau ticker.</p>
+        </div>
+        <div class="bg-orange-50 rounded-xl p-4 border border-orange-200">
+          <p class="text-xs font-semibold text-orange-700 uppercase tracking-wider mb-1">Aksesibilitas TV</p>
+          <p class="text-xs text-slate-600">Teks besar (readable dari 5+ meter). Kontras tinggi putih di atas gelap. Font Lora sangat jelas di resolusi TV.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========== FLOW B — STATE 3: PRAYER IN PROGRESS ========== -->
+    <section id="flow-b3" aria-labelledby="flow-b3-heading">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="flow-badge-b text-xs font-bold px-3 py-1.5 rounded-full">FLOW B — State 3</span>
+        <h2 id="flow-b3-heading" class="font-serif text-2xl font-bold text-slate-900">Prayer In Progress</h2>
+        <span class="text-xs text-slate-400 font-medium bg-slate-100 px-2 py-1 rounded-lg">Setelah iqamah hingga +15 menit</span>
+      </div>
+      <p class="text-slate-500 mb-6 max-w-2xl">Tampilan paling minimal — hanya nama sholat, pesan "sedang berlangsung", dan nama masjid. Tidak ada ticker, tidak ada poster. Suasana hening dan fokus penuh.</p>
+
+      <!-- TV Frame -->
+      <div class="tv-frame max-w-5xl">
+        <div class="tv-screen geo-bg" style="background: linear-gradient(160deg, #041510 0%, #071a14 40%, #051209 100%);">
+
+          <!-- Very subtle radial light from center -->
+          <div class="absolute inset-0" style="background: radial-gradient(ellipse at 50% 45%, rgba(15,118,110,0.12) 0%, transparent 65%);" aria-hidden="true"></div>
+
+          <!-- Content -->
+          <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-8">
+
+            <!-- Top: Mosque name minimal -->
+            <div class="absolute top-6 left-0 right-0 text-center">
+              <p class="text-white/25 text-sm font-serif">Masjid Al-Ikhlas &nbsp;·&nbsp; Jakarta Selatan</p>
+            </div>
+
+            <!-- Center content -->
+            <div class="flex flex-col items-center slide-up">
+              <!-- Decorative Arabic calligraphy-style ornament -->
+              <div class="flex items-center gap-4 mb-6" aria-hidden="true">
+                <div class="h-px w-20 bg-gradient-to-r from-transparent to-gold/30"></div>
+                <svg class="w-8 h-8 text-gold/40" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+                </svg>
+                <div class="h-px w-20 bg-gradient-to-l from-transparent to-gold/30"></div>
+              </div>
+
+              <!-- Status label -->
+              <p class="text-brand-400/70 text-sm font-medium uppercase tracking-[0.3em] mb-3">Saat ini sedang berlangsung</p>
+
+              <!-- Prayer Name — ENORMOUS, calm -->
+              <h2 class="text-white font-serif font-bold" style="font-size: clamp(4rem, 10vw, 9rem); line-height: 0.95; letter-spacing: -0.02em;">Dzuhur</h2>
+
+              <!-- Divider -->
+              <div class="flex items-center gap-4 mt-5" aria-hidden="true">
+                <div class="h-px w-24 bg-white/10"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-brand-400/40 pulse-soft"></div>
+                <div class="h-px w-24 bg-white/10"></div>
+              </div>
+
+              <!-- Time started -->
+              <p class="text-white/30 text-sm mt-4 tabular-nums">Dimulai 12:20 WIB</p>
+            </div>
+
+            <!-- Bottom: Return time -->
+            <div class="absolute bottom-6 left-0 right-0 text-center">
+              <p class="text-white/15 text-xs tracking-widest uppercase">Kembali ke tampilan normal pukul ≈ 12:35</p>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Annotations -->
+      <div class="mt-4 grid sm:grid-cols-3 gap-3 max-w-5xl">
+        <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-200">
+          <p class="text-xs font-semibold text-emerald-700 uppercase tracking-wider mb-1">Trigger</p>
+          <p class="text-xs text-slate-600">Server clock mencapai waktu iqamah. Durasi: 15 menit setelah adzan, lalu kembali ke Flow A.</p>
+        </div>
+        <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-200">
+          <p class="text-xs font-semibold text-emerald-700 uppercase tracking-wider mb-1">Prinsip Desain</p>
+          <p class="text-xs text-slate-600">Maksimal minimalis. Hanya nama sholat. Tidak ada gangguan visual. Fokus pada khusyuk jamaah.</p>
+        </div>
+        <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-200">
+          <p class="text-xs font-semibold text-emerald-700 uppercase tracking-wider mb-1">Elemen Non-Aktif</p>
+          <p class="text-xs text-slate-600">Tidak ada: running text ticker, poster rotation, countdown. Hanya nama sholat + status + nama masjid.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========== OBITUARY OVERLAY ========== -->
+    <section id="obituary" aria-labelledby="obit-heading">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="flow-badge-obs text-xs font-bold px-3 py-1.5 rounded-full">URGENT — Overlay</span>
+        <h2 id="obit-heading" class="font-serif text-2xl font-bold text-slate-900">Obituary Alert Overlay</h2>
+        <span class="text-xs text-slate-400 font-medium bg-slate-100 px-2 py-1 rounded-lg">Bisa terpicu kapan saja</span>
+      </div>
+      <p class="text-slate-500 mb-6 max-w-2xl">Ketika admin mengirim pengumuman duka, overlay penuh layar langsung muncul via LiveView push. Menampilkan info almarhum/almarhumah, waktu sholat jenazah, dan detail pemakaman. Nada visual tenang dan penuh hormat.</p>
+
+      <!-- TV Frame -->
+      <div class="tv-frame max-w-5xl">
+        <div class="tv-screen" style="background: linear-gradient(160deg, #0f0a0a 0%, #1a0808 50%, #0a0505 100%);">
+
+          <!-- Subtle geometric -->
+          <div class="absolute inset-0 geo-bg-subtle opacity-30" aria-hidden="true"></div>
+
+          <!-- Dark overlay -->
+          <div class="absolute inset-0 bg-black/20" aria-hidden="true"></div>
+
+          <!-- Content -->
+          <div class="absolute inset-0 flex flex-col">
+
+            <!-- Top: Mosque + Urgent badge -->
+            <div class="flex items-center justify-between px-8 pt-5 pb-3 border-b border-white/5">
+              <div class="flex items-center gap-2.5">
+                <svg class="w-5 h-5 text-white/40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M16 2C16 2 10 8 10 12V14H8V12C8 12 4 14 4 18V28H12V22C12 19.8 13.8 18 16 18C18.2 18 20 19.8 20 22V28H28V18C28 14 24 12 24 12V14H22V12C22 8 16 2 16 2Z" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+                <p class="text-white/50 font-serif text-sm">Masjid Al-Ikhlas</p>
+              </div>
+              <div class="flex items-center gap-2 bg-red-900/50 border border-red-700/50 rounded-full px-4 py-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-red-400 pulse-soft" aria-hidden="true"></span>
+                <p class="text-red-300 text-xs font-semibold uppercase tracking-widest">Pengumuman Duka</p>
+              </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="flex-1 flex items-center justify-center px-8 py-4">
+              <div class="w-full max-w-2xl">
+
+                <!-- Innalillahi text -->
+                <div class="text-center mb-6">
+                  <p class="text-white/30 text-sm tracking-[0.3em] uppercase mb-1">Telah berpulang ke Rahmatullah</p>
+                  <div class="flex items-center justify-center gap-4" aria-hidden="true">
+                    <div class="h-px flex-1 bg-white/10"></div>
+                    <p class="text-white/20 text-xs tracking-widest">inna lillahi wa inna ilayhi raji'un</p>
+                    <div class="h-px flex-1 bg-white/10"></div>
+                  </div>
+                </div>
+
+                <!-- Deceased info card -->
+                <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 mb-5">
+                  <div class="grid grid-cols-2 gap-6 items-start">
+                    <div>
+                      <p class="text-white/40 text-xs uppercase tracking-widest mb-2">Almarhum / Almarhumah</p>
+                      <p class="text-white font-serif font-bold text-3xl leading-tight">H. Budi Santoso</p>
+                      <p class="text-white/50 text-sm mt-1">Bin Abdul Rahman &nbsp;·&nbsp; 72 tahun</p>
+                      <p class="text-white/30 text-xs mt-2">Jamaah Masjid Al-Ikhlas</p>
+                    </div>
+                    <div class="space-y-3">
+                      <div class="bg-red-900/30 border border-red-800/30 rounded-xl p-3">
+                        <p class="text-red-300/60 text-xs uppercase tracking-wider mb-1">Sholat Jenazah</p>
+                        <div class="flex items-baseline gap-2">
+                          <p class="text-white font-serif font-bold text-xl tabular-nums">Ba'da Ashar</p>
+                          <p class="text-white/50 text-sm">≈ 15:40</p>
+                        </div>
+                        <p class="text-white/40 text-xs mt-0.5">Di masjid ini</p>
+                      </div>
+                      <div class="bg-white/5 border border-white/10 rounded-xl p-3">
+                        <p class="text-white/40 text-xs uppercase tracking-wider mb-1">Pemakaman</p>
+                        <p class="text-white text-sm font-medium">TPU Tanah Kusir</p>
+                        <p class="text-white/40 text-xs mt-0.5">Ba'da sholat jenazah</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Message -->
+                <div class="text-center">
+                  <p class="text-white/40 text-sm italic leading-relaxed">"Semoga Allah SWT mengampuni segala dosa dan menerima segala amal ibadahnya. Mohon doa dari seluruh jamaah."</p>
+                  <p class="text-white/20 text-xs mt-3">— Takmir Masjid Al-Ikhlas —</p>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Bottom ticker (dimmed) -->
+            <div class="border-t border-white/5 bg-black/20 px-0 py-1.5 flex items-center overflow-hidden opacity-50">
+              <div class="flex-shrink-0 bg-red-900/80 px-3 py-1 text-xs font-bold text-red-200 uppercase tracking-wider">
+                Duka
+              </div>
+              <div class="flex-1 overflow-hidden">
+                <p class="text-white/50 text-xs whitespace-nowrap ticker-anim pl-4">
+                  Telah berpulang: H. Budi Santoso, 72 tahun &nbsp;&mdash;&nbsp; Sholat jenazah ba'da Ashar di masjid ini &nbsp;&mdash;&nbsp; Pemakaman di TPU Tanah Kusir &nbsp;&mdash;&nbsp; Mohon doa dan kehadiran jamaah
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Annotations -->
+      <div class="mt-4 grid sm:grid-cols-3 gap-3 max-w-5xl">
+        <div class="bg-red-50 rounded-xl p-4 border border-red-200">
+          <p class="text-xs font-semibold text-red-700 uppercase tracking-wider mb-1">Trigger</p>
+          <p class="text-xs text-slate-600">Admin klik "Kirim Obituary" → LiveView langsung push overlay ke semua TV aktif. Tidak ada delay. Muncul di atas Flow A maupun B.</p>
+        </div>
+        <div class="bg-red-50 rounded-xl p-4 border border-red-200">
+          <p class="text-xs font-semibold text-red-700 uppercase tracking-wider mb-1">Konten Wajib</p>
+          <p class="text-xs text-slate-600">Nama almarhum/almarhumah, waktu sholat jenazah, lokasi pemakaman. Semua dari form obituary admin.</p>
+        </div>
+        <div class="bg-red-50 rounded-xl p-4 border border-red-200">
+          <p class="text-xs font-semibold text-red-700 uppercase tracking-wider mb-1">Nada Visual</p>
+          <p class="text-xs text-slate-600">Bukan merah terang — tapi gelap penuh hormat. Merah sangat muted. Teks putih tenang. Tidak ada animasi agresif.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========== SUMMARY / SPECS ========== -->
+    <section aria-labelledby="specs-heading" class="pb-16">
+      <h2 id="specs-heading" class="font-serif text-2xl font-bold text-slate-900 mb-6">Spesifikasi Teknis TV Display</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl">
+
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+          <div class="w-10 h-10 bg-brand-50 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-brand-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </div>
+          <h3 class="font-semibold text-slate-900 mb-2">Resolusi & Rasio</h3>
+          <p class="text-sm text-slate-500">Optimized 16:9 landscape. Target: 1920×1080 Full HD. Responsive ke 1280×720 dan 3840×2160 (4K).</p>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+          <div class="w-10 h-10 bg-brand-50 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-brand-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <h3 class="font-semibold text-slate-900 mb-2">Real-time Engine</h3>
+          <p class="text-sm text-slate-500">Phoenix LiveView via WebSocket. State changes push dari server — tidak ada polling, tidak ada refresh halaman.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+          <div class="w-10 h-10 bg-brand-50 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-brand-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="font-semibold text-slate-900 mb-2">Prayer Flow Timer</h3>
+          <p class="text-sm text-slate-500">Server-side clock authority. T-5min → Pre-Adhan. T+0 → Adhan. T+iqamah → Prayer. T+15min → Default.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+          <div class="w-10 h-10 bg-brand-50 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-brand-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          </div>
+          <h3 class="font-semibold text-slate-900 mb-2">Auto Recovery</h3>
+          <p class="text-sm text-slate-500">Reconnect otomatis jika internet putus. Cached prayer times tampil offline. Reconnect saat koneksi kembali.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+          <div class="w-10 h-10 bg-brand-50 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-brand-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
+          </div>
+          <h3 class="font-semibold text-slate-900 mb-2">Mosque Branding</h3>
+          <p class="text-sm text-slate-500">Nama masjid, logo, theme selection, custom background. Dikonfigurasi admin dari dashboard.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+          <div class="w-10 h-10 bg-brand-50 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-brand-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+          </div>
+          <h3 class="font-semibold text-slate-900 mb-2">Readability (5m+)</h3>
+          <p class="text-sm text-slate-500">Font minimum 24px untuk info sekunder. Jadwal sholat 36-48px. Prayer mode 72-144px. Kontras putih/gelap 7:1+.</p>
+        </div>
+
+      </div>
+
+      <!-- Back to landing -->
+      <div class="mt-10 flex items-center gap-4">
+        <a href="index.html" class="inline-flex items-center gap-2 bg-brand-700 text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-brand-800 shadow-[0_2px_8px_rgba(15,118,110,0.3)] hover:shadow-lg transition-all duration-200 cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          Kembali ke Landing Page
+        </a>
+        <a href="index.html#daftar" class="inline-flex items-center gap-2 text-brand-700 border border-brand-200 hover:border-brand-400 px-6 py-3 rounded-xl text-sm font-semibold hover:bg-brand-50 transition-all duration-200 cursor-pointer">
+          Daftarkan Masjid
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>
