@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Makmur — Platform Digital Masjid Indonesia</title>
+  <meta name="description" content="Makmurkan masjid Anda dengan platform digital. Jadwal sholat akurat, pengumuman real-time, dan tampilan TV pintar untuk masjid.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Lora', 'serif'],
+            sans: ['Raleway', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#F0FDFA',
+              100: '#CCFBF1',
+              200: '#99F6E4',
+              300: '#5EEAD4',
+              400: '#2DD4BF',
+              500: '#14B8A6',
+              600: '#0D9488',
+              700: '#0F766E',
+              800: '#115E59',
+              900: '#134E4A',
+            },
+            gold: {
+              DEFAULT: '#D4A574',
+              light: '#F5E6D3',
+              dark: '#B8865A',
+            },
+          },
+        },
+      },
+    }
+  </script>
+
+  <style>
+    /* Smooth scroll */
+    html { scroll-behavior: smooth; }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* Geometric pattern overlay */
+    .pattern-overlay {
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%230f766e' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    /* Mosque dome shape for decoration */
+    .dome-shape {
+      border-radius: 50% 50% 0 0;
+    }
+
+    /* Subtle glow for TV preview */
+    .tv-glow {
+      box-shadow: 0 0 60px rgba(15, 118, 110, 0.15), 0 0 120px rgba(15, 118, 110, 0.05);
+    }
+
+    /* Scroll fade-in animation */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Running text animation for TV preview */
+    @keyframes ticker {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+    .ticker-scroll {
+      animation: ticker 20s linear infinite;
+    }
+
+    /* Prayer time pulse */
+    @keyframes gentle-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    .gentle-pulse {
+      animation: gentle-pulse 3s ease-in-out infinite;
+    }
+  </style>
+</head>
+
+<body class="font-sans text-slate-700 bg-brand-50 antialiased">
+
+  <!-- ========== NAVBAR ========== -->
+  <nav class="fixed top-4 left-4 right-4 z-50 bg-white/90 backdrop-blur-md rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.06)] px-4 sm:px-6 py-3 transition-all duration-200" role="navigation" aria-label="Navigasi utama">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <!-- Logo -->
+      <a href="#" class="flex items-center gap-2 cursor-pointer group" aria-label="Makmur — Beranda">
+        <!-- Mosque icon -->
+        <svg class="w-8 h-8 text-brand-700 transition-colors duration-200 group-hover:text-brand-600" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M16 2C16 2 10 8 10 12V14H8V12C8 12 4 14 4 18V28H12V22C12 19.8 13.8 18 16 18C18.2 18 20 19.8 20 22V28H28V18C28 14 24 12 24 12V14H22V12C22 8 16 2 16 2Z" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="16" cy="10" r="2" fill="currentColor"/>
+          <path d="M16 0V2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span class="text-xl font-serif font-bold text-brand-800">Makmur</span>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#fitur" class="text-sm font-medium text-slate-600 hover:text-brand-700 transition-colors duration-200 cursor-pointer">Fitur</a>
+        <a href="#tv-display" class="text-sm font-medium text-slate-600 hover:text-brand-700 transition-colors duration-200 cursor-pointer">TV Display</a>
+        <a href="#cara-kerja" class="text-sm font-medium text-slate-600 hover:text-brand-700 transition-colors duration-200 cursor-pointer">Cara Kerja</a>
+        <a href="#daftar" class="inline-flex items-center gap-2 bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-emerald-800 shadow-[0_2px_8px_rgba(4,120,87,0.25)] hover:shadow-lg transition-all duration-200 cursor-pointer focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">
+          Daftarkan Masjid
+        </a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button class="md:hidden p-2 rounded-lg hover:bg-brand-50 transition-colors duration-200 cursor-pointer focus:ring-2 focus:ring-teal-500 focus:ring-offset-2" aria-label="Buka menu" id="mobile-menu-btn">
+        <svg class="w-6 h-6 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="hidden md:hidden mt-3 pt-3 border-t border-slate-100" id="mobile-menu">
+      <a href="#fitur" class="block py-2 text-sm font-medium text-slate-600 hover:text-brand-700 transition-colors duration-200 cursor-pointer">Fitur</a>
+      <a href="#tv-display" class="block py-2 text-sm font-medium text-slate-600 hover:text-brand-700 transition-colors duration-200 cursor-pointer">TV Display</a>
+      <a href="#cara-kerja" class="block py-2 text-sm font-medium text-slate-600 hover:text-brand-700 transition-colors duration-200 cursor-pointer">Cara Kerja</a>
+      <a href="#daftar" class="block mt-2 text-center bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-emerald-800 transition-all duration-200 cursor-pointer">Daftarkan Masjid</a>
+    </div>
+  </nav>
+
+
+  <!-- ========== HERO ========== -->
+  <main>
+    <section class="relative pt-32 pb-20 lg:pt-40 lg:pb-28 overflow-hidden pattern-overlay" aria-labelledby="hero-heading">
+      <!-- Decorative elements -->
+      <div class="absolute top-20 right-0 w-72 h-72 bg-brand-200/20 rounded-full blur-3xl" aria-hidden="true"></div>
+      <div class="absolute bottom-0 left-0 w-96 h-96 bg-gold-light/30 rounded-full blur-3xl" aria-hidden="true"></div>
+
+      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <!-- Text Content -->
+          <div class="fade-up">
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm rounded-full px-4 py-1.5 mb-6 shadow-sm border border-brand-100">
+              <span class="w-2 h-2 bg-emerald-500 rounded-full gentle-pulse" aria-hidden="true"></span>
+              <span class="text-sm font-medium text-brand-700">Platform Digital Masjid #1 Indonesia</span>
+            </div>
+
+            <h1 id="hero-heading" class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight">
+              Makmurkan
+              <span class="text-brand-700">Masjid</span> Anda
+            </h1>
+
+            <p class="mt-6 text-lg sm:text-xl text-slate-600 leading-relaxed max-w-xl">
+              Jadwal sholat akurat, papan pengumuman digital, dan Smart TV Display
+              yang menghubungkan masjid dengan jamaah secara real-time.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="mt-8 flex flex-col sm:flex-row gap-4">
+              <a href="#daftar" class="inline-flex items-center justify-center gap-2 bg-emerald-700 text-white px-8 py-4 rounded-xl text-base font-semibold hover:bg-emerald-800 shadow-[0_2px_8px_rgba(4,120,87,0.25)] hover:shadow-lg transition-all duration-200 cursor-pointer focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Daftarkan Masjid Anda
+              </a>
+              <a href="#tv-display" class="inline-flex items-center justify-center gap-2 bg-white text-brand-700 border-2 border-brand-200 px-8 py-4 rounded-xl text-base font-semibold hover:border-brand-400 hover:bg-brand-50 transition-all duration-200 cursor-pointer focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Lihat TV Display
+              </a>
+            </div>
+
+            <!-- Trust indicator -->
+            <div class="mt-8 flex items-center gap-6 text-sm text-slate-500">
+              <div class="flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                <span>Gratis selamanya</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                <span>Proyek sosial</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                <span>Open source</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Visual — Mosque Illustration Card -->
+          <div class="fade-up relative">
+            <div class="relative bg-white rounded-3xl shadow-[0_8px_32px_rgba(15,118,110,0.08)] p-6 border border-brand-100/50">
+              <!-- Mini TV Display Preview -->
+              <div class="bg-gradient-to-br from-brand-800 via-brand-900 to-emerald-900 rounded-2xl overflow-hidden aspect-video relative">
+                <!-- TV Content -->
+                <div class="absolute inset-0 p-6 flex flex-col justify-between">
+                  <!-- Top: Mosque name + date -->
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <p class="text-brand-200 text-xs font-medium tracking-wider uppercase">Masjid Al-Ikhlas</p>
+                      <p class="text-white/60 text-xs mt-0.5">Rabu, 11 Maret 2026 / 12 Ramadan 1447 H</p>
+                    </div>
+                    <div class="text-right">
+                      <p class="text-white text-2xl font-serif font-bold">12:05</p>
+                    </div>
+                  </div>
+
+                  <!-- Center: Prayer times grid -->
+                  <div class="flex-1 flex items-center justify-center">
+                    <div class="grid grid-cols-5 gap-3 w-full">
+                      <div class="text-center">
+                        <p class="text-brand-300 text-xs font-medium">Subuh</p>
+                        <p class="text-white font-serif font-bold text-sm mt-0.5">04:38</p>
+                      </div>
+                      <div class="text-center">
+                        <p class="text-brand-300 text-xs font-medium">Dzuhur</p>
+                        <p class="text-white font-serif font-bold text-sm mt-0.5 ring-2 ring-gold rounded-lg px-2 py-0.5">12:10</p>
+                      </div>
+                      <div class="text-center">
+                        <p class="text-brand-300 text-xs font-medium">Ashar</p>
+                        <p class="text-white font-serif font-bold text-sm mt-0.5">15:22</p>
+                      </div>
+                      <div class="text-center">
+                        <p class="text-brand-300 text-xs font-medium">Maghrib</p>
+                        <p class="text-white font-serif font-bold text-sm mt-0.5">17:58</p>
+                      </div>
+                      <div class="text-center">
+                        <p class="text-brand-300 text-xs font-medium">Isya</p>
+                        <p class="text-white font-serif font-bold text-sm mt-0.5">19:10</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Bottom: Running text ticker -->
+                  <div class="bg-black/20 rounded-lg px-3 py-1.5 overflow-hidden">
+                    <div class="flex whitespace-nowrap">
+                      <p class="text-brand-200 text-xs ticker-scroll">
+                        Kajian Ba'da Maghrib bersama Ustadz Ahmad — Pengajian Ibu-ibu setiap Jumat pagi — Pembagian takjil Ramadan mulai pukul 17:30
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Label -->
+              <div class="mt-4 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full gentle-pulse" aria-hidden="true"></span>
+                  <span class="text-sm font-medium text-slate-600">Smart TV Display — Live</span>
+                </div>
+                <span class="text-xs text-slate-400">Powered by Makmur</span>
+              </div>
+            </div>
+
+            <!-- Decorative dome -->
+            <div class="absolute -top-4 -right-4 w-20 h-20 bg-gold-light rounded-full opacity-40 blur-md" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========== FEATURES ========== -->
+    <section id="fitur" class="py-20 lg:py-28 bg-white" aria-labelledby="fitur-heading">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Section Header -->
+        <div class="text-center max-w-2xl mx-auto fade-up">
+          <p class="text-sm font-semibold text-brand-600 tracking-wider uppercase mb-3">Fitur Utama</p>
+          <h2 id="fitur-heading" class="font-serif text-3xl sm:text-4xl font-bold text-slate-900">
+            Semua yang Masjid Anda Butuhkan
+          </h2>
+          <p class="mt-4 text-lg text-slate-500 leading-relaxed">
+            Dari jadwal sholat akurat hingga pengumuman real-time, Makmur menghadirkan solusi digital lengkap untuk masjid modern.
+          </p>
+        </div>
+
+        <!-- Feature Grid -->
+        <div class="mt-16 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+          <!-- Feature 1: TV Prayer Broadcast -->
+          <div class="fade-up bg-brand-50/50 rounded-2xl p-8 border border-brand-100/50 hover:shadow-[0_8px_24px_rgba(15,118,110,0.10)] hover:-translate-y-1 transition-all duration-200 cursor-pointer group">
+            <div class="w-12 h-12 bg-brand-100 rounded-xl flex items-center justify-center mb-5 group-hover:bg-brand-200 transition-colors duration-200">
+              <svg class="w-6 h-6 text-brand-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+            </div>
+            <h3 class="font-serif text-lg font-semibold text-slate-900 mb-2">TV Jadwal Sholat</h3>
+            <p class="text-sm text-slate-500 leading-relaxed">
+              Tampilan jadwal sholat real-time di Smart TV dengan countdown otomatis menuju waktu adzan dan iqamah.
+            </p>
+          </div>
+
+          <!-- Feature 2: TV Announcement Broadcast -->
+          <div class="fade-up bg-brand-50/50 rounded-2xl p-8 border border-brand-100/50 hover:shadow-[0_8px_24px_rgba(15,118,110,0.10)] hover:-translate-y-1 transition-all duration-200 cursor-pointer group">
+            <div class="w-12 h-12 bg-gold-light rounded-xl flex items-center justify-center mb-5 group-hover:bg-gold/20 transition-colors duration-200">
+              <svg class="w-6 h-6 text-gold-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
+              </svg>
+            </div>
+            <h3 class="font-serif text-lg font-semibold text-slate-900 mb-2">TV Pengumuman</h3>
+            <p class="text-sm text-slate-500 leading-relaxed">
+              Running text dan poster digital berputar otomatis. Pengumuman darurat tampil langsung di layar TV masjid.
+            </p>
+          </div>
+
+          <!-- Feature 3: Accurate Prayer Times -->
+          <div class="fade-up bg-brand-50/50 rounded-2xl p-8 border border-brand-100/50 hover:shadow-[0_8px_24px_rgba(15,118,110,0.10)] hover:-translate-y-1 transition-all duration-200 cursor-pointer group">
+            <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center mb-5 group-hover:bg-emerald-100 transition-colors duration-200">
+              <svg class="w-6 h-6 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <h3 class="font-serif text-lg font-semibold text-slate-900 mb-2">Jadwal Sholat Akurat</h3>
+            <p class="text-sm text-slate-500 leading-relaxed">
+              Sinkronisasi dengan Kemenag API dan perhitungan astronomis sebagai fallback. Akurat sesuai lokasi GPS masjid.
+            </p>
+          </div>
+
+          <!-- Feature 4: Mosque Discovery -->
+          <div class="fade-up bg-brand-50/50 rounded-2xl p-8 border border-brand-100/50 hover:shadow-[0_8px_24px_rgba(15,118,110,0.10)] hover:-translate-y-1 transition-all duration-200 cursor-pointer group">
+            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mb-5 group-hover:bg-blue-100 transition-colors duration-200">
+              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </svg>
+            </div>
+            <h3 class="font-serif text-lg font-semibold text-slate-900 mb-2">Temukan Masjid</h3>
+            <p class="text-sm text-slate-500 leading-relaxed">
+              Cari masjid terdekat dengan peta interaktif. Lihat jadwal sholat, acara, dan informasi masjid di sekitar Anda.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========== TV DISPLAY SHOWCASE ========== -->
+    <section id="tv-display" class="py-20 lg:py-28 bg-brand-50 pattern-overlay relative overflow-hidden" aria-labelledby="tv-heading">
+      <!-- Decorative -->
+      <div class="absolute top-0 right-0 w-80 h-80 bg-brand-200/15 rounded-full blur-3xl" aria-hidden="true"></div>
+
+      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <!-- Text -->
+          <div class="fade-up lg:order-2">
+            <p class="text-sm font-semibold text-brand-600 tracking-wider uppercase mb-3">Smart TV Display</p>
+            <h2 id="tv-heading" class="font-serif text-3xl sm:text-4xl font-bold text-slate-900">
+              Papan Pengumuman Digital yang <span class="text-brand-700">Hidup</span>
+            </h2>
+            <p class="mt-4 text-lg text-slate-500 leading-relaxed">
+              Tampilkan jadwal sholat, pengumuman, dan poster acara di layar TV masjid. Update secara real-time tanpa perlu refresh halaman.
+            </p>
+
+            <!-- Feature list -->
+            <ul class="mt-8 space-y-4" role="list">
+              <li class="flex items-start gap-3">
+                <div class="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg class="w-3.5 h-3.5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-medium text-slate-900">Prayer Flow State Machine</p>
+                  <p class="text-sm text-slate-500 mt-0.5">Transisi otomatis: persiapan adzan, countdown iqamah, hingga sholat berlangsung</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg class="w-3.5 h-3.5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-medium text-slate-900">Running Text & Poster Berputar</p>
+                  <p class="text-sm text-slate-500 mt-0.5">Pengumuman berjalan di bawah layar, poster acara berganti otomatis</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg class="w-3.5 h-3.5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-medium text-slate-900">Overlay Berita Duka (Obituary)</p>
+                  <p class="text-sm text-slate-500 mt-0.5">Pengumuman jenazah tampil langsung sebagai overlay di layar TV</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-3">
+                <div class="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg class="w-3.5 h-3.5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-medium text-slate-900">Tanggal Hijriyah & Masehi</p>
+                  <p class="text-sm text-slate-500 mt-0.5">Tampilkan tanggal Hijriyah (Umm al-Qura) dan Masehi secara bersamaan</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- TV Display Preview (Prayer Mode) -->
+          <div class="fade-up lg:order-1">
+            <div class="tv-glow rounded-2xl overflow-hidden border-4 border-slate-800 bg-slate-900">
+              <!-- TV Frame -->
+              <div class="bg-gradient-to-br from-brand-900 via-[#0a3d38] to-emerald-950 aspect-video relative overflow-hidden">
+
+                <!-- Decorative geometric pattern -->
+                <div class="absolute inset-0 opacity-5" aria-hidden="true">
+                  <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <pattern id="islamic-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                        <path d="M20 0L40 20L20 40L0 20Z" fill="none" stroke="white" stroke-width="0.5"/>
+                        <circle cx="20" cy="20" r="8" fill="none" stroke="white" stroke-width="0.5"/>
+                      </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#islamic-pattern)"/>
+                  </svg>
+                </div>
+
+                <!-- Prayer Mode Content -->
+                <div class="absolute inset-0 p-5 sm:p-8 flex flex-col justify-between">
+                  <!-- Top bar -->
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <p class="text-gold text-xs sm:text-sm font-serif font-semibold tracking-wide">Masjid Al-Ikhlas</p>
+                      <p class="text-white/40 text-xs mt-0.5">Jakarta Selatan</p>
+                    </div>
+                    <div class="text-right">
+                      <p class="text-white/60 text-xs">12 Ramadan 1447 H</p>
+                      <p class="text-white/40 text-xs">11 Maret 2026</p>
+                    </div>
+                  </div>
+
+                  <!-- Center: Prayer preparation -->
+                  <div class="text-center flex-1 flex flex-col items-center justify-center">
+                    <p class="text-brand-300 text-xs sm:text-sm font-medium tracking-widest uppercase">Bersiap untuk Sholat</p>
+                    <p class="text-white font-serif text-3xl sm:text-5xl font-bold mt-2">Dzuhur</p>
+                    <div class="mt-4 flex items-center gap-3">
+                      <div class="bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2">
+                        <p class="text-brand-200 text-xs">Adzan</p>
+                        <p class="text-white font-serif font-bold text-lg sm:text-xl">12:10</p>
+                      </div>
+                      <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                      </svg>
+                      <div class="bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2">
+                        <p class="text-brand-200 text-xs">Iqamah</p>
+                        <p class="text-white font-serif font-bold text-lg sm:text-xl">12:20</p>
+                      </div>
+                    </div>
+                    <div class="mt-4">
+                      <p class="text-white/50 text-xs tracking-wider uppercase">Menuju Adzan</p>
+                      <p class="text-gold font-serif text-2xl sm:text-3xl font-bold mt-1">04:52</p>
+                    </div>
+                  </div>
+
+                  <!-- Bottom ticker -->
+                  <div class="bg-black/30 rounded-lg px-3 py-1.5 overflow-hidden">
+                    <p class="text-brand-300/80 text-xs whitespace-nowrap ticker-scroll">
+                      Kajian Ba'da Maghrib: Fiqih Puasa bersama Ust. Ahmad Fauzi &mdash; Buka Puasa Bersama setiap hari di halaman masjid &mdash; Pendaftaran Zakat Fitrah dibuka mulai 20 Ramadan
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- TV Stand -->
+            <div class="mx-auto w-24 h-3 bg-slate-700 rounded-b-lg" aria-hidden="true"></div>
+            <div class="mx-auto w-40 h-2 bg-slate-600 rounded-b-lg" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========== HOW IT WORKS ========== -->
+    <section id="cara-kerja" class="py-20 lg:py-28 bg-white" aria-labelledby="cara-heading">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Section Header -->
+        <div class="text-center max-w-2xl mx-auto fade-up">
+          <p class="text-sm font-semibold text-brand-600 tracking-wider uppercase mb-3">Cara Kerja</p>
+          <h2 id="cara-heading" class="font-serif text-3xl sm:text-4xl font-bold text-slate-900">
+            Tiga Langkah Mudah
+          </h2>
+          <p class="mt-4 text-lg text-slate-500 leading-relaxed">
+            Digitalkan masjid Anda dalam hitungan menit. Tanpa biaya, tanpa kerumitan teknis.
+          </p>
+        </div>
+
+        <!-- Steps -->
+        <div class="mt-16 grid md:grid-cols-3 gap-8 lg:gap-12">
+          <!-- Step 1 -->
+          <div class="fade-up text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-brand-50 rounded-2xl border-2 border-brand-200 mb-6">
+              <span class="text-2xl font-serif font-bold text-brand-700">1</span>
+            </div>
+            <h3 class="font-serif text-xl font-semibold text-slate-900 mb-3">Daftarkan Masjid</h3>
+            <p class="text-slate-500 leading-relaxed">
+              Isi informasi masjid: nama, alamat, lokasi GPS, dan foto. Buat akun admin untuk mengelola konten.
+            </p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="fade-up text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-brand-50 rounded-2xl border-2 border-brand-200 mb-6">
+              <span class="text-2xl font-serif font-bold text-brand-700">2</span>
+            </div>
+            <h3 class="font-serif text-xl font-semibold text-slate-900 mb-3">Atur Jadwal & Konten</h3>
+            <p class="text-slate-500 leading-relaxed">
+              Konfigurasi jadwal sholat, buat pengumuman, dan unggah poster acara melalui dashboard admin yang mudah digunakan.
+            </p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="fade-up text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-brand-50 rounded-2xl border-2 border-brand-200 mb-6">
+              <span class="text-2xl font-serif font-bold text-brand-700">3</span>
+            </div>
+            <h3 class="font-serif text-xl font-semibold text-slate-900 mb-3">Hidupkan TV Display</h3>
+            <p class="text-slate-500 leading-relaxed">
+              Buka link TV Display di Smart TV masjid. Selesai! Semua update tampil otomatis secara real-time.
+            </p>
+          </div>
+        </div>
+
+        <!-- Connector line (desktop only) -->
+        <div class="hidden md:block mt-[-100px] mb-8 max-w-2xl mx-auto" aria-hidden="true">
+          <div class="border-t-2 border-dashed border-brand-200"></div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========== MOBILE APP + JAMAAH FEATURES ========== -->
+    <section class="py-20 lg:py-28 bg-brand-50/50" aria-labelledby="jamaah-heading">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <!-- Phone Mockup -->
+          <div class="fade-up flex justify-center">
+            <div class="relative">
+              <!-- Phone frame -->
+              <div class="w-64 sm:w-72 bg-slate-900 rounded-[2.5rem] p-3 shadow-2xl">
+                <div class="bg-gradient-to-b from-brand-50 to-white rounded-[2rem] overflow-hidden aspect-[9/19.5]">
+                  <!-- Status bar -->
+                  <div class="bg-brand-700 px-6 py-3 flex justify-between items-center">
+                    <p class="text-white text-xs font-medium">12:05</p>
+                    <div class="flex gap-1">
+                      <div class="w-4 h-2.5 bg-white/60 rounded-sm" aria-hidden="true"></div>
+                      <div class="w-4 h-2.5 bg-white/60 rounded-sm" aria-hidden="true"></div>
+                      <div class="w-4 h-2.5 bg-white/80 rounded-sm" aria-hidden="true"></div>
+                    </div>
+                  </div>
+
+                  <!-- App header -->
+                  <div class="bg-brand-700 px-6 pb-6 pt-2">
+                    <p class="text-white/80 text-xs">Assalamu'alaikum</p>
+                    <p class="text-white font-serif font-bold text-lg mt-0.5">Ahmad</p>
+                    <!-- Prayer time card -->
+                    <div class="mt-3 bg-white/15 backdrop-blur-sm rounded-xl p-3">
+                      <div class="flex justify-between items-center">
+                        <div>
+                          <p class="text-white/70 text-xs">Sholat Selanjutnya</p>
+                          <p class="text-white font-serif font-bold text-xl">Dzuhur</p>
+                        </div>
+                        <div class="text-right">
+                          <p class="text-gold font-serif font-bold text-2xl">12:10</p>
+                          <p class="text-white/60 text-xs">4 menit lagi</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Feed preview -->
+                  <div class="px-4 py-3">
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">E-Mading</p>
+                    <!-- Feed card 1 -->
+                    <div class="bg-white rounded-xl p-3 shadow-sm border border-slate-100 mb-2">
+                      <div class="flex gap-2 items-start">
+                        <div class="w-8 h-8 bg-brand-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <svg class="w-4 h-4 text-brand-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        </div>
+                        <div>
+                          <p class="text-xs font-semibold text-slate-900">Kajian Ba'da Maghrib</p>
+                          <p class="text-xs text-slate-400 mt-0.5">Masjid Al-Ikhlas</p>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Feed card 2 -->
+                    <div class="bg-red-50 rounded-xl p-3 border border-red-100 mb-2">
+                      <div class="flex gap-2 items-start">
+                        <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                        </div>
+                        <div>
+                          <p class="text-xs font-semibold text-red-800">Berita Duka</p>
+                          <p class="text-xs text-red-600 mt-0.5">Sholat Jenazah ba'da Ashar</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Phone glow -->
+              <div class="absolute -inset-4 bg-brand-200/20 rounded-[3rem] blur-2xl -z-10" aria-hidden="true"></div>
+            </div>
+          </div>
+
+          <!-- Text Content -->
+          <div class="fade-up">
+            <p class="text-sm font-semibold text-brand-600 tracking-wider uppercase mb-3">Aplikasi Jamaah</p>
+            <h2 id="jamaah-heading" class="font-serif text-3xl sm:text-4xl font-bold text-slate-900">
+              Tetap Terhubung dengan <span class="text-brand-700">Masjid Anda</span>
+            </h2>
+            <p class="mt-4 text-lg text-slate-500 leading-relaxed">
+              Jadwal sholat di genggaman, notifikasi pengumuman penting, dan temukan masjid terdekat di mana pun Anda berada.
+            </p>
+
+            <!-- Feature list -->
+            <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="flex items-start gap-3 bg-white rounded-xl p-4 border border-slate-100">
+                <svg class="w-5 h-5 text-brand-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div>
+                  <p class="text-sm font-semibold text-slate-900">Jadwal Sholat GPS</p>
+                  <p class="text-xs text-slate-500 mt-0.5">Akurat sesuai lokasi Anda</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3 bg-white rounded-xl p-4 border border-slate-100">
+                <svg class="w-5 h-5 text-brand-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                </svg>
+                <div>
+                  <p class="text-sm font-semibold text-slate-900">Push Notifikasi</p>
+                  <p class="text-xs text-slate-500 mt-0.5">Darurat vs rutin otomatis</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3 bg-white rounded-xl p-4 border border-slate-100">
+                <svg class="w-5 h-5 text-brand-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                <div>
+                  <p class="text-sm font-semibold text-slate-900">Cari Masjid Terdekat</p>
+                  <p class="text-xs text-slate-500 mt-0.5">Peta interaktif + navigasi</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3 bg-white rounded-xl p-4 border border-slate-100">
+                <svg class="w-5 h-5 text-brand-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                </svg>
+                <div>
+                  <p class="text-sm font-semibold text-slate-900">E-Mading Feed</p>
+                  <p class="text-xs text-slate-500 mt-0.5">Pengumuman masjid diikuti</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========== STATS ========== -->
+    <section class="py-16 lg:py-20 bg-white border-y border-slate-100" aria-label="Statistik platform">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center fade-up">
+          <div>
+            <p class="text-3xl sm:text-4xl font-serif font-bold text-brand-700">800K+</p>
+            <p class="text-sm text-slate-500 mt-1">Masjid di Indonesia</p>
+          </div>
+          <div>
+            <p class="text-3xl sm:text-4xl font-serif font-bold text-brand-700">230M+</p>
+            <p class="text-sm text-slate-500 mt-1">Muslim Indonesia</p>
+          </div>
+          <div>
+            <p class="text-3xl sm:text-4xl font-serif font-bold text-brand-700">5x</p>
+            <p class="text-sm text-slate-500 mt-1">Sholat Setiap Hari</p>
+          </div>
+          <div>
+            <p class="text-3xl sm:text-4xl font-serif font-bold text-brand-700">24/7</p>
+            <p class="text-sm text-slate-500 mt-1">TV Display Aktif</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========== FINAL CTA ========== -->
+    <section id="daftar" class="py-20 lg:py-28 bg-gradient-to-br from-brand-800 via-brand-900 to-emerald-900 relative overflow-hidden" aria-labelledby="cta-heading">
+      <!-- Decorative pattern -->
+      <div class="absolute inset-0 opacity-5" aria-hidden="true">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="cta-pattern" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+              <path d="M30 0L60 30L30 60L0 30Z" fill="none" stroke="white" stroke-width="0.5"/>
+              <circle cx="30" cy="30" r="12" fill="none" stroke="white" stroke-width="0.5"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#cta-pattern)"/>
+        </svg>
+      </div>
+
+      <!-- Glow -->
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand-400/10 rounded-full blur-3xl" aria-hidden="true"></div>
+
+      <div class="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center fade-up">
+        <h2 id="cta-heading" class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight">
+          Makmurkan Masjid Anda Bersama Kami
+        </h2>
+        <p class="mt-6 text-lg text-brand-200 leading-relaxed max-w-xl mx-auto">
+          Bergabunglah dengan misi mendigitalkan masjid di seluruh Indonesia. Gratis selamanya — karena ini adalah proyek sosial untuk umat.
+        </p>
+
+        <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="#" class="inline-flex items-center justify-center gap-2 bg-white text-brand-800 px-8 py-4 rounded-xl text-base font-semibold hover:bg-brand-50 shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brand-900">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Daftarkan Masjid
+          </a>
+          <a href="#" class="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm text-white border border-white/20 px-8 py-4 rounded-xl text-base font-semibold hover:bg-white/20 transition-all duration-200 cursor-pointer focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brand-900">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            Download Aplikasi
+          </a>
+        </div>
+
+        <p class="mt-8 text-sm text-brand-300/60">
+          Gratis &middot; Open Source &middot; Proyek Sosial untuk Umat
+        </p>
+      </div>
+    </section>
+  </main>
+
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="bg-brand-950 py-12" role="contentinfo">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-4 gap-8">
+        <!-- Brand -->
+        <div class="md:col-span-2">
+          <div class="flex items-center gap-2 mb-4">
+            <svg class="w-7 h-7 text-brand-400" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M16 2C16 2 10 8 10 12V14H8V12C8 12 4 14 4 18V28H12V22C12 19.8 13.8 18 16 18C18.2 18 20 19.8 20 22V28H28V18C28 14 24 12 24 12V14H22V12C22 8 16 2 16 2Z" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="16" cy="10" r="2" fill="currentColor"/>
+            </svg>
+            <span class="text-lg font-serif font-bold text-white">Makmur</span>
+          </div>
+          <p class="text-sm text-brand-300/50 max-w-xs leading-relaxed">
+            Platform digital masjid Indonesia. Menghubungkan masjid dengan jamaah melalui teknologi modern.
+          </p>
+        </div>
+
+        <!-- Links -->
+        <div>
+          <h3 class="text-sm font-semibold text-white mb-4">Platform</h3>
+          <ul class="space-y-2 text-sm" role="list">
+            <li><a href="#fitur" class="text-brand-300/50 hover:text-brand-300 transition-colors duration-200 cursor-pointer">Fitur</a></li>
+            <li><a href="#tv-display" class="text-brand-300/50 hover:text-brand-300 transition-colors duration-200 cursor-pointer">TV Display</a></li>
+            <li><a href="#cara-kerja" class="text-brand-300/50 hover:text-brand-300 transition-colors duration-200 cursor-pointer">Cara Kerja</a></li>
+            <li><a href="#daftar" class="text-brand-300/50 hover:text-brand-300 transition-colors duration-200 cursor-pointer">Daftarkan Masjid</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-semibold text-white mb-4">Tentang</h3>
+          <ul class="space-y-2 text-sm" role="list">
+            <li><a href="#" class="text-brand-300/50 hover:text-brand-300 transition-colors duration-200 cursor-pointer">Tentang Kami</a></li>
+            <li><a href="#" class="text-brand-300/50 hover:text-brand-300 transition-colors duration-200 cursor-pointer">Kontak</a></li>
+            <li><a href="#" class="text-brand-300/50 hover:text-brand-300 transition-colors duration-200 cursor-pointer">Kebijakan Privasi</a></li>
+            <li><a href="#" class="text-brand-300/50 hover:text-brand-300 transition-colors duration-200 cursor-pointer">GitHub</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-10 pt-8 border-t border-brand-800/50 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <p class="text-xs text-brand-300/40">&copy; 2026 Makmur by RQLab. Proyek sosial untuk umat.</p>
+        <p class="text-xs text-brand-300/40">Dibuat dengan keikhlasan di Indonesia</p>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ========== SCRIPTS ========== -->
+  <script>
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (menuBtn && mobileMenu) {
+      menuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+        const isOpen = !mobileMenu.classList.contains('hidden');
+        menuBtn.setAttribute('aria-expanded', isOpen);
+        menuBtn.setAttribute('aria-label', isOpen ? 'Tutup menu' : 'Buka menu');
+      });
+      // Close mobile menu on link click
+      mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.add('hidden');
+          menuBtn.setAttribute('aria-expanded', 'false');
+          menuBtn.setAttribute('aria-label', 'Buka menu');
+        });
+      });
+    }
+
+    // Scroll fade-in animation with IntersectionObserver
+    const fadeElements = document.querySelectorAll('.fade-up');
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -40px 0px'
+      });
+
+      fadeElements.forEach(el => observer.observe(el));
+    } else {
+      // Fallback: show all elements
+      fadeElements.forEach(el => el.classList.add('visible'));
+    }
+
+    // Respect prefers-reduced-motion
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      fadeElements.forEach(el => el.classList.add('visible'));
+    }
+  </script>
+
+</body>
+</html>
